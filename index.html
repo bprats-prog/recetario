@@ -15,7 +15,7 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon.svg">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:tal,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap');
 
   :root {
     --paper: #EFEFE3;
@@ -1178,6 +1178,31 @@
     });
   }
 
+  function cartIngredientLines() {
+    const ids = [...cart];
+    const items = ids.map(id => recipes.find(r => r.id === id)).filter(Boolean);
+    const lines = [];
+    items.forEach(r => { (r.ingredients || []).forEach(i => lines.push(i)); });
+    return [...new Set(lines)];
+  }
+
+  async function shareCartToBring() {
+    const lines = cartIngredientLines();
+    if (!lines.length) return;
+    const text = lines.join('\n');
+    if (navigator.share) {
+      try { await navigator.share({ text, title: 'Lista de la compra' }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      const btn = document.getElementById('shareCartBtn');
+      if (btn) { const old = btn.textContent; btn.textContent = '✓ Copiado, pégalo en Bring!'; setTimeout(() => { btn.textContent = old; }, 2200); }
+    } catch (e) {
+      window.prompt('Copia esta lista y pégala en Bring!:', text);
+    }
+  }
+
   function renderCartOverlay() {
     const ids = [...cart];
     const items = ids.map(id => recipes.find(r => r.id === id)).filter(Boolean);
@@ -1199,13 +1224,20 @@
         '<div class="sheet" role="dialog" aria-modal="true">' +
           '<div class="sheet-top"><h2>Lista de la compra</h2>' +
           '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
-          (items.length ? '<p style="margin:6px 0 4px"><button class="delete-link" id="clearCartBtn" type="button">Vaciar lista</button></p>' : '') +
+          (items.length
+            ? '<p style="margin:6px 0 12px; display:flex; gap:14px; align-items:center; flex-wrap:wrap">' +
+                '<button class="submit-btn" id="shareCartBtn" type="button" style="padding:9px 16px; font-size:13.5px">📤 Compartir con Bring!</button>' +
+                '<button class="delete-link" id="clearCartBtn" type="button">Vaciar lista</button>' +
+              '</p>'
+            : '') +
           body +
         '</div>' +
       '</div>';
     document.getElementById('closeBtn').addEventListener('click', closeDetail);
     document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
     document.addEventListener('keydown', escClose);
+    const shareBtn = document.getElementById('shareCartBtn');
+    if (shareBtn) shareBtn.addEventListener('click', shareCartToBring);
     const clearBtn = document.getElementById('clearCartBtn');
     if (clearBtn) clearBtn.addEventListener('click', () => { cart.clear(); saveCart(); render(); closeDetail(); });
     overlayRoot.querySelectorAll('[data-remove]').forEach(btn => {
