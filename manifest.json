@@ -1,0 +1,19 @@
+{
+  "name": "Recetario Belusitaa",
+  "short_name": "Recetario",
+  "description": "Recetas guardadas de Instagram, favoritas, notas y plan semanal.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EFEFE3",
+  "theme_color": "#EFEFE3",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

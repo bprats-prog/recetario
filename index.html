@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recetario Belusitaa</title>
+<meta name="description" content="Recetario familiar: recetas guardadas de Instagram, favoritas, notas y plan semanal.">
+<meta name="theme-color" content="#EFEFE3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1A1C15" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Recetario">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap');
+
+  :root {
+    --paper: #EFEFE3;
+    --card: #F9F9F1;
+    --ink: #262519;
+    --ink-soft: #5B5A4A;
+    --line: rgba(38,37,25,0.14);
+    --accent: #3F5E33;
+    --accent-ink: #F4F6EE;
+    --accent-2: #B9702E;
+    --accent-2-soft: rgba(185,112,46,0.14);
+    --accent-soft: rgba(63,94,51,0.12);
+    --shadow: 0 1px 2px rgba(38,37,25,0.06);
+    --focus: #B9702E;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #1A1C15;
+      --card: #22241C;
+      --ink: #ECEBDD;
+      --ink-soft: #ABA994;
+      --line: rgba(236,235,221,0.14);
+      --accent: #8FBF78;
+      --accent-ink: #14200F;
+      --accent-2: #E6A15B;
+      --accent-2-soft: rgba(230,161,91,0.16);
+      --accent-soft: rgba(143,191,120,0.14);
+      --shadow: 0 1px 2px rgba(0,0,0,0.3);
+      --focus: #E6A15B;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1A1C15;
+    --card: #22241C;
+    --ink: #ECEBDD;
+    --ink-soft: #ABA994;
+    --line: rgba(236,235,221,0.14);
+    --accent: #8FBF78;
+    --accent-ink: #14200F;
+    --accent-2: #E6A15B;
+    --accent-2-soft: rgba(230,161,91,0.16);
+    --accent-soft: rgba(143,191,120,0.14);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3);
+    --focus: #E6A15B;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  [hidden] { display: none !important; }
+  html { height: 100%; }
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Karla', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  h1, h2, h3, .display {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+
+  .wrap { max-width: 980px; margin: 0 auto; padding: 28px 20px 80px; padding-top: calc(28px + env(safe-area-inset-top)); }
+
+  header.top {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 22px;
+  }
+  .eyebrow {
+    font-size: 12.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    font-weight: 700;
+  }
+  h1.title {
+    font-size: clamp(28px, 5vw, 40px);
+    margin: 2px 0 4px;
+    font-style: italic;
+  }
+  .subtitle {
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    margin: 0;
+  }
+  .stats {
+    margin-top: 10px;
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat { font-size: 13px; color: var(--ink-soft); }
+  .stat b { color: var(--ink); font-size: 15px; font-weight: 700; }
+
+  .controls {
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    padding: 14px 0 12px;
+    padding-top: calc(14px + env(safe-area-inset-top));
+    margin-top: calc(-1 * env(safe-area-inset-top));
+    z-index: 5;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+  }
+  .search-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .searchbox {
+    position: relative;
+    flex: 1;
+    min-width: 160px;
+  }
+  .add-btn {
+    flex: none;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    padding: 0 16px;
+    border-radius: 10px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: var(--accent-ink);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .add-btn:hover { opacity: .92; }
+  .add-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .cart-toggle-btn {
+    background: var(--card);
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .cart-toggle-btn #cartCount {
+    background: var(--accent-2);
+    color: var(--accent-ink);
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-size: 12px;
+    margin-left: 2px;
+  }
+  .count-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .count-row .count-line { margin: 0; }
+  .surprise-btn {
+    flex: none;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .surprise-btn:hover { background: var(--accent); color: var(--accent-ink); }
+  .surprise-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .cart-btn { flex: none; background: none; border: none; cursor: pointer; font-size: 16px; line-height: 1; color: var(--line); padding: 2px; }
+  .cart-btn.on { color: var(--accent); }
+  .cart-item { display: flex; flex-direction: column; gap: 6px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .cart-item:last-child { border-bottom: none; }
+  .cart-item-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .cart-item-top h3 { font-size: 16px; margin: 0; font-weight: 600; }
+  .cart-remove { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 13px; text-decoration: underline; padding: 0; }
+  .cart-ingredients { font-size: 13.5px; color: var(--ink); line-height: 1.55; white-space: pre-wrap; }
+  .cart-empty-hint { color: var(--ink-soft); font-size: 13.5px; }
+  .searchbox input {
+    width: 100%;
+    font: inherit;
+    font-size: 16px;
+    padding: 12px 14px 12px 40px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+  }
+  .searchbox input:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+  }
+  .searchbox svg {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-soft);
+    pointer-events: none;
+  }
+  .chips {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+  }
+  .chip {
+    flex: none;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 7px 13px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink-soft);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .12s, color .12s, border-color .12s;
+  }
+  .chip .n { font-variant-numeric: tabular-nums; opacity: .7; margin-left: 5px; }
+  .chip:hover { border-color: var(--accent); color: var(--ink); }
+  .chip.active {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: var(--accent);
+  }
+  .chip.active .n { opacity: .85; }
+  .chip:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 15px 13px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    min-height: 148px;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card h3 {
+    font-size: 17px;
+    margin: 0;
+    line-height: 1.28;
+    font-weight: 500;
+  }
+  .fav-btn {
+    flex: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--line);
+    padding: 2px;
+  }
+  .fav-btn.on { color: var(--accent-2); }
+  .card .snippet {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    flex: 1;
+  }
+  .tag {
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--accent-2-soft);
+    color: var(--accent-2);
+  }
+
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-soft);
+  }
+  .empty .display { font-size: 22px; color: var(--ink); margin-bottom: 6px; }
+
+  .loadmore {
+    display: block;
+    margin: 26px auto 0;
+    font: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 11px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .loadmore:hover { border-color: var(--accent); }
+
+  .count-line { color: var(--ink-soft); font-size: 13px; margin: 0 0 14px; }
+
+  /* detail overlay */
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(20,20,12,0.45);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 30;
+  }
+  @media (min-width: 640px) {
+    .overlay { align-items: center; padding: 24px; }
+  }
+  .sheet {
+    background: var(--paper);
+    width: 100%;
+    max-width: 640px;
+    max-height: 88vh;
+    border-radius: 18px 18px 0 0;
+    overflow-y: auto;
+    padding: 22px 22px 30px;
+    padding-bottom: calc(30px + env(safe-area-inset-bottom));
+    position: relative;
+    border: 1px solid var(--line);
+  }
+  @media (min-width: 640px) {
+    .sheet { border-radius: 16px; }
+  }
+  .sheet-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+  .sheet h2 { font-size: 24px; margin: 0; font-style: italic; }
+  .close-btn {
+    flex: none;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+  .sheet .meta-row { display: flex; align-items: center; gap: 10px; margin: 10px 0 16px; flex-wrap: wrap; }
+  .sheet .body-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .body-text h3 {
+    font-family: 'Karla', ui-sans-serif, system-ui, sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: var(--ink-soft);
+    margin: 18px 0 8px;
+  }
+  .body-text h3:first-child { margin-top: 0; }
+  .body-text ul, .body-text ol { margin: 0; padding-left: 22px; }
+  .body-text li { margin-bottom: 7px; line-height: 1.55; }
+  .edit-section-label { font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-soft); display: block; margin: 14px 0 6px; }
+  .edit-section-label:first-of-type { margin-top: 0; }
+  .cat-select {
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--accent-2);
+    background: var(--accent-2-soft);
+    color: var(--accent-2);
+    cursor: pointer;
+  }
+  .cat-select:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+  .edit-title-input {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 6px 10px;
+    width: 100%;
+    margin-right: 8px;
+  }
+  .edit-title-input:focus-visible { outline: 2px solid var(--focus); }
+  .edit-toolbar { display: flex; align-items: center; gap: 10px; margin: 10px 0 6px; }
+  .bold-btn {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 14px;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .bold-btn:hover { border-color: var(--accent); }
+  .edit-text-input {
+    width: 100%;
+    min-height: 220px;
+    font: inherit;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    resize: vertical;
+  }
+  .edit-text-input:focus-visible { outline: 2px solid var(--focus); }
+  .rating-stars { display: inline-flex; gap: 2px; }
+  .rating-stars .star { cursor: pointer; font-size: 17px; color: var(--line); }
+  .rating-stars .star.on { color: var(--accent-2); }
+  .notes-box { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+  .notes-row { display: flex; align-items: center; justify-content: space-between; }
+  .notes-label { font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-soft); }
+  .notes-box textarea {
+    font: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    min-height: 70px;
+    resize: vertical;
+  }
+  .notes-box textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .card-rating { font-size: 12px; color: var(--accent-2); letter-spacing: 1px; }
+
+  .add-form { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
+  .add-form label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+  .add-form input, .add-form select, .add-form textarea {
+    font: inherit;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink);
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--card);
+  }
+  .add-form textarea { resize: vertical; min-height: 140px; font-family: inherit; line-height: 1.5; }
+  .add-form input:focus-visible, .add-form select:focus-visible, .add-form textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .submit-btn {
+    font: inherit;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 12px 20px;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: var(--accent-ink);
+    cursor: pointer;
+  }
+  .submit-btn:hover { opacity: .92; }
+  .form-hint { font-size: 12.5px; color: var(--ink-soft); font-weight: 400; }
+  .delete-link { font-size: 13px; color: var(--ink-soft); background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0; }
+
+  .plan-toolbar { display: flex; gap: 10px; margin: 4px 0 16px; flex-wrap: wrap; }
+  .plan-day { margin-bottom: 16px; }
+  .plan-day h3 { font-size: 15px; margin: 0 0 8px; }
+  .plan-slot { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .plan-day:last-child .plan-slot:last-child { border-bottom: none; }
+  .plan-slot-label { flex: none; width: 62px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-soft); }
+  .plan-slot-recipe { flex: 1; font-size: 14.5px; cursor: pointer; }
+  .plan-slot-recipe.empty { color: var(--ink-soft); font-style: italic; }
+  .plan-slot-recipe:hover { color: var(--accent); text-decoration: underline; }
+  .plan-clear-btn { flex: none; background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 15px; padding: 2px 4px; }
+  .plan-pick-list { display: flex; flex-direction: column; gap: 6px; max-height: 55vh; overflow-y: auto; }
+  .plan-pick-item {
+    font: inherit;
+    font-size: 14px;
+    text-align: left;
+    padding: 9px 12px;
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .plan-pick-item:hover { border-color: var(--accent); }
+
+  .ig-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .ig-link:hover { text-decoration: underline; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card { transition: transform .1s ease; }
+    .card:active { transform: scale(0.98); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">recuperado de @belusitaa · instagram guardados</span>
+    <h1 class="title">Recetario Belusitaa</h1>
+    <p class="subtitle">Todo lo que has ido guardando, por fin en un solo sitio.</p>
+    <div class="stats">
+      <span class="stat"><b id="statTotal">–</b> recetas</span>
+      <span class="stat"><b id="statCats">–</b> categorías</span>
+      <span class="stat"><b id="statFav">0</b> favoritas</span>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="search-row">
+      <div class="searchbox">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
+        <input id="search" type="text" placeholder="Buscar por nombre, ingrediente…" autocomplete="off">
+      </div>
+      <button class="add-btn cart-toggle-btn" id="cartBtn" type="button" hidden>🛒 Lista <span id="cartCount">0</span></button>
+      <button class="add-btn cart-toggle-btn" id="planBtn" type="button">📅 Plan semanal</button>
+      <button class="add-btn cart-toggle-btn" id="editModeBtn" type="button">🔒 Modo edición</button>
+      <button class="add-btn" id="addRecipeBtn" type="button" hidden>+ Añadir receta</button>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="count-row">
+    <p class="count-line" id="countLine"></p>
+    <button class="surprise-btn" id="surpriseBtn" type="button" hidden>🎲 Sorpréndeme</button>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="emptyState" hidden>
+    <div class="display">Aquí no hay nada guardado</div>
+    <div>Prueba otra búsqueda o cambia de categoría.</div>
+  </div>
+  <button class="loadmore" id="loadMore" hidden>Ver más recetas</button>
+</div>
+
+<div id="overlayRoot"></div>
+
+<script>
+(function(){
+  const API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/store-api";
+  const PASSKEY = "recetario_passcode_v1";
+
+  const CATEGORY_ORDER = ["Entrantes y Aperitivos","Sopas y Cremas","Ensaladas","Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y Bocadillos","Salsas","Postres","Desayunos","Bebe","Otras"];
+  const CATEGORY_LABEL = { "Sandwiches y Bocadillos": "Sándwiches y Bocadillos", "Verduras": "Recetas con Verduras", "Bebe": "Recetas Bebé" };
+  function catLabel(c) { return CATEGORY_LABEL[c] || c; }
+  const FAVKEY = "recetario_favs_v1";
+  const CARTKEY = "recetario_cart_v1";
+  const PAGE_SIZE = 39;
+
+  let recipes = [];
+  let favs = new Set();
+  try { favs = new Set(JSON.parse(localStorage.getItem(FAVKEY) || "[]")); } catch(e) {}
+  let cart = new Set();
+  try { cart = new Set(JSON.parse(localStorage.getItem(CARTKEY) || "[]")); } catch(e) {}
+
+  let state = { q: "", cat: "TODAS", visible: PAGE_SIZE };
+
+  const grid = document.getElementById('grid');
+  const chipsEl = document.getElementById('chips');
+  const searchEl = document.getElementById('search');
+  const countLine = document.getElementById('countLine');
+  const emptyState = document.getElementById('emptyState');
+  const loadMoreBtn = document.getElementById('loadMore');
+  const overlayRoot = document.getElementById('overlayRoot');
+  const addRecipeBtn = document.getElementById('addRecipeBtn');
+  addRecipeBtn.addEventListener('click', () => openAddForm());
+  const cartBtn = document.getElementById('cartBtn');
+  cartBtn.addEventListener('click', () => openCart());
+  const planBtn = document.getElementById('planBtn');
+  planBtn.addEventListener('click', () => openPlanView());
+  const editModeBtn = document.getElementById('editModeBtn');
+  editModeBtn.addEventListener('click', () => openPasscodeForm());
+  const surpriseBtn = document.getElementById('surpriseBtn');
+  surpriseBtn.addEventListener('click', () => surpriseMe());
+
+  function saveFavs() {
+    try { localStorage.setItem(FAVKEY, JSON.stringify([...favs])); } catch(e) {}
+    document.getElementById('statFav').textContent = favs.size;
+  }
+
+  function saveCart() {
+    try { localStorage.setItem(CARTKEY, JSON.stringify([...cart])); } catch(e) {}
+    cartBtn.hidden = cart.size === 0;
+    document.getElementById('cartCount').textContent = cart.size;
+  }
+
+  function toggleCart(id, el) {
+    if (cart.has(id)) { cart.delete(id); el.classList.remove('on'); el.textContent = '🛒'; }
+    else { cart.add(id); el.classList.add('on'); el.textContent = '✓'; }
+    saveCart();
+  }
+  saveCart();
+
+  function surpriseMe() {
+    const filtered = recipes.filter(matches);
+    if (!filtered.length) return;
+    const pick = filtered[Math.floor(Math.random() * filtered.length)];
+    openDetail(pick);
+  }
+
+  function norm(s) {
+    return (s || "").toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
+  function hasRealRecipeContent(r) {
+    return (r.ingredients && r.ingredients.length > 0) || (r.steps && r.steps.length > 0);
+  }
+
+  function isLowContent(r) {
+    return !hasRealRecipeContent(r);
+  }
+
+  function searchHaystack(r) {
+    return norm(r.title) + " " + norm(catLabel(r.category)) + " " + norm((r.ingredients||[]).join(' ')) + " " + norm((r.steps||[]).join(' ')) + " " + norm((r.tips||[]).join(' '));
+  }
+
+  const SYNONYM_GROUPS = [
+    ["pasta","espague","macarron","tallarin","tagliatelle","fideo","lasagna","lasana","canelon","raviol","gnocchi","noqui","penne","fusilli","spaghetti","linguine","fetuccin","tortellini"],
+    ["legumbre","garbanzo","alubia","lenteja"],
+    ["carne","pollo","pavo","ternera","cerdo","vacuno","cordero","buey"],
+    ["pescado","marisco","salmon","atun","merluza","bacalao","lubina","gamba","langostino","mejillon","calamar","pulpo","sepia","sardina","trucha","boqueron"]
+  ];
+
+  function expandTerm(word) {
+    for (const group of SYNONYM_GROUPS) {
+      if (group.some(g => word.includes(g) || g.includes(word))) return group;
+    }
+    return null;
+  }
+
+  function titleCatHaystack(r) {
+    return norm(r.title) + " " + norm(catLabel(r.category));
+  }
+
+  function queryMatchesRecipe(normalizedQuery, r) {
+    const words = normalizedQuery.split(/\s+/).filter(Boolean);
+    if (!words.length) return true;
+    const fullHay = searchHaystack(r);
+    const titleHay = titleCatHaystack(r);
+    return words.every(w => {
+      const group = expandTerm(w);
+      if (group) return group.some(v => titleHay.includes(v));
+      return fullHay.includes(w);
+    });
+  }
+
+  function isMix(r) { return !!r.mix; }
+
+  function matches(r) {
+    if (hiddenIds.has(r.id)) return false;
+    if (state.cat === "MIX") { if (!isMix(r)) return false; }
+    else {
+      if (isMix(r)) return false;
+      if (isLowContent(r) && state.cat !== "REVISAR") return false;
+      if (state.cat === "FAV") { if (!favs.has(r.id)) return false; }
+      else if (state.cat === "REVISAR") { if (!isLowContent(r)) return false; }
+      else if (state.cat !== "TODAS" && r.category !== state.cat) return false;
+    }
+    if (state.q) {
+      if (!queryMatchesRecipe(state.q, r)) return false;
+    }
+    return true;
+  }
+
+  function buildChips() {
+    const counts = {};
+    let lowContentCount = 0;
+    let mixCount = 0;
+    recipes.forEach(r => {
+      if (hiddenIds.has(r.id)) return;
+      if (isMix(r)) { mixCount++; return; }
+      if (isLowContent(r)) { lowContentCount++; return; }
+      counts[r.category] = (counts[r.category]||0) + 1;
+    });
+    const cats = CATEGORY_ORDER.filter(c => counts[c]);
+    const all = [
+      {key:"TODAS", label:"Todas", n: recipes.length - hiddenIds.size - lowContentCount - mixCount},
+      ...cats.map(c => ({key:c, label:catLabel(c), n: counts[c]})),
+      {key:"FAV", label:"★ Favoritas", n: favs.size},
+    ];
+    if (lowContentCount > 0) all.push({key:"REVISAR", label:"⚠️ Revisar", n: lowContentCount});
+    if (mixCount > 0) all.push({key:"MIX", label:"🎭 Mix", n: mixCount});
+    chipsEl.innerHTML = "";
+    all.forEach(c => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (state.cat === c.key ? ' active' : '');
+      b.innerHTML = escapeHtml(c.label) + ' <span class="n">' + c.n + '</span>';
+      b.setAttribute('aria-pressed', state.cat === c.key ? 'true' : 'false');
+      b.addEventListener('click', () => { state.cat = c.key; state.visible = PAGE_SIZE; render(); });
+      chipsEl.appendChild(b);
+    });
+  }
+
+  function snippet(text) {
+    return (text || "").replace(/\s+/g, ' ').trim().slice(0, 170);
+  }
+
+  function cardSnippetText(r) {
+    if (r.steps && r.steps.length) return r.steps.join(' ');
+    if (r.ingredients && r.ingredients.length) return r.ingredients.join(', ');
+    if (r.tips && r.tips.length) return r.tips.join(' ');
+    return '';
+  }
+
+  function render() {
+    const filtered = recipes.filter(matches);
+    const shown = filtered.slice(0, state.visible);
+
+    countLine.textContent = filtered.length + (filtered.length === 1 ? ' receta encontrada' : ' recetas encontradas');
+    emptyState.hidden = filtered.length !== 0;
+    grid.hidden = filtered.length === 0;
+    loadMoreBtn.hidden = filtered.length <= shown.length;
+    surpriseBtn.hidden = filtered.length === 0;
+
+    grid.innerHTML = "";
+    const frag = document.createDocumentFragment();
+    shown.forEach(r => {
+      const card = document.createElement('button');
+      card.className = 'card';
+      card.type = 'button';
+      const isFav = favs.has(r.id);
+      const inCart = cart.has(r.id);
+      const rating = myRatings[r.id] || 0;
+      card.innerHTML =
+        '<div class="card-top"><h3>' + escapeHtml(r.title) + '</h3>' +
+        '<span style="display:flex; gap:4px; flex:none">' +
+        '<span class="cart-btn' + (inCart?' on':'') + '" data-cart="' + r.id + '" role="button" aria-label="añadir a la lista de la compra">' + (inCart ? '✓' : '🛒') + '</span>' +
+        '<span class="fav-btn' + (isFav?' on':'') + '" data-fav="' + r.id + '" role="button" aria-label="favorita">' + (isFav ? '★' : '☆') + '</span>' +
+        '</span></div>' +
+        '<span class="tag">' + escapeHtml(catLabel(r.category)) + '</span>' +
+        (rating > 0 ? '<span class="card-rating">' + '★'.repeat(rating) + '</span>' : '') +
+        '<div class="snippet">' + formatRichText(snippet(cardSnippetText(r))) + '</div>';
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('[data-fav],[data-cart]')) return;
+        openDetail(r);
+      });
+      card.querySelector('[data-fav]').addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleFav(r.id, e.target);
+      });
+      card.querySelector('[data-cart]').addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleCart(r.id, e.target);
+      });
+      frag.appendChild(card);
+    });
+    grid.appendChild(frag);
+
+    buildChips();
+  }
+
+  function toggleFav(id, el) {
+    if (favs.has(id)) { favs.delete(id); el.classList.remove('on'); el.textContent = '☆'; }
+    else { favs.add(id); el.classList.add('on'); el.textContent = '★'; }
+    saveFavs();
+    render();
+  }
+
+  function escapeHtml(s) {
+    return (s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  function formatRichText(s) {
+    return escapeHtml(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  }
+
+  function starsHtml(rating, interactive) {
+    let out = '<span class="rating-stars"' + (interactive ? ' id="ratingStars"' : '') + '>';
+    for (let i = 1; i <= 5; i++) {
+      out += '<span class="star' + (i <= rating ? ' on' : '') + '"' + (interactive ? ' data-n="' + i + '" role="button" aria-label="' + i + ' estrellas"' : '') + '>' + (i <= rating ? '★' : '☆') + '</span>';
+    }
+    return out + '</span>';
+  }
+
+  function bodyHtml(r) {
+    let html = '';
+    if (r.ingredients && r.ingredients.length) {
+      html += '<h3>Ingredientes</h3><ul>' + r.ingredients.map(i => '<li>' + formatRichText(i) + '</li>').join('') + '</ul>';
+    }
+    if (r.steps && r.steps.length) {
+      html += '<h3>Elaboración</h3><ol>' + r.steps.map(s => '<li>' + formatRichText(s) + '</li>').join('') + '</ol>';
+    }
+    if (r.tips && r.tips.length) {
+      html += '<h3>Tips</h3><ul>' + r.tips.map(t => '<li>' + formatRichText(t) + '</li>').join('') + '</ul>';
+    }
+    if (!html) html = '<p style="color:var(--ink-soft)">Sin contenido todavía.</p>';
+    return html;
+  }
+
+  function openDetail(r, editing) {
+    const isFav = favs.has(r.id);
+    const rating = myRatings[r.id] || 0;
+    const note = myNotes[r.id] || '';
+    const titleBlock = editing
+      ? '<input type="text" id="editTitle" class="edit-title-input" value="' + escapeAttr(r.title) + '">'
+      : '<h2>' + escapeHtml(r.title) + '</h2>';
+    const bodyBlock = editing
+      ? '<div class="edit-toolbar"><button type="button" id="boldBtn" class="bold-btn" title="Negrita">B</button><span class="form-hint">Selecciona texto y pulsa B para ponerlo en negrita · un elemento por línea</span></div>' +
+        '<label class="edit-section-label" for="editIngredients">Ingredientes</label>' +
+        '<textarea id="editIngredients" class="edit-text-input" style="min-height:110px">' + escapeHtml((r.ingredients||[]).join('\n')) + '</textarea>' +
+        '<label class="edit-section-label" for="editSteps">Elaboración</label>' +
+        '<textarea id="editSteps" class="edit-text-input" style="min-height:160px">' + escapeHtml((r.steps||[]).join('\n')) + '</textarea>' +
+        '<label class="edit-section-label" for="editTips">Tips</label>' +
+        '<textarea id="editTips" class="edit-text-input" style="min-height:80px">' + escapeHtml((r.tips||[]).join('\n')) + '</textarea>'
+      : '<div class="body-text">' + bodyHtml(r) + '</div>';
+    overlayRoot.innerHTML =
+      '<div class="overlay" id="ov">' +
+        '<div class="sheet" role="dialog" aria-modal="true">' +
+          '<div class="sheet-top">' + titleBlock +
+          '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
+          '<div class="meta-row">' +
+            (canEdit
+              ? '<select class="cat-select" id="catSelect" aria-label="Cambiar categoría">' +
+                  CATEGORY_ORDER.map(c => '<option value="' + escapeAttr(c) + '"' + (c === r.category ? ' selected' : '') + '>' + escapeHtml(catLabel(c)) + '</option>').join('') +
+                '</select>'
+              : '<span class="tag">' + escapeHtml(catLabel(r.category)) + '</span>') +
+            '<span class="fav-btn' + (isFav?' on':'') + '" id="detailFav" role="button" tabindex="0" aria-label="favorita" style="font-size:20px">' + (isFav?'★':'☆') + '</span>' +
+          '</div>' +
+          bodyBlock +
+          (editing
+            ? '<p style="margin-top:12px; display:flex; gap:10px">' +
+                '<button class="submit-btn" id="saveEditBtn" type="button" style="padding:8px 18px; font-size:14px">Guardar cambios</button>' +
+                '<button class="delete-link" id="cancelEditBtn" type="button">Cancelar</button>' +
+              '</p>'
+            : (canEdit ? '<p style="margin-top:10px"><button class="delete-link" id="editBtn" type="button">✏️ Editar título y texto</button></p>' : '')) +
+          (canEdit && !editing
+            ? '<div class="notes-box">' +
+                '<div class="notes-row"><span class="notes-label">Mi valoración</span>' + starsHtml(rating, true) + '</div>' +
+                '<label class="notes-label" for="noteText">Mis notas</label>' +
+                '<textarea id="noteText" placeholder="Ej. le pondría menos sal, muy rica, la hice el 12/3...">' + escapeHtml(note) + '</textarea>' +
+              '</div>'
+            : '') +
+          (!editing
+            ? '<p style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap">' +
+                (r.url ? '<a class="ig-link" href="' + escapeAttr(r.url) + '" target="_blank" rel="noopener noreferrer">Ver publicación original en Instagram ↗</a>' : '<span></span>') +
+                (canEdit ? '<button class="delete-link" id="deleteBtn" type="button">Eliminar de mi recetario</button>' : '') +
+              '</p>'
+            : '') +
+        '</div>' +
+      '</div>';
+    document.getElementById('closeBtn').addEventListener('click', closeDetail);
+    document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
+    document.getElementById('detailFav').addEventListener('click', (e) => toggleFav(r.id, e.currentTarget));
+    document.addEventListener('keydown', escClose);
+    const sel = document.getElementById('catSelect');
+    if (sel) sel.addEventListener('change', () => changeCategory(r, sel.value));
+    const delBtn = document.getElementById('deleteBtn');
+    if (delBtn) delBtn.addEventListener('click', () => archiveRecipe(r));
+    const editBtn = document.getElementById('editBtn');
+    if (editBtn) editBtn.addEventListener('click', () => openDetail(r, true));
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    if (cancelEditBtn) cancelEditBtn.addEventListener('click', () => openDetail(r, false));
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    if (saveEditBtn) saveEditBtn.addEventListener('click', () => {
+      const newTitle = document.getElementById('editTitle').value.trim();
+      const newIngredients = linesFromTextarea(document.getElementById('editIngredients'));
+      const newSteps = linesFromTextarea(document.getElementById('editSteps'));
+      const newTips = linesFromTextarea(document.getElementById('editTips'));
+      if (!newTitle) return;
+      saveEdit(r, newTitle, newIngredients, newSteps, newTips);
+      openDetail(r, false);
+    });
+    const boldBtn = document.getElementById('boldBtn');
+    if (boldBtn) boldBtn.addEventListener('click', () => {
+      const active = document.activeElement;
+      const ta = (active && active.tagName === 'TEXTAREA') ? active : document.getElementById('editSteps');
+      const start = ta.selectionStart;
+      const end = ta.selectionEnd;
+      const selected = ta.value.slice(start, end);
+      const replacement = '**' + (selected || 'texto') + '**';
+      ta.value = ta.value.slice(0, start) + replacement + ta.value.slice(end);
+      ta.focus();
+      if (selected) {
+        ta.setSelectionRange(start, start + replacement.length);
+      } else {
+        ta.setSelectionRange(start + 2, start + 2 + 'texto'.length);
+      }
+    });
+    const starsEl = document.getElementById('ratingStars');
+    if (starsEl) starsEl.querySelectorAll('.star').forEach(s => {
+      s.addEventListener('click', () => {
+        const n = parseInt(s.getAttribute('data-n'), 10);
+        const newRating = (myRatings[r.id] || 0) === n ? 0 : n;
+        saveRating(r.id, newRating);
+        starsEl.querySelectorAll('.star').forEach((s2, idx) => {
+          s2.classList.toggle('on', idx < newRating);
+          s2.textContent = idx < newRating ? '★' : '☆';
+        });
+      });
+    });
+    const noteEl = document.getElementById('noteText');
+    if (noteEl) {
+      let noteTimer;
+      noteEl.addEventListener('input', () => {
+        clearTimeout(noteTimer);
+        noteTimer = setTimeout(() => saveNote(r.id, noteEl.value), 500);
+      });
+    }
+  }
+  function escClose(e) { if (e.key === 'Escape') closeDetail(); }
+  function closeDetail() { overlayRoot.innerHTML = ""; document.removeEventListener('keydown', escClose); planViewOpen = false; }
+
+  function escapeAttr(s) { return escapeHtml(s); }
+
+  let canEdit = false;
+  const dbOverrides = {};
+  const hiddenIds = new Set();
+  const myRatings = {};
+  const myNotes = {};
+  const textEdits = {};
+  const pollTimers = {};
+
+  function applyOverrides() {
+    recipes.forEach(r => {
+      if (r.baseCategory === undefined) r.baseCategory = r.category;
+      r.category = dbOverrides[r.id] || r.baseCategory;
+      if (r.baseTitle === undefined) r.baseTitle = r.title;
+      if (r.baseIngredients === undefined) r.baseIngredients = r.ingredients || [];
+      if (r.baseSteps === undefined) r.baseSteps = r.steps || [];
+      if (r.baseTips === undefined) r.baseTips = r.tips || [];
+      const edit = textEdits[r.id];
+      r.title = (edit && edit.title) || r.baseTitle;
+      r.ingredients = edit ? edit.ingredients : r.baseIngredients;
+      r.steps = edit ? edit.steps : r.baseSteps;
+      r.tips = edit ? edit.tips : r.baseTips;
+    });
+  }
+
+  function linesFromTextarea(ta) {
+    return ta.value.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  }
+
+  // ---- Backend (Supabase edge function) -----------------------------------
+
+  function getStoredPasscode() {
+    try { return localStorage.getItem(PASSKEY) || ''; } catch (e) { return ''; }
+  }
+  function setStoredPasscode(code) {
+    try { localStorage.setItem(PASSKEY, code); } catch (e) {}
+  }
+  function clearStoredPasscode() {
+    try { localStorage.removeItem(PASSKEY); } catch (e) {}
+  }
+
+  async function verifyPasscode(code) {
+    try {
+      const res = await fetch(API_BASE + '?verify=1', { headers: { 'X-Passcode': code } });
+      const j = await res.json();
+      return !!j.valid;
+    } catch (e) { return false; }
+  }
+
+  async function apiGetCollection(collection) {
+    const headers = {};
+    const code = getStoredPasscode();
+    if (code) headers['X-Passcode'] = code;
+    try {
+      const res = await fetch(API_BASE + '?collection=' + encodeURIComponent(collection), { headers });
+      if (!res.ok) return [];
+      const j = await res.json();
+      return j.docs || [];
+    } catch (e) { console.error('fetch error', collection, e); return []; }
+  }
+
+  async function apiSetDoc(collection, docId, data) {
+    const code = getStoredPasscode();
+    if (!code) return false;
+    try {
+      const res = await fetch(API_BASE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ collection, doc_id: docId, data, passcode: code })
+      });
+      return res.ok;
+    } catch (e) { console.error('write error', collection, docId, e); return false; }
+  }
+
+  function startPolling(name, applyFn, intervalMs) {
+    if (pollTimers[name]) clearInterval(pollTimers[name]);
+    const tick = () => apiGetCollection(name).then(applyFn).catch(e => console.error('poll error', name, e));
+    tick();
+    pollTimers[name] = setInterval(tick, intervalMs);
+  }
+  function stopPolling(name) {
+    if (pollTimers[name]) { clearInterval(pollTimers[name]); delete pollTimers[name]; }
+  }
+
+  function applyOverridesDocs(docs) {
+    for (const k of Object.keys(dbOverrides)) delete dbOverrides[k];
+    docs.forEach(d => { if (d.data && d.data.category) dbOverrides[d.id] = d.data.category; });
+    applyOverrides();
+    render();
+  }
+  function applyManualDocs(docs) {
+    const ids = new Set(docs.map(d => d.id));
+    recipes = recipes.filter(r => !(r.manual && !ids.has(r.id)));
+    docs.forEach(d => upsertManualLocal(d.id, d.data));
+    applyOverrides();
+    updateStats();
+    render();
+  }
+  function applyHiddenDocs(docs) {
+    hiddenIds.clear();
+    docs.forEach(d => { if (d.data && d.data.hidden) hiddenIds.add(d.id); });
+    updateStats();
+    render();
+  }
+  function applyNotesDocs(docs) {
+    for (const k of Object.keys(myRatings)) delete myRatings[k];
+    for (const k of Object.keys(myNotes)) delete myNotes[k];
+    docs.forEach(d => {
+      const data = d.data || {};
+      if (data.rating) myRatings[d.id] = data.rating;
+      myNotes[d.id] = data.note || '';
+    });
+    render();
+  }
+  function applyEditsDocs(docs) {
+    for (const k of Object.keys(textEdits)) delete textEdits[k];
+    docs.forEach(d => { const data = d.data; if (data) textEdits[d.id] = { title: data.title, ingredients: data.ingredients||[], steps: data.steps||[], tips: data.tips||[] }; });
+    applyOverrides();
+    render();
+  }
+  function applyPlanDocs(docs) {
+    plan = {};
+    docs.forEach(d => { plan[d.id] = (d.data && d.data.recipeId) || ''; });
+    if (planViewOpen) openPlanView();
+  }
+
+  async function saveEdit(r, newTitle, newIngredients, newSteps, newTips) {
+    textEdits[r.id] = { title: newTitle, ingredients: newIngredients, steps: newSteps, tips: newTips };
+    r.title = newTitle;
+    r.ingredients = newIngredients;
+    r.steps = newSteps;
+    r.tips = newTips;
+    render();
+    if (canEdit) await apiSetDoc('edits', r.id, { title: newTitle, ingredients: newIngredients, steps: newSteps, tips: newTips });
+  }
+
+  async function changeCategory(r, newCat) {
+    if (newCat === r.category) return;
+    dbOverrides[r.id] = newCat;
+    r.category = newCat;
+    render();
+    if (canEdit) await apiSetDoc('overrides', r.id, { category: newCat });
+  }
+
+  function upsertManualLocal(id, data) {
+    const obj = {
+      id,
+      title: (data && data.title) || 'Receta guardada',
+      category: (data && data.category) || 'Otras',
+      ingredients: (data && data.ingredients) || [],
+      steps: (data && data.steps) || [],
+      tips: (data && data.tips) || [],
+      url: (data && data.url) || '',
+      manual: true
+    };
+    const idx = recipes.findIndex(x => x.id === id);
+    if (idx >= 0) recipes[idx] = obj; else recipes.push(obj);
+  }
+
+  async function archiveRecipe(r) {
+    hiddenIds.add(r.id);
+    closeDetail();
+    updateStats();
+    render();
+    if (canEdit) await apiSetDoc('hidden', r.id, { hidden: true });
+  }
+
+  async function saveRating(id, rating) {
+    myRatings[id] = rating;
+    if (rating === 0) delete myRatings[id];
+    render();
+    if (canEdit) await apiSetDoc('notes', id, { rating, note: myNotes[id] || '' });
+  }
+
+  async function saveNote(id, note) {
+    myNotes[id] = note;
+    if (canEdit) await apiSetDoc('notes', id, { rating: myRatings[id] || 0, note });
+  }
+
+  async function saveNewRecipe(recipeData) {
+    const id = 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    upsertManualLocal(id, recipeData);
+    render();
+    if (canEdit) await apiSetDoc('manual_recipes', id, recipeData);
+    return id;
+  }
+
+  function openAddForm() {
+    overlayRoot.innerHTML =
+      '<div class="overlay" id="ov">' +
+        '<div class="sheet" role="dialog" aria-modal="true">' +
+          '<div class="sheet-top"><h2>Añadir receta</h2>' +
+          '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
+          '<form class="add-form" id="addForm">' +
+            '<label>Título<input type="text" id="f_title" required maxlength="120" placeholder="Ej. Tarta de manzana de la abuela"></label>' +
+            '<label>Categoría<select id="f_cat">' +
+              CATEGORY_ORDER.map(c => '<option value="' + escapeAttr(c) + '">' + escapeHtml(catLabel(c)) + '</option>').join('') +
+            '</select></label>' +
+            '<label>Ingredientes (uno por línea)<textarea id="f_ingredients" placeholder="200 g de harina&#10;2 huevos&#10;..."></textarea></label>' +
+            '<label>Elaboración (un paso por línea)<textarea id="f_steps" placeholder="Mezcla los ingredientes...&#10;Hornea 20 min..."></textarea></label>' +
+            '<label>Tips (opcional, uno por línea)<textarea id="f_tips" placeholder="..."></textarea></label>' +
+            '<label>Enlace (opcional)<input type="url" id="f_url" placeholder="https://www.instagram.com/..."></label>' +
+            '<button type="submit" class="submit-btn">Guardar receta</button>' +
+          '</form>' +
+        '</div>' +
+      '</div>';
+    document.getElementById('closeBtn').addEventListener('click', closeDetail);
+    document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
+    document.addEventListener('keydown', escClose);
+    document.getElementById('f_title').focus();
+    document.getElementById('addForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = document.getElementById('f_title').value.trim();
+      if (!title) return;
+      const recipeData = {
+        title,
+        category: document.getElementById('f_cat').value,
+        ingredients: linesFromTextarea(document.getElementById('f_ingredients')),
+        steps: linesFromTextarea(document.getElementById('f_steps')),
+        tips: linesFromTextarea(document.getElementById('f_tips')),
+        url: document.getElementById('f_url').value.trim()
+      };
+      saveNewRecipe(recipeData);
+      closeDetail();
+    });
+  }
+
+  function renderCartOverlay() {
+    const ids = [...cart];
+    const items = ids.map(id => recipes.find(r => r.id === id)).filter(Boolean);
+    const body = items.length
+      ? items.map(r => {
+          const lines = (r.ingredients && r.ingredients.length) ? r.ingredients : null;
+          const ingredientsHtml = lines
+            ? lines.map(l => '• ' + escapeHtml(l)).join('\n')
+            : '<span class="cart-empty-hint">Sin ingredientes detectados, mira la receta completa.</span>';
+          return '<div class="cart-item">' +
+            '<div class="cart-item-top"><h3>' + escapeHtml(r.title) + '</h3>' +
+            '<button class="cart-remove" data-remove="' + r.id + '" type="button">Quitar</button></div>' +
+            '<div class="cart-ingredients">' + ingredientsHtml + '</div>' +
+          '</div>';
+        }).join('')
+      : '<p class="cart-empty-hint">Añade recetas con el botón 🛒 de cada tarjeta.</p>';
+    overlayRoot.innerHTML =
+      '<div class="overlay" id="ov">' +
+        '<div class="sheet" role="dialog" aria-modal="true">' +
+          '<div class="sheet-top"><h2>Lista de la compra</h2>' +
+          '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
+          (items.length ? '<p style="margin:6px 0 4px"><button class="delete-link" id="clearCartBtn" type="button">Vaciar lista</button></p>' : '') +
+          body +
+        '</div>' +
+      '</div>';
+    document.getElementById('closeBtn').addEventListener('click', closeDetail);
+    document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
+    document.addEventListener('keydown', escClose);
+    const clearBtn = document.getElementById('clearCartBtn');
+    if (clearBtn) clearBtn.addEventListener('click', () => { cart.clear(); saveCart(); render(); closeDetail(); });
+    overlayRoot.querySelectorAll('[data-remove]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        cart.delete(btn.getAttribute('data-remove'));
+        saveCart();
+        render();
+        renderCartOverlay();
+      });
+    });
+  }
+
+  function openCart() { renderCartOverlay(); }
+
+  // ---- Edit-mode passcode ---------------------------------------------------
+
+  function updateEditModeUI() {
+    editModeBtn.textContent = canEdit ? '🔓 Edición activa' : '🔒 Modo edición';
+  }
+
+  function openPasscodeForm() {
+    if (canEdit) {
+      overlayRoot.innerHTML =
+        '<div class="overlay" id="ov">' +
+          '<div class="sheet" role="dialog" aria-modal="true">' +
+            '<div class="sheet-top"><h2>Modo edición</h2>' +
+            '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
+            '<p class="form-hint">La edición está activa en este dispositivo.</p>' +
+            '<p style="margin-top:14px"><button class="delete-link" id="logoutBtn" type="button">Salir del modo edición aquí</button></p>' +
+          '</div>' +
+        '</div>';
+      document.getElementById('closeBtn').addEventListener('click', closeDetail);
+      document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
+      document.addEventListener('keydown', escClose);
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        clearStoredPasscode();
+        canEdit = false;
+        addRecipeBtn.hidden = true;
+        stopPolling('plan');
+        initLocalPlan();
+        updateEditModeUI();
+        closeDetail();
+        render();
+      });
+      return;
+    }
+    overlayRoot.innerHTML =
+      '<div class="overlay" id="ov">' +
+        '<div class="sheet" role="dialog" aria-modal="true">' +
+          '<div class="sheet-top"><h2>Modo edición</h2>' +
+          '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
+          '<p class="form-hint">Introduce el código para editar recetas y compartir el plan semanal.</p>' +
+          '<form class="add-form" id="passForm">' +
+            '<label>Código<input type="password" id="f_pass" autocomplete="off" required></label>' +
+            '<button type="submit" class="submit-btn">Entrar</button>' +
+          '</form>' +
+          '<p class="form-hint" id="passError" style="color:var(--accent-2); margin-top:8px"></p>' +
+        '</div>' +
+      '</div>';
+    document.getElementById('closeBtn').addEventListener('click', closeDetail);
+    document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
+    document.addEventListener('keydown', escClose);
+    document.getElementById('f_pass').focus();
+    document.getElementById('passForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const code = document.getElementById('f_pass').value.trim();
+      const ok = await verifyPasscode(code);
+      if (ok) {
+        setStoredPasscode(code);
+        canEdit = true;
+        addRecipeBtn.hidden = false;
+        updateEditModeUI();
+        startPolling('plan', applyPlanDocs, 15000);
+        closeDetail();
+        render();
+      } else {
+        document.getElementById('passError').textContent = 'Código incorrecto.';
+      }
+    });
+  }
+
+  // ---- Weekly plan ------------------------------------------------------
+
+  const PLAN_DAYS = [
+    {key:"lunes", label:"Lunes"},
+    {key:"martes", label:"Martes"},
+    {key:"miercoles", label:"Miércoles"},
+    {key:"jueves", label:"Jueves"},
+    {key:"viernes", label:"Viernes"},
+    {key:"sabado", label:"Sábado"},
+    {key:"domingo", label:"Domingo"}
+  ];
+  const PLAN_SLOTS = [{key:"comida", label:"Comida"}, {key:"cena", label:"Cena"}, {key:"bebe", label:"Bebé"}];
+
+  const PLANKEY = "recetario_local_plan_v1";
+  let plan = {};
+  let planViewOpen = false;
+
+  function initLocalPlan() {
+    try { plan = JSON.parse(localStorage.getItem(PLANKEY) || "{}"); } catch (e) { plan = {}; }
+  }
+  function saveLocalPlan() {
+    try { localStorage.setItem(PLANKEY, JSON.stringify(plan)); } catch (e) {}
+  }
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function savePlanSlot(slotKey, recipeId, skipRender) {
+    plan[slotKey] = recipeId;
+    if (!skipRender && planViewOpen) openPlanView();
+    if (canEdit) {
+      apiSetDoc('plan', slotKey, { recipeId: recipeId || '' });
+    } else {
+      saveLocalPlan();
+    }
+  }
+
+  const MEAL_CATEGORIES = new Set(["Entrantes y Aperitivos","Sopas y Cremas","Ensaladas","Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y Bocadillos"]);
+  const GUIDE_TITLE_RE = /^(gu[ií]a|c[oó]mo|consejo|truco|idea[s]?|primeros alimentos|qu[eé]\s|men[uú]|plan (de|semanal)|batch cooking|especias para|alimentaci[oó]n|\d+\s+(ideas?|formas?|recetas?|maneras?|trucos?|consejos?)\b)/i;
+  const BABY_TREAT_RE = /(porridge|papilla|helado|gelatina|torrija|kinder|compota|mousse|flan|pud[ií]n|bizcocho|galleta|batido|yogur)/i;
+
+  function isRealMeal(r) {
+    return MEAL_CATEGORIES.has(r.category) && !GUIDE_TITLE_RE.test((r.title || '').trim());
+  }
+  function isRealBabyDish(r) {
+    return r.category === 'Bebe' && !GUIDE_TITLE_RE.test((r.title || '').trim()) && !BABY_TREAT_RE.test(r.title || '');
+  }
+
+  function titleGroupTags(r) {
+    const words = norm(r.title + ' ' + catLabel(r.category)).split(/\s+/);
+    const tags = new Set();
+    words.forEach(w => {
+      SYNONYM_GROUPS.forEach((group, i) => {
+        if (group.some(g => w.includes(g) || g.includes(w))) tags.add(i);
+      });
+    });
+    return tags;
+  }
+  function sharesGroup(rA, rB) {
+    const tagsA = titleGroupTags(rA);
+    for (const t of titleGroupTags(rB)) if (tagsA.has(t)) return true;
+    return false;
+  }
+
+  function autofillPlan() {
+    const usedAdult = new Set();
+    const usedBaby = new Set();
+    const isUsable = r => !hiddenIds.has(r.id) && !isLowContent(r);
+    const favPool = shuffle(recipes.filter(r => favs.has(r.id) && isUsable(r) && isRealMeal(r)));
+    const ratedPool = shuffle(recipes.filter(r => (myRatings[r.id]||0) >= 4 && isUsable(r) && isRealMeal(r) && !favs.has(r.id)));
+    const anyPool = shuffle(recipes.filter(r => isUsable(r) && isRealMeal(r) && !favs.has(r.id) && (myRatings[r.id]||0) < 4));
+    const adultPool = [...favPool, ...ratedPool, ...anyPool];
+    const babyPool = shuffle(recipes.filter(r => isUsable(r) && isRealBabyDish(r)));
+
+    function nextFrom(pool, used, idxRef) {
+      if (!pool.length) return null;
+      for (let tries = 0; tries < pool.length; tries++) {
+        const cand = pool[idxRef.i % pool.length];
+        idxRef.i++;
+        if (!used.has(cand.id) || used.size >= pool.length) { used.add(cand.id); return cand; }
+      }
+      return pool[0];
+    }
+    const adultIdxRef = { i: 0 };
+    const babyIdxRef = { i: 0 };
+    const recipeById = id => recipes.find(x => x.id === id);
+
+    PLAN_DAYS.forEach(day => {
+      const keys = { comida: day.key + '_comida', cena: day.key + '_cena', bebe: day.key + '_bebe' };
+
+      ['comida', 'cena'].forEach(slotName => {
+        const key = keys[slotName];
+        if (plan[key]) return;
+        const bebeR = plan[keys.bebe] ? recipeById(plan[keys.bebe]) : null;
+        let pick = bebeR ? adultPool.find(a => !usedAdult.has(a.id) && sharesGroup(a, bebeR)) : null;
+        if (!pick) pick = nextFrom(adultPool, usedAdult, adultIdxRef);
+        else usedAdult.add(pick.id);
+        if (pick) savePlanSlot(key, pick.id, true);
+      });
+
+      if (!plan[keys.bebe]) {
+        const comidaR = plan[keys.comida] ? recipeById(plan[keys.comida]) : null;
+        const cenaR = plan[keys.cena] ? recipeById(plan[keys.cena]) : null;
+        const matchesArr = babyPool.filter(b => (cenaR && sharesGroup(b, cenaR)) || (comidaR && sharesGroup(b, comidaR)));
+        let pick = matchesArr.find(b => !usedBaby.has(b.id)) || matchesArr[0] || null;
+        if (pick) usedBaby.add(pick.id);
+        else pick = nextFrom(babyPool, usedBaby, babyIdxRef);
+        if (pick) savePlanSlot(keys.bebe, pick.id, true);
+      }
+    });
+    openPlanView();
+  }
+
+  function clearPlan() {
+    PLAN_DAYS.forEach(day => {
+      PLAN_SLOTS.forEach(slot => {
+        savePlanSlot(day.key + '_' + slot.key, '', true);
+      });
+    });
+    openPlanView();
+  }
+
+  function openPlanPicker(slotKey) {
+    const isBebe = slotKey.endsWith('_bebe');
+    let filterText = '';
+
+    function listHtml() {
+      const q = norm(filterText);
+      let pool = recipes.filter(r => !hiddenIds.has(r.id) && !isLowContent(r));
+      if (isBebe) pool = pool.filter(r => r.category === 'Bebe');
+      if (q) pool = pool.filter(r => queryMatchesRecipe(q, r));
+      pool = pool.slice(0, 60);
+      if (!pool.length) return '<p class="cart-empty-hint">Sin resultados.</p>';
+      return pool.map(r => '<button type="button" class="plan-pick-item" data-assign="' + r.id + '">' + escapeHtml(r.title) + ' <span class="tag" style="margin-left:6px">' + escapeHtml(catLabel(r.category)) + '</span></button>').join('');
+    }
+
+    function renderPicker() {
+      overlayRoot.innerHTML =
+        '<div class="overlay" id="ov">' +
+          '<div class="sheet" role="dialog" aria-modal="true">' +
+            '<div class="sheet-top"><h2>Elegir receta</h2>' +
+            '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
+            '<div class="searchbox" style="margin-bottom:12px">' +
+              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>' +
+              '<input id="pickSearch" type="text" placeholder="Buscar receta..." autocomplete="off" value="' + escapeAttr(filterText) + '">' +
+            '</div>' +
+            '<div id="pickList" class="plan-pick-list">' + listHtml() + '</div>' +
+          '</div>' +
+        '</div>';
+      document.getElementById('closeBtn').addEventListener('click', () => openPlanView());
+      document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') openPlanView(); });
+      document.addEventListener('keydown', escClose);
+      const input = document.getElementById('pickSearch');
+      input.focus();
+      input.addEventListener('input', () => {
+        filterText = input.value;
+        document.getElementById('pickList').innerHTML = listHtml();
+        document.getElementById('pickList').querySelectorAll('[data-assign]').forEach(bindAssign);
+      });
+      document.getElementById('pickList').querySelectorAll('[data-assign]').forEach(bindAssign);
+    }
+    function bindAssign(btn) {
+      btn.addEventListener('click', () => {
+        savePlanSlot(slotKey, btn.getAttribute('data-assign'), true);
+        openPlanView();
+      });
+    }
+    renderPicker();
+  }
+
+  function openPlanView() {
+    planViewOpen = true;
+    const daysHtml = PLAN_DAYS.map(day => {
+      const slotsHtml = PLAN_SLOTS.map(slot => {
+        const key = day.key + '_' + slot.key;
+        const recipeId = plan[key];
+        const r = recipeId ? recipes.find(x => x.id === recipeId) : null;
+        return '<div class="plan-slot">' +
+          '<span class="plan-slot-label">' + escapeHtml(slot.label) + '</span>' +
+          '<span class="plan-slot-recipe' + (r ? '' : ' empty') + '" data-slotpick="' + key + '">' +
+            (r ? escapeHtml(r.title) : 'Elegir receta…') +
+          '</span>' +
+          (r ? '<button type="button" class="plan-clear-btn" data-slotclear="' + key + '" aria-label="Quitar">✕</button>' : '') +
+        '</div>';
+      }).join('');
+      return '<div class="plan-day"><h3>' + escapeHtml(day.label) + '</h3>' + slotsHtml + '</div>';
+    }).join('');
+
+    overlayRoot.innerHTML =
+      '<div class="overlay" id="ov">' +
+        '<div class="sheet" role="dialog" aria-modal="true">' +
+          '<div class="sheet-top"><h2>Plan semanal</h2>' +
+          '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
+          '<p class="form-hint" style="margin:-4px 0 12px">' + (canEdit ? 'Plan compartido: lo ves igual en todos los dispositivos con el código de edición.' : 'Tu plan personal: se guarda solo en este dispositivo/navegador.') + '</p>' +
+          '<div class="plan-toolbar">' +
+            '<button type="button" class="surprise-btn" id="autofillBtn">🎲 Planifícamela</button>' +
+            '<button type="button" class="delete-link" id="clearPlanBtn">Vaciar plan</button>' +
+          '</div>' +
+          daysHtml +
+        '</div>' +
+      '</div>';
+    document.getElementById('closeBtn').addEventListener('click', closeDetail);
+    document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
+    document.addEventListener('keydown', escClose);
+    document.getElementById('autofillBtn').addEventListener('click', autofillPlan);
+    document.getElementById('clearPlanBtn').addEventListener('click', clearPlan);
+    overlayRoot.querySelectorAll('[data-slotpick]').forEach(el => {
+      el.addEventListener('click', () => openPlanPicker(el.getAttribute('data-slotpick')));
+    });
+    overlayRoot.querySelectorAll('[data-slotclear]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        savePlanSlot(el.getAttribute('data-slotclear'), '');
+      });
+    });
+  }
+
+  // ---- Boot ---------------------------------------------------------------
+
+  async function initRemote() {
+    const code = getStoredPasscode();
+    if (code) {
+      canEdit = await verifyPasscode(code);
+      if (!canEdit) clearStoredPasscode();
+    }
+    if (canEdit) addRecipeBtn.hidden = false;
+    updateEditModeUI();
+
+    startPolling('overrides', applyOverridesDocs, 25000);
+    startPolling('manual_recipes', applyManualDocs, 25000);
+    startPolling('hidden', applyHiddenDocs, 25000);
+    startPolling('notes', applyNotesDocs, 25000);
+    startPolling('edits', applyEditsDocs, 25000);
+    if (canEdit) {
+      startPolling('plan', applyPlanDocs, 15000);
+    } else {
+      initLocalPlan();
+    }
+  }
+
+  let debounceTimer;
+  searchEl.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      state.q = norm(searchEl.value.trim());
+      state.visible = PAGE_SIZE;
+      render();
+    }, 120);
+  });
+
+  loadMoreBtn.addEventListener('click', () => {
+    state.visible += PAGE_SIZE;
+    render();
+  });
+
+  function updateStats() {
+    const visible = recipes.filter(r => !hiddenIds.has(r.id));
+    document.getElementById('statTotal').textContent = visible.length;
+    document.getElementById('statCats').textContent = new Set(visible.map(r=>r.category)).size;
+  }
+
+  fetch('recipes.json')
+    .then(r => r.json())
+    .then(data => {
+      recipes = data;
+      applyOverrides();
+      updateStats();
+      document.getElementById('statFav').textContent = favs.size;
+      render();
+    })
+    .catch(err => {
+      countLine.textContent = "No se pudieron cargar las recetas.";
+      console.error(err);
+    });
+
+  initRemote();
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(e => console.error('sw register failed', e));
+    });
+  }
+})();
+</script>
+</body>
+</html>
