@@ -1,5 +1,5 @@
-const CACHE_NAME = "recetario-shell-v1";
-const SHELL_FILES = ["/", "/index.html", "/manifest.json", "/icon.svg"];
+const CACHE_NAME = "recetario-shell-v2";
+const SHELL_FILES = ["/manifest.json", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -23,8 +23,12 @@ self.addEventListener("fetch", (event) => {
   // Never cache calls to the Supabase edge function: that data must stay live.
   if (url.hostname.endsWith("supabase.co")) return;
 
-  if (url.pathname.endsWith("recipes.json")) {
-    // Network-first for recipe data so updates show up; cache as an offline fallback.
+  // Network-first for the HTML shell and the recipe data, so a new deploy
+  // shows up immediately instead of being stuck behind a stale cache; only
+  // fall back to the cached copy when actually offline.
+  const isHtmlShell = req.mode === "navigate" || url.pathname === "/" || url.pathname.endsWith("index.html");
+  const isRecipesData = url.pathname.endsWith("recipes.json");
+  if (isHtmlShell || isRecipesData) {
     event.respondWith(
       fetch(req).then((res) => {
         const copy = res.clone();
@@ -35,7 +39,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Cache-first for the app shell (HTML/CSS/JS/icons), falling back to network.
+  // Cache-first for the rest of the static shell (icons, manifest, recipe pages).
   event.respondWith(
     caches.match(req).then((cached) => cached || fetch(req).then((res) => {
       const copy = res.clone();
