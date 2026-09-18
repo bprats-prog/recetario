@@ -839,6 +839,7 @@
 
   function openDetail(r, editing) {
     const isFav = favs.has(r.id);
+    const inCart = cart.has(r.id);
     const rating = myRatings[r.id] || 0;
     const note = myNotes[r.id] || '';
     const titleBlock = editing
@@ -864,7 +865,10 @@
                   CATEGORY_ORDER.map(c => '<option value="' + escapeAttr(c) + '"' + (c === r.category ? ' selected' : '') + '>' + escapeHtml(catLabel(c)) + '</option>').join('') +
                 '</select>'
               : '<span class="tag">' + escapeHtml(catLabel(r.category)) + '</span>') +
-            '<span class="fav-btn' + (isFav?' on':'') + '" id="detailFav" role="button" tabindex="0" aria-label="favorita" style="font-size:20px">' + (isFav?'★':'☆') + '</span>' +
+            '<span style="display:flex; gap:10px; margin-left:auto">' +
+              '<span class="cart-btn' + (inCart?' on':'') + '" id="detailCart" role="button" tabindex="0" aria-label="añadir a la lista de la compra" style="font-size:20px">' + (inCart?'✓':'🛒') + '</span>' +
+              '<span class="fav-btn' + (isFav?' on':'') + '" id="detailFav" role="button" tabindex="0" aria-label="favorita" style="font-size:20px">' + (isFav?'★':'☆') + '</span>' +
+            '</span>' +
           '</div>' +
           bodyBlock +
           (editing
@@ -883,7 +887,10 @@
           (!editing
             ? '<p style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap">' +
                 (r.url ? '<a class="ig-link" href="' + escapeAttr(r.url) + '" target="_blank" rel="noopener noreferrer">Ver publicación original en Instagram ↗</a>' : '<span></span>') +
-                (canEdit ? '<button class="delete-link" id="deleteBtn" type="button">Eliminar de mi recetario</button>' : '') +
+                '<span style="display:flex; gap:14px; align-items:center">' +
+                  (!r.manual && hasRealRecipeContent(r) ? '<button class="delete-link" id="bringBtn" type="button">🔗 Enlace para Bring!</button>' : '') +
+                  (canEdit ? '<button class="delete-link" id="deleteBtn" type="button">Eliminar de mi recetario</button>' : '') +
+                '</span>' +
               '</p>'
             : '') +
         '</div>' +
@@ -891,11 +898,14 @@
     document.getElementById('closeBtn').addEventListener('click', closeDetail);
     document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
     document.getElementById('detailFav').addEventListener('click', (e) => toggleFav(r.id, e.currentTarget));
+    document.getElementById('detailCart').addEventListener('click', (e) => toggleCart(r.id, e.currentTarget));
     document.addEventListener('keydown', escClose);
     const sel = document.getElementById('catSelect');
     if (sel) sel.addEventListener('change', () => changeCategory(r, sel.value));
     const delBtn = document.getElementById('deleteBtn');
     if (delBtn) delBtn.addEventListener('click', () => archiveRecipe(r));
+    const bringBtn = document.getElementById('bringBtn');
+    if (bringBtn) bringBtn.addEventListener('click', () => shareRecipeLink(r.id, r.title, bringBtn));
     const editBtn = document.getElementById('editBtn');
     if (editBtn) editBtn.addEventListener('click', () => openDetail(r, true));
     const cancelEditBtn = document.getElementById('cancelEditBtn');
@@ -1178,28 +1188,28 @@
     });
   }
 
-  function cartIngredientLines() {
-    const ids = [...cart];
-    const items = ids.map(id => recipes.find(r => r.id === id)).filter(Boolean);
-    const lines = [];
-    items.forEach(r => { (r.ingredients || []).forEach(i => lines.push(i)); });
-    return [...new Set(lines)];
+  // Bring! (and similar apps) import a recipe by fetching a URL and reading its
+  // schema.org/Recipe JSON-LD — it does NOT accept pasted/shared plain text.
+  // Each recipe with real content gets its own static page (webapp/r/<id>.html)
+  // with that markup; sharing/copying that link is what Bring!'s "add recipe
+  // from link" feature actually understands. Manually-added recipes don't have
+  // a generated page (they're not in the static build), so we hide the button
+  // for those to avoid offering a link that 404s.
+  function recipePageUrl(id) {
+    return location.origin + '/r/' + id + '.html';
   }
 
-  async function shareCartToBring() {
-    const lines = cartIngredientLines();
-    if (!lines.length) return;
-    const text = lines.join('\n');
+  async function shareRecipeLink(id, title, btnEl) {
+    const url = recipePageUrl(id);
     if (navigator.share) {
-      try { await navigator.share({ text, title: 'Lista de la compra' }); return; }
+      try { await navigator.share({ url, title: title || 'Receta' }); return; }
       catch (e) { if (e && e.name === 'AbortError') return; }
     }
     try {
-      await navigator.clipboard.writeText(text);
-      const btn = document.getElementById('shareCartBtn');
-      if (btn) { const old = btn.textContent; btn.textContent = '✓ Copiado, pégalo en Bring!'; setTimeout(() => { btn.textContent = old; }, 2200); }
+      await navigator.clipboard.writeText(url);
+      if (btnEl) { const old = btnEl.textContent; btnEl.textContent = '✓ Enlace copiado'; setTimeout(() => { btnEl.textContent = old; }, 2000); }
     } catch (e) {
-      window.prompt('Copia esta lista y pégala en Bring!:', text);
+      window.prompt('Copia este enlace y pégalo en "Anadir receta" de Bring!:', url);
     }
   }
 
@@ -1212,9 +1222,11 @@
           const ingredientsHtml = lines
             ? lines.map(l => '• ' + escapeHtml(l)).join('\n')
             : '<span class="cart-empty-hint">Sin ingredientes detectados, mira la receta completa.</span>';
+          const bringBtn = r.manual ? '' : '<button class="cart-remove" data-bring="' + r.id + '" data-title="' + escapeAttr(r.title) + '" type="button">🔗 Bring!</button>';
           return '<div class="cart-item">' +
             '<div class="cart-item-top"><h3>' + escapeHtml(r.title) + '</h3>' +
-            '<button class="cart-remove" data-remove="' + r.id + '" type="button">Quitar</button></div>' +
+            '<span style="display:flex; gap:12px; flex:none">' + bringBtn +
+            '<button class="cart-remove" data-remove="' + r.id + '" type="button">Quitar</button></span></div>' +
             '<div class="cart-ingredients">' + ingredientsHtml + '</div>' +
           '</div>';
         }).join('')
@@ -1225,10 +1237,8 @@
           '<div class="sheet-top"><h2>Lista de la compra</h2>' +
           '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
           (items.length
-            ? '<p style="margin:6px 0 12px; display:flex; gap:14px; align-items:center; flex-wrap:wrap">' +
-                '<button class="submit-btn" id="shareCartBtn" type="button" style="padding:9px 16px; font-size:13.5px">📤 Compartir con Bring!</button>' +
-                '<button class="delete-link" id="clearCartBtn" type="button">Vaciar lista</button>' +
-              '</p>'
+            ? '<p class="form-hint" style="margin:0 0 10px">Bring! solo importa una receta por enlace: toca "🔗 Bring!" en cada una y pégalo ahí en "Añadir receta".</p>' +
+              '<p style="margin:0 0 12px"><button class="delete-link" id="clearCartBtn" type="button">Vaciar lista</button></p>'
             : '') +
           body +
         '</div>' +
@@ -1236,8 +1246,6 @@
     document.getElementById('closeBtn').addEventListener('click', closeDetail);
     document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
     document.addEventListener('keydown', escClose);
-    const shareBtn = document.getElementById('shareCartBtn');
-    if (shareBtn) shareBtn.addEventListener('click', shareCartToBring);
     const clearBtn = document.getElementById('clearCartBtn');
     if (clearBtn) clearBtn.addEventListener('click', () => { cart.clear(); saveCart(); render(); closeDetail(); });
     overlayRoot.querySelectorAll('[data-remove]').forEach(btn => {
@@ -1247,6 +1255,9 @@
         render();
         renderCartOverlay();
       });
+    });
+    overlayRoot.querySelectorAll('[data-bring]').forEach(btn => {
+      btn.addEventListener('click', () => shareRecipeLink(btn.getAttribute('data-bring'), btn.getAttribute('data-title'), btn));
     });
   }
 
@@ -1504,9 +1515,10 @@
         const r = recipeId ? recipes.find(x => x.id === recipeId) : null;
         return '<div class="plan-slot">' +
           '<span class="plan-slot-label">' + escapeHtml(slot.label) + '</span>' +
-          '<span class="plan-slot-recipe' + (r ? '' : ' empty') + '" data-slotpick="' + key + '">' +
+          '<span class="plan-slot-recipe' + (r ? '' : ' empty') + '" data-slotview="' + key + '">' +
             (r ? escapeHtml(r.title) : 'Elegir receta…') +
           '</span>' +
+          (r ? '<button type="button" class="plan-clear-btn" data-slotedit="' + key + '" aria-label="Cambiar receta" title="Cambiar receta">✏️</button>' : '') +
           (r ? '<button type="button" class="plan-clear-btn" data-slotclear="' + key + '" aria-label="Quitar">✕</button>' : '') +
         '</div>';
       }).join('');
@@ -1531,8 +1543,20 @@
     document.addEventListener('keydown', escClose);
     document.getElementById('autofillBtn').addEventListener('click', autofillPlan);
     document.getElementById('clearPlanBtn').addEventListener('click', clearPlan);
-    overlayRoot.querySelectorAll('[data-slotpick]').forEach(el => {
-      el.addEventListener('click', () => openPlanPicker(el.getAttribute('data-slotpick')));
+    overlayRoot.querySelectorAll('[data-slotview]').forEach(el => {
+      el.addEventListener('click', () => {
+        const key = el.getAttribute('data-slotview');
+        const recipeId = plan[key];
+        const r = recipeId ? recipes.find(x => x.id === recipeId) : null;
+        if (r) openDetail(r);
+        else openPlanPicker(key);
+      });
+    });
+    overlayRoot.querySelectorAll('[data-slotedit]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openPlanPicker(el.getAttribute('data-slotedit'));
+      });
     });
     overlayRoot.querySelectorAll('[data-slotclear]').forEach(el => {
       el.addEventListener('click', (e) => {
