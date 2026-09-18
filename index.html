@@ -3,20 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Recetario Belusitaa</title>
-<meta name="description" content="Recetario familiar: recetas guardadas de Instagram, favoritas, notas y plan semanal.">
+<title>A fuego lento</title>
+<meta name="description" content="A fuego lento: recetas para salir de la rutina.">
 <meta name="theme-color" content="#EFEFE3" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1A1C15" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Recetario">
+<meta name="apple-mobile-web-app-title" content="A fuego lento">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&family=Dancing+Script:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap');
-
   :root {
     --paper: #EFEFE3;
     --card: #F9F9F1;
@@ -90,19 +91,15 @@
     gap: 4px;
     margin-bottom: 22px;
   }
-  .eyebrow {
-    font-size: 12.5px;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: var(--accent-2);
-    font-weight: 700;
-  }
   h1.title {
-    font-size: clamp(28px, 5vw, 40px);
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    font-size: clamp(38px, 8vw, 56px);
     margin: 2px 0 4px;
-    font-style: italic;
+    font-style: normal;
   }
   .subtitle {
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
     color: var(--ink-soft);
     font-size: 14.5px;
     margin: 0;
@@ -547,9 +544,8 @@
 <body>
 <div class="wrap">
   <header class="top">
-    <span class="eyebrow">recuperado de @belusitaa · instagram guardados</span>
-    <h1 class="title">Recetario Belusitaa</h1>
-    <p class="subtitle">Todo lo que has ido guardando, por fin en un solo sitio.</p>
+    <h1 class="title">A fuego lento</h1>
+    <p class="subtitle">Recetas para salir de la rutina.</p>
     <div class="stats">
       <span class="stat"><b id="statTotal">–</b> recetas</span>
       <span class="stat"><b id="statCats">–</b> categorías</span>
