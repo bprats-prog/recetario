@@ -201,8 +201,8 @@
     font: inherit;
     font-size: 16px;
     padding: 12px 14px 12px 40px;
-    border-radius: 10px;
-    border: 1px solid var(--line);
+    border-radius: 999px;
+    border: 1.5px solid var(--ink-soft);
     background: var(--card);
     color: var(--ink);
   }
@@ -218,35 +218,54 @@
     color: var(--ink-soft);
     pointer-events: none;
   }
-  .chips {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 2px;
-    scrollbar-width: thin;
-  }
-  .chip {
-    flex: none;
+  .filter-row { display: flex; }
+  .filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     font: inherit;
     font-size: 13.5px;
     font-weight: 600;
-    padding: 7px 13px;
+    padding: 8px 14px;
     border-radius: 999px;
     border: 1px solid var(--line);
     background: var(--card);
     color: var(--ink-soft);
     cursor: pointer;
-    white-space: nowrap;
     transition: background .12s, color .12s, border-color .12s;
   }
-  .chip .n { font-variant-numeric: tabular-nums; opacity: .7; margin-left: 5px; }
-  .chip:hover { border-color: var(--accent); color: var(--ink); }
-  .chip.active {
+  .filter-btn:hover { border-color: var(--accent); color: var(--ink); }
+  .filter-btn .n { font-variant-numeric: tabular-nums; opacity: .75; }
+  .filter-btn.active {
     background: var(--accent);
     color: var(--accent-ink);
     border-color: var(--accent);
   }
-  .chip.active .n { opacity: .85; }
+  .filter-btn.active .n { opacity: .85; }
+  .filter-pick-list { display: flex; flex-direction: column; gap: 6px; max-height: 65vh; overflow-y: auto; }
+  .filter-pick-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font: inherit;
+    font-size: 14.5px;
+    font-weight: 600;
+    text-align: left;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .filter-pick-item:hover { border-color: var(--accent); }
+  .filter-pick-item.active {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: var(--accent);
+  }
+  .filter-pick-item .n { font-variant-numeric: tabular-nums; opacity: .8; }
   .chip:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
 
   .grid {
@@ -267,7 +286,6 @@
     text-align: left;
     font: inherit;
     color: inherit;
-    min-height: 148px;
   }
   .card:hover { border-color: var(--accent); }
   .card:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
@@ -289,16 +307,6 @@
     padding: 2px;
   }
   .fav-btn.on { color: var(--accent-2); }
-  .card .snippet {
-    font-size: 13.5px;
-    color: var(--ink-soft);
-    line-height: 1.45;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    flex: 1;
-  }
   .tag {
     align-self: flex-start;
     font-size: 11px;
@@ -363,7 +371,7 @@
     .sheet { border-radius: 16px; }
   }
   .sheet-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
-  .sheet h2 { font-size: 24px; margin: 0; font-style: italic; }
+  .sheet h2, .recipe-page h2 { font-size: 24px; margin: 0; font-style: italic; }
   .close-btn {
     flex: none;
     background: var(--card);
@@ -374,8 +382,36 @@
     cursor: pointer;
     color: var(--ink-soft);
   }
-  .sheet .meta-row { display: flex; align-items: center; gap: 10px; margin: 10px 0 16px; flex-wrap: wrap; }
-  .sheet .body-text {
+
+  /* recipe detail: full page, not an overlay sheet */
+  .recipe-page {
+    position: fixed; inset: 0;
+    background: var(--paper);
+    z-index: 40;
+    overflow-y: auto;
+    padding: 16px 20px 30px;
+    padding-top: calc(16px + env(safe-area-inset-top));
+    padding-bottom: calc(30px + env(safe-area-inset-bottom));
+  }
+  .recipe-page .page-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .recipe-page .page-top h2, .recipe-page .page-top .edit-title-input { flex: 1; }
+  .ig-embed { display: flex; justify-content: center; margin: 4px 0 16px; min-height: 60px; }
+  .ig-embed iframe { max-width: 100%; }
+  .back-btn {
+    flex: none;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--ink);
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .sheet .meta-row, .recipe-page .meta-row { display: flex; align-items: center; gap: 10px; margin: 10px 0 16px; flex-wrap: wrap; }
+  .sheet .body-text, .recipe-page .body-text {
     font-size: 15px;
     line-height: 1.6;
     color: var(--ink);
@@ -390,8 +426,68 @@
     margin: 18px 0 8px;
   }
   .body-text h3:first-child { margin-top: 0; }
+  .body-text h3::before {
+    content: "";
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 2px;
+    margin-right: 7px;
+    vertical-align: middle;
+    background: currentColor;
+  }
   .body-text ul, .body-text ol { margin: 0; padding-left: 22px; }
   .body-text li { margin-bottom: 7px; line-height: 1.55; }
+  .body-text .section-block { margin-bottom: 22px; }
+  .body-text .section-block:last-child { margin-bottom: 0; }
+
+  .section-ingredients h3 { color: var(--accent); }
+  .section-ingredients ul { list-style: none; padding-left: 0; }
+  .section-ingredients li { position: relative; padding-left: 20px; }
+  .section-ingredients li::before {
+    content: "";
+    position: absolute; left: 2px; top: 8px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .section-steps ol { list-style: none; padding-left: 0; counter-reset: step; }
+  .section-steps li {
+    position: relative;
+    padding-left: 34px;
+    counter-increment: step;
+    margin-bottom: 14px;
+  }
+  .section-steps li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: -1px;
+    width: 23px; height: 23px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1.5px solid var(--ink-soft);
+    color: var(--ink);
+    font-family: 'Karla', ui-sans-serif, system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+
+  .section-tips {
+    background: var(--accent-2-soft);
+    border-left: 3px solid var(--accent-2);
+    border-radius: 4px 10px 10px 4px;
+    padding: 14px 16px;
+  }
+  .section-tips h3 { color: var(--accent-2); margin-top: 0; }
+  .section-tips ul { list-style: none; padding-left: 0; }
+  .section-tips li { display: flex; gap: 8px; align-items: flex-start; }
+  .section-tips li::before {
+    content: "→";
+    color: var(--accent-2);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
   .edit-section-label { font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-soft); display: block; margin: 14px 0 6px; }
   .edit-section-label:first-of-type { margin-top: 0; }
   .cat-select {
@@ -564,7 +660,13 @@
       <button class="add-btn cart-toggle-btn" id="editModeBtn" type="button">🔒 Modo edición</button>
       <button class="add-btn" id="addRecipeBtn" type="button" hidden>+ Añadir receta</button>
     </div>
-    <div class="chips" id="chips"></div>
+    <div class="filter-row">
+      <button class="filter-btn" id="filterBtn" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="4 4 20 4 14 12.5 14 19 10 21 10 12.5 4 4"/></svg>
+        <span id="filterLabel">Filtros</span>
+        <span class="n" id="filterCount"></span>
+      </button>
+    </div>
   </div>
 
   <div class="count-row">
@@ -580,6 +682,7 @@
 </div>
 
 <div id="overlayRoot"></div>
+<div id="pageRoot"></div>
 
 <script>
 (function(){
@@ -589,6 +692,24 @@
   const CATEGORY_ORDER = ["Entrantes y Aperitivos","Sopas y Cremas","Ensaladas","Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y Bocadillos","Salsas","Postres","Desayunos","Bebe","Otras"];
   const CATEGORY_LABEL = { "Sandwiches y Bocadillos": "Sándwiches y Bocadillos", "Verduras": "Recetas con Verduras", "Bebe": "Recetas Bebé" };
   function catLabel(c) { return CATEGORY_LABEL[c] || c; }
+  const CATEGORY_ICON = {
+    "Entrantes y Aperitivos": "🥟",
+    "Sopas y Cremas": "🍲",
+    "Ensaladas": "🥗",
+    "Carne": "🥩",
+    "Pescado": "🐟",
+    "Verduras": "🥦",
+    "Pasta": "🍝",
+    "Arroces": "🍚",
+    "Pizzas": "🍕",
+    "Sandwiches y Bocadillos": "🥪",
+    "Salsas": "🧂",
+    "Postres": "🍰",
+    "Desayunos": "🍳",
+    "Bebe": "🍼",
+    "Otras": "🍽️"
+  };
+  function catIcon(c) { return CATEGORY_ICON[c] || "🍽️"; }
   const FAVKEY = "recetario_favs_v1";
   const CARTKEY = "recetario_cart_v1";
   const PAGE_SIZE = 39;
@@ -602,12 +723,14 @@
   let state = { q: "", cat: "TODAS", visible: PAGE_SIZE };
 
   const grid = document.getElementById('grid');
-  const chipsEl = document.getElementById('chips');
+  const filterBtn = document.getElementById('filterBtn');
+  filterBtn.addEventListener('click', () => openFilterPicker());
   const searchEl = document.getElementById('search');
   const countLine = document.getElementById('countLine');
   const emptyState = document.getElementById('emptyState');
   const loadMoreBtn = document.getElementById('loadMore');
   const overlayRoot = document.getElementById('overlayRoot');
+  const pageRoot = document.getElementById('pageRoot');
   const addRecipeBtn = document.getElementById('addRecipeBtn');
   addRecipeBtn.addEventListener('click', () => openAddForm());
   const cartBtn = document.getElementById('cartBtn');
@@ -708,7 +831,7 @@
     return true;
   }
 
-  function buildChips() {
+  function computeFilterOptions() {
     const counts = {};
     let lowContentCount = 0;
     let mixCount = 0;
@@ -726,26 +849,42 @@
     ];
     if (lowContentCount > 0) all.push({key:"REVISAR", label:"⚠️ Revisar", n: lowContentCount});
     if (mixCount > 0) all.push({key:"MIX", label:"🎭 Mix", n: mixCount});
-    chipsEl.innerHTML = "";
-    all.forEach(c => {
-      const b = document.createElement('button');
-      b.className = 'chip' + (state.cat === c.key ? ' active' : '');
-      b.innerHTML = escapeHtml(c.label) + ' <span class="n">' + c.n + '</span>';
-      b.setAttribute('aria-pressed', state.cat === c.key ? 'true' : 'false');
-      b.addEventListener('click', () => { state.cat = c.key; state.visible = PAGE_SIZE; render(); });
-      chipsEl.appendChild(b);
+    return all;
+  }
+
+  function buildChips() {
+    const all = computeFilterOptions();
+    const current = all.find(c => c.key === state.cat) || all[0];
+    filterBtn.classList.toggle('active', state.cat !== 'TODAS');
+    document.getElementById('filterLabel').textContent = current.label;
+    document.getElementById('filterCount').textContent = current.n;
+  }
+
+  function openFilterPicker() {
+    const all = computeFilterOptions();
+    overlayRoot.innerHTML =
+      '<div class="overlay" id="ov">' +
+        '<div class="sheet" role="dialog" aria-modal="true">' +
+          '<div class="sheet-top"><h2>Filtros</h2>' +
+          '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
+          '<div class="filter-pick-list">' +
+            all.map(c => '<button type="button" class="filter-pick-item' + (state.cat === c.key ? ' active' : '') + '" data-cat="' + escapeAttr(c.key) + '">' +
+              '<span>' + escapeHtml(c.label) + '</span><span class="n">' + c.n + '</span>' +
+            '</button>').join('') +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    document.getElementById('closeBtn').addEventListener('click', closeDetail);
+    document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
+    document.addEventListener('keydown', escClose);
+    overlayRoot.querySelectorAll('[data-cat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.cat = btn.getAttribute('data-cat');
+        state.visible = PAGE_SIZE;
+        render();
+        closeDetail();
+      });
     });
-  }
-
-  function snippet(text) {
-    return (text || "").replace(/\s+/g, ' ').trim().slice(0, 170);
-  }
-
-  function cardSnippetText(r) {
-    if (r.steps && r.steps.length) return r.steps.join(' ');
-    if (r.ingredients && r.ingredients.length) return r.ingredients.join(', ');
-    if (r.tips && r.tips.length) return r.tips.join(' ');
-    return '';
   }
 
   function render() {
@@ -773,9 +912,8 @@
         '<span class="cart-btn' + (inCart?' on':'') + '" data-cart="' + r.id + '" role="button" aria-label="añadir a la lista de la compra">' + (inCart ? '✓' : '🛒') + '</span>' +
         '<span class="fav-btn' + (isFav?' on':'') + '" data-fav="' + r.id + '" role="button" aria-label="favorita">' + (isFav ? '★' : '☆') + '</span>' +
         '</span></div>' +
-        '<span class="tag">' + escapeHtml(catLabel(r.category)) + '</span>' +
-        (rating > 0 ? '<span class="card-rating">' + '★'.repeat(rating) + '</span>' : '') +
-        '<div class="snippet">' + formatRichText(snippet(cardSnippetText(r))) + '</div>';
+        '<span class="tag">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</span>' +
+        (rating > 0 ? '<span class="card-rating">' + '★'.repeat(rating) + '</span>' : '');
       card.addEventListener('click', (e) => {
         if (e.target.closest('[data-fav],[data-cart]')) return;
         openDetail(r);
@@ -821,19 +959,42 @@
   function bodyHtml(r) {
     let html = '';
     if (r.ingredients && r.ingredients.length) {
-      html += '<h3>Ingredientes</h3><ul>' + r.ingredients.map(i => '<li>' + formatRichText(i) + '</li>').join('') + '</ul>';
+      html += '<div class="section-block section-ingredients"><h3>Ingredientes</h3><ul>' + r.ingredients.map(i => '<li>' + formatRichText(i) + '</li>').join('') + '</ul></div>';
     }
     if (r.steps && r.steps.length) {
-      html += '<h3>Elaboración</h3><ol>' + r.steps.map(s => '<li>' + formatRichText(s) + '</li>').join('') + '</ol>';
+      html += '<div class="section-block section-steps"><h3>Elaboración</h3><ol>' + r.steps.map(s => '<li>' + formatRichText(s) + '</li>').join('') + '</ol></div>';
     }
     if (r.tips && r.tips.length) {
-      html += '<h3>Tips</h3><ul>' + r.tips.map(t => '<li>' + formatRichText(t) + '</li>').join('') + '</ul>';
+      html += '<div class="section-block section-tips"><h3>Tips</h3><ul>' + r.tips.map(t => '<li>' + formatRichText(t) + '</li>').join('') + '</ul></div>';
     }
     if (!html) html = '<p style="color:var(--ink-soft)">Sin contenido todavía.</p>';
     return html;
   }
 
+  let igScriptLoading = false;
+  function processInstagramEmbeds() {
+    if (window.instgrm && window.instgrm.Embeds) {
+      window.instgrm.Embeds.process();
+      return;
+    }
+    if (igScriptLoading) return;
+    igScriptLoading = true;
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.instagram.com/embed.js';
+    s.onload = () => { if (window.instgrm) window.instgrm.Embeds.process(); };
+    document.body.appendChild(s);
+  }
+
+  let currentDetailId = null;
+
   function openDetail(r, editing) {
+    history.pushState({ view: 'detail', id: r.id }, '', '#receta-' + encodeURIComponent(r.id));
+    renderDetailPage(r, editing);
+  }
+
+  function renderDetailPage(r, editing) {
+    currentDetailId = r.id;
     const isFav = favs.has(r.id);
     const inCart = cart.has(r.id);
     const rating = myRatings[r.id] || 0;
@@ -850,52 +1011,56 @@
         '<label class="edit-section-label" for="editTips">Tips</label>' +
         '<textarea id="editTips" class="edit-text-input" style="min-height:80px">' + escapeHtml((r.tips||[]).join('\n')) + '</textarea>'
       : '<div class="body-text">' + bodyHtml(r) + '</div>';
-    overlayRoot.innerHTML =
-      '<div class="overlay" id="ov">' +
-        '<div class="sheet" role="dialog" aria-modal="true">' +
-          '<div class="sheet-top">' + titleBlock +
-          '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
-          '<div class="meta-row">' +
-            (canEdit
-              ? '<select class="cat-select" id="catSelect" aria-label="Cambiar categoría">' +
-                  CATEGORY_ORDER.map(c => '<option value="' + escapeAttr(c) + '"' + (c === r.category ? ' selected' : '') + '>' + escapeHtml(catLabel(c)) + '</option>').join('') +
-                '</select>'
-              : '<span class="tag">' + escapeHtml(catLabel(r.category)) + '</span>') +
-            '<span style="display:flex; gap:10px; margin-left:auto">' +
-              '<span class="cart-btn' + (inCart?' on':'') + '" id="detailCart" role="button" tabindex="0" aria-label="añadir a la lista de la compra" style="font-size:20px">' + (inCart?'✓':'🛒') + '</span>' +
-              '<span class="fav-btn' + (isFav?' on':'') + '" id="detailFav" role="button" tabindex="0" aria-label="favorita" style="font-size:20px">' + (isFav?'★':'☆') + '</span>' +
-            '</span>' +
-          '</div>' +
-          bodyBlock +
-          (editing
-            ? '<p style="margin-top:12px; display:flex; gap:10px">' +
-                '<button class="submit-btn" id="saveEditBtn" type="button" style="padding:8px 18px; font-size:14px">Guardar cambios</button>' +
-                '<button class="delete-link" id="cancelEditBtn" type="button">Cancelar</button>' +
-              '</p>'
-            : (canEdit ? '<p style="margin-top:10px"><button class="delete-link" id="editBtn" type="button">✏️ Editar título y texto</button></p>' : '')) +
-          (canEdit && !editing
-            ? '<div class="notes-box">' +
-                '<div class="notes-row"><span class="notes-label">Mi valoración</span>' + starsHtml(rating, true) + '</div>' +
-                '<label class="notes-label" for="noteText">Mis notas</label>' +
-                '<textarea id="noteText" placeholder="Ej. le pondría menos sal, muy rica, la hice el 12/3...">' + escapeHtml(note) + '</textarea>' +
-              '</div>'
-            : '') +
-          (!editing
-            ? '<p style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap">' +
-                (r.url ? '<a class="ig-link" href="' + escapeAttr(r.url) + '" target="_blank" rel="noopener noreferrer">Ver publicación original en Instagram ↗</a>' : '<span></span>') +
-                '<span style="display:flex; gap:14px; align-items:center">' +
-                  (!r.manual && hasRealRecipeContent(r) ? '<button class="delete-link" id="bringBtn" type="button">🔗 Enlace para Bring!</button>' : '') +
-                  (canEdit ? '<button class="delete-link" id="deleteBtn" type="button">Eliminar de mi recetario</button>' : '') +
-                '</span>' +
-              '</p>'
-            : '') +
+    const isInstagramUrl = !!(r.url && r.url.indexOf('instagram.com') !== -1);
+    const photoBlock = (!editing && isInstagramUrl)
+      ? '<div class="ig-embed"><blockquote class="instagram-media" data-instgrm-permalink="' + escapeAttr(r.url) + '" data-instgrm-version="14"><a href="' + escapeAttr(r.url) + '"></a></blockquote></div>'
+      : '';
+    pageRoot.innerHTML =
+      '<div class="recipe-page" id="detailPage">' +
+        '<div class="page-top">' +
+          '<button class="back-btn" id="backBtn" aria-label="Volver">←</button>' + titleBlock +
         '</div>' +
+        '<div class="meta-row">' +
+          (canEdit
+            ? '<select class="cat-select" id="catSelect" aria-label="Cambiar categoría">' +
+                CATEGORY_ORDER.map(c => '<option value="' + escapeAttr(c) + '"' + (c === r.category ? ' selected' : '') + '>' + escapeHtml(catLabel(c)) + '</option>').join('') +
+              '</select>'
+            : '<span class="tag">' + escapeHtml(catLabel(r.category)) + '</span>') +
+          '<span style="display:flex; gap:10px; margin-left:auto">' +
+            '<span class="cart-btn' + (inCart?' on':'') + '" id="detailCart" role="button" tabindex="0" aria-label="añadir a la lista de la compra" style="font-size:20px">' + (inCart?'✓':'🛒') + '</span>' +
+            '<span class="fav-btn' + (isFav?' on':'') + '" id="detailFav" role="button" tabindex="0" aria-label="favorita" style="font-size:20px">' + (isFav?'★':'☆') + '</span>' +
+          '</span>' +
+        '</div>' +
+        photoBlock +
+        bodyBlock +
+        (editing
+          ? '<p style="margin-top:12px; display:flex; gap:10px">' +
+              '<button class="submit-btn" id="saveEditBtn" type="button" style="padding:8px 18px; font-size:14px">Guardar cambios</button>' +
+              '<button class="delete-link" id="cancelEditBtn" type="button">Cancelar</button>' +
+            '</p>'
+          : (canEdit ? '<p style="margin-top:10px"><button class="delete-link" id="editBtn" type="button">✏️ Editar título y texto</button></p>' : '')) +
+        (canEdit && !editing
+          ? '<div class="notes-box">' +
+              '<div class="notes-row"><span class="notes-label">Mi valoración</span>' + starsHtml(rating, true) + '</div>' +
+              '<label class="notes-label" for="noteText">Mis notas</label>' +
+              '<textarea id="noteText" placeholder="Ej. le pondría menos sal, muy rica, la hice el 12/3...">' + escapeHtml(note) + '</textarea>' +
+            '</div>'
+          : '') +
+        (!editing
+          ? '<p style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap">' +
+              (r.url ? '<a class="ig-link" href="' + escapeAttr(r.url) + '" target="_blank" rel="noopener noreferrer">Ver publicación original en Instagram ↗</a>' : '<span></span>') +
+              '<span style="display:flex; gap:14px; align-items:center">' +
+                (!r.manual && hasRealRecipeContent(r) ? '<button class="delete-link" id="bringBtn" type="button">🔗 Enlace para Bring!</button>' : '') +
+                (canEdit ? '<button class="delete-link" id="deleteBtn" type="button">Eliminar de mi recetario</button>' : '') +
+              '</span>' +
+            '</p>'
+          : '') +
       '</div>';
-    document.getElementById('closeBtn').addEventListener('click', closeDetail);
-    document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
+    document.getElementById('backBtn').addEventListener('click', () => history.back());
     document.getElementById('detailFav').addEventListener('click', (e) => toggleFav(r.id, e.currentTarget));
     document.getElementById('detailCart').addEventListener('click', (e) => toggleCart(r.id, e.currentTarget));
-    document.addEventListener('keydown', escClose);
+    document.addEventListener('keydown', pageEscClose);
+    if (isInstagramUrl && !editing) processInstagramEmbeds();
     const sel = document.getElementById('catSelect');
     if (sel) sel.addEventListener('change', () => changeCategory(r, sel.value));
     const delBtn = document.getElementById('deleteBtn');
@@ -903,9 +1068,9 @@
     const bringBtn = document.getElementById('bringBtn');
     if (bringBtn) bringBtn.addEventListener('click', () => shareRecipeLink(r.id, r.title, bringBtn));
     const editBtn = document.getElementById('editBtn');
-    if (editBtn) editBtn.addEventListener('click', () => openDetail(r, true));
+    if (editBtn) editBtn.addEventListener('click', () => renderDetailPage(r, true));
     const cancelEditBtn = document.getElementById('cancelEditBtn');
-    if (cancelEditBtn) cancelEditBtn.addEventListener('click', () => openDetail(r, false));
+    if (cancelEditBtn) cancelEditBtn.addEventListener('click', () => renderDetailPage(r, false));
     const saveEditBtn = document.getElementById('saveEditBtn');
     if (saveEditBtn) saveEditBtn.addEventListener('click', () => {
       const newTitle = document.getElementById('editTitle').value.trim();
@@ -914,7 +1079,7 @@
       const newTips = linesFromTextarea(document.getElementById('editTips'));
       if (!newTitle) return;
       saveEdit(r, newTitle, newIngredients, newSteps, newTips);
-      openDetail(r, false);
+      renderDetailPage(r, false);
     });
     const boldBtn = document.getElementById('boldBtn');
     if (boldBtn) boldBtn.addEventListener('click', () => {
@@ -953,8 +1118,53 @@
       });
     }
   }
+
   function escClose(e) { if (e.key === 'Escape') closeDetail(); }
   function closeDetail() { overlayRoot.innerHTML = ""; document.removeEventListener('keydown', escClose); planViewOpen = false; }
+
+  function pageEscClose(e) { if (e.key === 'Escape') history.back(); }
+  function closePage() {
+    pageRoot.innerHTML = "";
+    document.removeEventListener('keydown', pageEscClose);
+    currentDetailId = null;
+  }
+
+  window.addEventListener('popstate', (e) => {
+    const st = e.state;
+    if (st && st.view === 'detail') {
+      const r = recipes.find(x => x.id === st.id);
+      if (r) renderDetailPage(r, false);
+      else closePage();
+    } else {
+      closePage();
+    }
+  });
+
+  // swipe left/right on an open recipe page to go to the next/previous recipe
+  let swipeStartX = null, swipeStartY = null;
+  pageRoot.addEventListener('touchstart', (e) => {
+    if (!currentDetailId) return;
+    const t = e.changedTouches[0];
+    swipeStartX = t.clientX;
+    swipeStartY = t.clientY;
+  }, { passive: true });
+  pageRoot.addEventListener('touchend', (e) => {
+    if (!currentDetailId || swipeStartX === null) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - swipeStartX;
+    const dy = t.clientY - swipeStartY;
+    swipeStartX = null;
+    if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (document.getElementById('editTitle')) return; // don't swipe while editing
+    const list = recipes.filter(matches);
+    const idx = list.findIndex(x => x.id === currentDetailId);
+    if (idx === -1) return;
+    const nextIdx = dx < 0 ? idx + 1 : idx - 1;
+    if (nextIdx < 0 || nextIdx >= list.length) return;
+    const nr = list[nextIdx];
+    history.replaceState({ view: 'detail', id: nr.id }, '', '#receta-' + encodeURIComponent(nr.id));
+    renderDetailPage(nr, false);
+  }, { passive: true });
 
   function escapeAttr(s) { return escapeHtml(s); }
 
@@ -1118,7 +1328,7 @@
 
   async function archiveRecipe(r) {
     hiddenIds.add(r.id);
-    closeDetail();
+    history.back();
     updateStats();
     render();
     if (canEdit) await apiSetDoc('hidden', r.id, { hidden: true });
