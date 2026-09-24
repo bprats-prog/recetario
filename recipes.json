@@ -248,7 +248,9 @@
         "title":  "Ensalada de Stracciatella con Albaricoques y Pistachos",
         "category":  "Ensaladas",
         "url":  "https://www.instagram.com/reel/DNORPyGIrn7/",
-        "ingredients":  "1 bocado que lo tiene todo: cremosidad láctea, dulzor y acidez de la fruta, notas herbales y ese toque crujiente que te hace sonreír en cada cucharada.",
+        "ingredients":  [
+                            "1 bocado que lo tiene todo: cremosidad láctea, dulzor y acidez de la fruta, notas herbales y ese toque crujiente que te hace sonreír en cada cucharada."
+                        ],
         "steps":  [
                       "Hoy la sirvo con un maridaje que es un auténtico descubrimiento: verdejo SOY ROCÍO de Bodega y Almazara Virgen de las Viñas. @vinostomillar",
                       "Fresco, aromático, perfecto para resaltar cada matiz de esta ensalada.",
@@ -301,7 +303,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Solo tienes que seleccionar unos buenos tomates.",
+        "tips":  [
+                     "Solo tienes que seleccionar unos buenos tomates."
+                 ],
         "formatFlag":  false
     },
     {
@@ -323,8 +327,12 @@
                             "pimentón De la Vera",
                             "sal"
                         ],
-        "steps":  "Opcional: unas gotas de tabasco o alguna salsa picante",
-        "tips":  "Es una opción perfecta para llevar a la playa, piscina y oficina y disfrutar de una comida completa y muy rica.",
+        "steps":  [
+                      "Opcional: unas gotas de tabasco o alguna salsa picante"
+                  ],
+        "tips":  [
+                     "Es una opción perfecta para llevar a la playa, piscina y oficina y disfrutar de una comida completa y muy rica."
+                 ],
         "formatFlag":  false
     },
     {
@@ -406,7 +414,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Empezamos el 2025 fuerte con una receta que me enamoró en 2024. Una estilo de “Ensalada César” con un toque diferente.",
+        "tips":  [
+                     "Empezamos el 2025 fuerte con una receta que me enamoró en 2024. Una estilo de “Ensalada César” con un toque diferente."
+                 ],
         "formatFlag":  false
     },
     {
@@ -462,7 +472,9 @@
                       "Para montar el poke pon en el táper el arroz cocido y encima añade de forma ordenada el huevo duro, el pepino, los langostinos, el aguacate y el melocotón.",
                       "Para hacer la salsa mezcla todos los ingredientes en un bol y échala por encima del poke."
                   ],
-        "tips":  "POKE BOL",
+        "tips":  [
+                     "POKE BOL"
+                 ],
         "formatFlag":  true
     },
     {
@@ -522,7 +534,9 @@
                       "Mezcla los ingredientes de la vinagreta y listo!",
                       "Mil gracias!"
                   ],
-        "tips":  "Fácil, saludable y brutal!",
+        "tips":  [
+                     "Fácil, saludable y brutal!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -545,7 +559,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Esta fue la primera ensalada de legumbres que probé cuando era pequeña y sin duda es mi favorita. Lleva años en el recetario familiar y la preparamos cada verano porque está buenísima y es muy fácil de hacer. Es fundamental ser generoso con la vinagreta y la hierbabuena. La combinación del parmesano y la manzana nunca falla.",
+        "tips":  [
+                     "Esta fue la primera ensalada de legumbres que probé cuando era pequeña y sin duda es mi favorita. Lleva años en el recetario familiar y la preparamos cada verano porque está buenísima y es muy fácil de hacer. Es fundamental ser generoso con la vinagreta y la hierbabuena. La combinación del parmesano y la manzana nunca falla."
+                 ],
         "formatFlag":  false
     },
     {
@@ -567,7 +583,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Ensalada de alubias",
+        "tips":  [
+                     "Ensalada de alubias"
+                 ],
         "formatFlag":  false
     },
     {
@@ -589,7 +607,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Ensalada de calabacín",
+        "tips":  [
+                     "Ensalada de calabacín"
+                 ],
         "formatFlag":  false
     },
     {
@@ -613,7 +633,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Ensalada de remolacha",
+        "tips":  [
+                     "Ensalada de remolacha"
+                 ],
         "formatFlag":  false
     },
     {
@@ -686,7 +708,9 @@
                       "Aviso: el ESTRAGÓN tiene un sabor intenso y especial, pruébalo para ajustarlo a tu gusto, y si no te agrada no no se lo pongas. A mí me encanta!",
                       "Delicioso también para acompañar platos de verduras (con brócoli, vainas), para tostas, ensaladas, sandwiches y bocadillos."
                   ],
-        "tips":  "Me encanta sorprender con estos dips tan deliciosos y especiales Perfecto para acompañar de los Crackers que hicimos en la receta anterior!",
+        "tips":  [
+                     "Me encanta sorprender con estos dips tan deliciosos y especiales Perfecto para acompañar de los Crackers que hicimos en la receta anterior!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -753,7 +777,9 @@
                       "ES MUY FÁCIL: Corta los tomates a rodajas y ponlos en una fuente, añade los tomatitos cherry, el melocotón a gajos, la mozzarella a trozos, un puñadito de piñones,las hojas de albahaca, un chorrito de aceite de oliva y sal!",
                       "Fácil y RIQUÍSIMO"
                   ],
-        "tips":  "De mis ensaladas favoritísimas del mundo mundial‍ tomates y melocotones del huerto, mozzarella fresca, piñones, albahaca… y poco más puede necesitar algo así sobre una tostadita es una maravilla",
+        "tips":  [
+                     "De mis ensaladas favoritísimas del mundo mundial‍ tomates y melocotones del huerto, mozzarella fresca, piñones, albahaca… y poco más puede necesitar algo así sobre una tostadita es una maravilla"
+                 ],
         "formatFlag":  false
     },
     {
@@ -795,7 +821,9 @@
                       "Para la salsa: 2 cucharadas yogur natural, cucharadita ketchup sin azúcar, cucharadita mostaza, ajo, cebolla, sal, vinagre de vino blanco y pepinillos. Mezcla y prueba para ajustar a tu gusto.",
                       "Sigue el resto de pasos del vídeo, colócala por orden en un bote de cristal y lista! A DISFRUTAAAAR"
                   ],
-        "tips":  "Tanto si os gusta la famosa Big Mac de McDonalds como si no, tenéis que probar esta receta! Es súper fácil de preparar, puedes preparar varios tarros, tener comida lista para varios días y no imagináis que disfrutona",
+        "tips":  [
+                     "Tanto si os gusta la famosa Big Mac de McDonalds como si no, tenéis que probar esta receta! Es súper fácil de preparar, puedes preparar varios tarros, tener comida lista para varios días y no imagináis que disfrutona"
+                 ],
         "formatFlag":  false
     },
     {
@@ -979,7 +1007,9 @@
         "title":  "Ensalada de Aprovechamiento Fácil",
         "category":  "Ensaladas",
         "url":  "https://www.instagram.com/reel/CgeUiI1jo8I/",
-        "ingredients":  "Colaboración pagada con @arcos",
+        "ingredients":  [
+                            "Colaboración pagada con @arcos"
+                        ],
         "steps":  [
 
                   ],
@@ -1002,7 +1032,9 @@
                             "3cdas Agua",
                             "Procesa todos los ingredientes y disfruta"
                         ],
-        "steps":  "Puedes conservarlo en un recipiente de vidrio bien tapado en la nevera y asi servirte cuando quieras",
+        "steps":  [
+                      "Puedes conservarlo en un recipiente de vidrio bien tapado en la nevera y asi servirte cuando quieras"
+                  ],
         "tips":  [
                      "Solo necesitas:",
                      "1/2 aguacate",
@@ -1132,7 +1164,9 @@
                       "Trituramos la coliflor cocida y la añadimos a la mezcla anterior junto con el huevo y la sal y mezclamos.",
                       "Con dos cucharas vamos formando las croquetas y las vamos echando directamente a freir en el aceite caliente y listos... a disfrutar con una ensalada"
                   ],
-        "tips":  "#",
+        "tips":  [
+                     "#"
+                 ],
         "formatFlag":  false
     },
     {
@@ -1317,7 +1351,9 @@
                       "2.Cocina en horno o airfryer unos 15’(ajusta según grosor) a 190C",
                       "Mil gracias!"
                   ],
-        "tips":  "Con pequeños detalles podemos comer sano y rico toda la familia",
+        "tips":  [
+                     "Con pequeños detalles podemos comer sano y rico toda la familia"
+                 ],
         "formatFlag":  false
     },
     {
@@ -1344,7 +1380,9 @@
                       "Pasa cada triángulo por huevo y pan rallado y llévalos a la air fryer 20 minutos a 200 °C",
                       "Crujientes por fuera y jugosos por dentro."
                   ],
-        "tips":  "@tinoverdu",
+        "tips":  [
+                     "@tinoverdu"
+                 ],
         "formatFlag":  false
     },
     {
@@ -1404,7 +1442,9 @@
                             "Sal y pimienta negra",
                             "Almendra laminada"
                         ],
-        "steps":  "Tritura todos los ingredientes hasta conseguir una crema muy fina. Ajusta la textura con el caldo. Cuela para que quede más fino. Refrigera al menos 2 horas. Sirve con almendra laminada y un chorrito de aceite de oliva.",
+        "steps":  [
+                      "Tritura todos los ingredientes hasta conseguir una crema muy fina. Ajusta la textura con el caldo. Cuela para que quede más fino. Refrigera al menos 2 horas. Sirve con almendra laminada y un chorrito de aceite de oliva."
+                  ],
         "tips":  [
 
                  ],
@@ -1424,7 +1464,9 @@
                             "1 cucharada de vinagre de Jerez",
                             "Sal y pimienta"
                         ],
-        "steps":  "Tritura todos los ingredientes. Cuela para que quede más fino. Enfría durante al menos 2 horas. Sirve con queso feta, albahaca fresca y un hilo de aceite de oliva.",
+        "steps":  [
+                      "Tritura todos los ingredientes. Cuela para que quede más fino. Enfría durante al menos 2 horas. Sirve con queso feta, albahaca fresca y un hilo de aceite de oliva."
+                  ],
         "tips":  [
 
                  ],
@@ -1442,7 +1484,9 @@
                             "2 cucharadas de aceite de oliva virgen extra",
                             "Sal y pimienta"
                         ],
-        "steps":  "Tritura todos los ingredientes hasta obtener una textura muy cremosa. Cuela para que quede fino. Refrigera al menos 2 horas. Sirve con jamón crujiente y hierbabuena para darle el toque de frescor.",
+        "steps":  [
+                      "Tritura todos los ingredientes hasta obtener una textura muy cremosa. Cuela para que quede fino. Refrigera al menos 2 horas. Sirve con jamón crujiente y hierbabuena para darle el toque de frescor."
+                  ],
         "tips":  [
 
                  ],
@@ -1522,7 +1566,9 @@
                             "Pan rallado italiano sin gluten",
                             "1 huevo"
                         ],
-        "steps":  "Mezclar, formar las albóndigas y cocinar en una sartén hasta que queden doradas y crujientes por fuera. Cubrir con la salsa de tomate que prefieras. Encima, una cucharada de queso cottage y queso parmesano rallado.” - @haileybieber",
+        "steps":  [
+                      "Mezclar, formar las albóndigas y cocinar en una sartén hasta que queden doradas y crujientes por fuera. Cubrir con la salsa de tomate que prefieras. Encima, una cucharada de queso cottage y queso parmesano rallado.” - @haileybieber"
+                  ],
         "tips":  [
                      "Nunca me imaginaría que diría “albóndigas” y “Hailey Bieber” en la misma frase jajaja ahora si aún no habéis probado no sé a qué estáis esperando! La receta es súper fácil y la combinación es brutal",
                      "Os dejo la receta que subió a sus stories el otro día:",
@@ -1589,7 +1635,9 @@
                       "Ponlos en una bandeja de horno, espolvorea con el queso rallado.",
                       "Hornea 10 minutos a 200°C"
                   ],
-        "tips":  "RECETA:",
+        "tips":  [
+                     "RECETA:"
+                 ],
         "formatFlag":  false
     },
     {
@@ -1735,7 +1783,9 @@
         "steps":  [
 
                   ],
-        "tips":  "La patata cocida y enfriada cuida tus bacterias buenas gracias al almidón resistente.El calabacín y la manzana aportan esa fibra suave que protege tus mucosas.Y el tzatziki de apio nos da todo el frescor veraniego sin los ingredientes que suelen repetir o irritar. Además, puedes consultar las soluciones que tiene @laincopharma para tratar el reflujo”.",
+        "tips":  [
+                     "La patata cocida y enfriada cuida tus bacterias buenas gracias al almidón resistente.El calabacín y la manzana aportan esa fibra suave que protege tus mucosas.Y el tzatziki de apio nos da todo el frescor veraniego sin los ingredientes que suelen repetir o irritar. Además, puedes consultar las soluciones que tiene @laincopharma para tratar el reflujo”."
+                 ],
         "formatFlag":  false
     },
     {
@@ -1755,7 +1805,9 @@
                             "Aceite de oliva",
                             "Sal y pimienta negra al gusto"
                         ],
-        "steps":  "Cocción: 10 min sin remover el arroz + 5 min con el",
+        "steps":  [
+                      "Cocción: 10 min sin remover el arroz + 5 min con el"
+                  ],
         "tips":  [
 
                  ],
@@ -1778,7 +1830,9 @@
         "steps":  [
 
                   ],
-        "tips":  "DÁTILES + QUESO",
+        "tips":  [
+                     "DÁTILES + QUESO"
+                 ],
         "formatFlag":  false
     },
     {
@@ -1915,7 +1969,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Crujientes por fuera, jugosas por dentro y con una salsa burger que queda increíble.",
+        "tips":  [
+                     "Crujientes por fuera, jugosas por dentro y con una salsa burger que queda increíble."
+                 ],
         "formatFlag":  false
     },
     {
@@ -2009,7 +2065,9 @@
                       "Pisto, huevo y parmesano",
                       "Pollo, calabacín y pesto"
                   ],
-        "tips":  "La mejor idea para una cena divertida en casa. Cada uno se puede hacer el suyo a su gusto y son muy fáciles.",
+        "tips":  [
+                     "La mejor idea para una cena divertida en casa. Cada uno se puede hacer el suyo a su gusto y son muy fáciles."
+                 ],
         "formatFlag":  false
     },
     {
@@ -2053,7 +2111,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Plato sencillo, rápido y perfecto para los que quieren cuidarse.",
+        "tips":  [
+                     "Plato sencillo, rápido y perfecto para los que quieren cuidarse."
+                 ],
         "formatFlag":  false
     },
     {
@@ -2206,8 +2266,12 @@
                             "Albahaca u orégano",
                             "Espaguetis"
                         ],
-        "steps":  "Cuando estén listas, agrega tomate triturado, parmesano, albahaca u orégano y queso rallado. Deja rehogar unos minutos y sirve con los espaguetis",
-        "tips":  "No os imagináis lo jugosas que quedan así",
+        "steps":  [
+                      "Cuando estén listas, agrega tomate triturado, parmesano, albahaca u orégano y queso rallado. Deja rehogar unos minutos y sirve con los espaguetis"
+                  ],
+        "tips":  [
+                     "No os imagináis lo jugosas que quedan así"
+                 ],
         "formatFlag":  false
     },
     {
@@ -2578,7 +2642,9 @@
                       "Hornea 180ºC · 20-25 min hasta dorar.",
                       "Deja templar un poco y disfruta del espectáculo de capas."
                   ],
-        "tips":  "RECETA:",
+        "tips":  [
+                     "RECETA:"
+                 ],
         "formatFlag":  false
     },
     {
@@ -2613,7 +2679,9 @@
                       "Y no lo olvides…",
                       "CREA UNA BUENA RELACIÓN CON TU COMIDA"
                   ],
-        "tips":  "Dicen que este es el pollo que hace que se quieran casar contigo. No sabemos si funciona pero después de probarlo lo entendemos.",
+        "tips":  [
+                     "Dicen que este es el pollo que hace que se quieran casar contigo. No sabemos si funciona pero después de probarlo lo entendemos."
+                 ],
         "formatFlag":  false
     },
     {
@@ -2681,7 +2749,9 @@
         "title":  "Pasta con Tomates Asados y Albahaca",
         "category":  "Pasta",
         "url":  "https://www.instagram.com/reel/DVMKKcQDC0y/",
-        "ingredients":  "1 de mis recetas de pasta favorita, que aún no había hecho en mi cocina INtegrada @boschhomees de la casita del pueblo.",
+        "ingredients":  [
+                            "1 de mis recetas de pasta favorita, que aún no había hecho en mi cocina INtegrada @boschhomees de la casita del pueblo."
+                        ],
         "steps":  [
                       "La placa con extractor INtegrado que recoge vapor, humos y olores, haciendo mi cocina abierta y limpia y el horno con función vapor y auto limpieza que me hace la cocina súper fácil",
                       "Anota esta receta:",
@@ -2975,7 +3045,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Con unas albóndigas es imposible fallar, pero estas están en otra liga. Con una salsa para bebérsela a borbotones.",
+        "tips":  [
+                     "Con unas albóndigas es imposible fallar, pero estas están en otra liga. Con una salsa para bebérsela a borbotones."
+                 ],
         "formatFlag":  false
     },
     {
@@ -3015,7 +3087,9 @@
                             "Montamos el pastel poniendo una capa de patata y coliflor, queso, relleno, otra capa de patata y coliflor y más queso.",
                             "Cocinamos en el horno durante 25 min a 180 grados y ya lo tendríamos listo."
                         ],
-        "steps":  "PUBLI. Hemos utilizado la atidora Keisel con picadora, sartén Onix Red (que tiene un indicador térmico que señala el instante exacto en el que la sartén ONIX RED alcanza la temperatura ideal para empezar a usarla) y la cacerola Balance de @magefesa_es de acero inoxidable que además ahora tienen tienda online con ollas a presión, baterías, sartenes y muchos más productos disponibles.",
+        "steps":  [
+                      "PUBLI. Hemos utilizado la atidora Keisel con picadora, sartén Onix Red (que tiene un indicador térmico que señala el instante exacto en el que la sartén ONIX RED alcanza la temperatura ideal para empezar a usarla) y la cacerola Balance de @magefesa_es de acero inoxidable que además ahora tienen tienda online con ollas a presión, baterías, sartenes y muchos más productos disponibles."
+                  ],
         "tips":  [
 
                  ],
@@ -3212,7 +3286,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Se hacen en solo quince minutos y quedan bien crujientes.",
+        "tips":  [
+                     "Se hacen en solo quince minutos y quedan bien crujientes."
+                 ],
         "formatFlag":  false
     },
     {
@@ -3249,7 +3325,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Su madre le hizo enamorarse de este recetón con origen guineano. Un plato con el que coronarse @lamineyamal",
+        "tips":  [
+                     "Su madre le hizo enamorarse de este recetón con origen guineano. Un plato con el que coronarse @lamineyamal"
+                 ],
         "formatFlag":  false
     },
     {
@@ -3304,8 +3382,12 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Esta receta era una de las que más hacía cuando me llevaba el tupper al trabajo. Es muy sencilla de preparar y mantiene su sabor varios días, incluso es el plato perfecto para hacer durante tu batchcooking y tener para dos veces. Además, es el típico plato saciante que no te hará tener hambre durante la tarde!",
-        "tips":  "En el carrusel tenéis videos con el paso a paso y la receta redactada completa!",
+        "steps":  [
+                      "Esta receta era una de las que más hacía cuando me llevaba el tupper al trabajo. Es muy sencilla de preparar y mantiene su sabor varios días, incluso es el plato perfecto para hacer durante tu batchcooking y tener para dos veces. Además, es el típico plato saciante que no te hará tener hambre durante la tarde!"
+                  ],
+        "tips":  [
+                     "En el carrusel tenéis videos con el paso a paso y la receta redactada completa!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -3593,7 +3675,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Es muy fácil de hacer, pocos ingredientes y un resultado increíble",
+        "tips":  [
+                     "Es muy fácil de hacer, pocos ingredientes y un resultado increíble"
+                 ],
         "formatFlag":  false
     },
     {
@@ -3629,7 +3713,9 @@
                       "5 Vertemos el vino tinto, reducimos a fuego alto y agregamos el caldo. Le damos un hervor de 5 minutos y trituramos la salsa. Vertemos de nuevo en la olla, corregimos de sal, reincorporamos las albóndigas y hervimos a fuego suave unos 15 minutos, hasta que la salsa tenga la consistencia que buscamos.",
                       "6 Si nos pasamos de espesa, podemos agregar algo más de caldo. Si queda un poco ácida, podemos incorporar un poco de azúcar para contrarrestar la acidez. Ya solo quedaría servir con patatas fritas, ¡Y a disfrutar!"
                   ],
-        "tips":  "Hoy os traigo unas albóndigas en salsa que están espectaculares. Una receta tradicional y sabrosa que tenéis que probar… ¡las albóndigas quedan super jugosas!",
+        "tips":  [
+                     "Hoy os traigo unas albóndigas en salsa que están espectaculares. Una receta tradicional y sabrosa que tenéis que probar… ¡las albóndigas quedan super jugosas!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -3654,7 +3740,9 @@
                       "Quedan buenísimos, tan cremosos que no podrás resistirte.",
                       "¿Los vas a probar?"
                   ],
-        "tips":  "Imagina una pasta cremosa, con pesto, jamón crujiente y piñones tostados… La pruebas una vez y ya no hay vuelta atrás.",
+        "tips":  [
+                     "Imagina una pasta cremosa, con pesto, jamón crujiente y piñones tostados… La pruebas una vez y ya no hay vuelta atrás."
+                 ],
         "formatFlag":  false
     },
     {
@@ -3674,7 +3762,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Yo me lo comeré cuando nazca el bizcochito",
+        "tips":  [
+                     "Yo me lo comeré cuando nazca el bizcochito"
+                 ],
         "formatFlag":  false
     },
     {
@@ -3950,7 +4040,9 @@
                       "2.Cocina en el horno o en airfryer a 190C unos 10-15’ (hasta que veas que se va a salir el queso)",
                       "Mil gracias!"
                   ],
-        "tips":  "GUARDA ESTOS SAN JACOBOS!",
+        "tips":  [
+                     "GUARDA ESTOS SAN JACOBOS!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -4015,7 +4107,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Perfecto para una cena rápida, sabrosa… y con el toque crujiente que solo consigues en tu horno Brandt",
+        "tips":  [
+                     "Perfecto para una cena rápida, sabrosa… y con el toque crujiente que solo consigues en tu horno Brandt"
+                 ],
         "formatFlag":  false
     },
     {
@@ -4157,7 +4251,9 @@
                       "▫Patatas fritas (caseras subo receta a historias)",
                       "Publi con Moulinex"
                   ],
-        "tips":  "He usado la Easy Fry XL Surface de @moulinex_es,tenéis 15% descuento con el código: FITFOOD15MLX",
+        "tips":  [
+                     "He usado la Easy Fry XL Surface de @moulinex_es,tenéis 15% descuento con el código: FITFOOD15MLX"
+                 ],
         "formatFlag":  false
     },
     {
@@ -4373,7 +4469,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Es una combinación que tienes que probar. Muy fácil que solo te llevará unos 15 minutos.",
+        "tips":  [
+                     "Es una combinación que tienes que probar. Muy fácil que solo te llevará unos 15 minutos."
+                 ],
         "formatFlag":  false
     },
     {
@@ -4648,7 +4746,9 @@
                       "¡A disfrutar!",
                       "Embajadoras HSN Store"
                   ],
-        "tips":  "Pechuga de pollo",
+        "tips":  [
+                     "Pechuga de pollo"
+                 ],
         "formatFlag":  false
     },
     {
@@ -4667,7 +4767,9 @@
                             "Mientras saca la carne de las alitas y trocéala un poco.",
                             "Echa la carne a la sopa y lista para servir."
                         ],
-        "steps":  "Si no va a comértela todo de vez, pon en un cazo la cantidad que vayas a comer y echa los fideos que quieras (1/4 vaso por persona aprox.). Guarda el resto de la sopa en un recipiente de cristal y te dura 2-3 días en nevera o también la puedes congelar.",
+        "steps":  [
+                      "Si no va a comértela todo de vez, pon en un cazo la cantidad que vayas a comer y echa los fideos que quieras (1/4 vaso por persona aprox.). Guarda el resto de la sopa en un recipiente de cristal y te dura 2-3 días en nevera o también la puedes congelar."
+                  ],
         "tips":  [
 
                  ],
@@ -4905,7 +5007,9 @@
                       "Yo lo serví con una salsa de mostaza y miel, que le fue de fábula",
                       "¡Y tacháaaaan!"
                   ],
-        "tips":  "Si te aburre comer la pechuga de pollo, siempre igual, guarda idea que se hace muy fácil en la freidora de aire.",
+        "tips":  [
+                     "Si te aburre comer la pechuga de pollo, siempre igual, guarda idea que se hace muy fácil en la freidora de aire."
+                 ],
         "formatFlag":  false
     },
     {
@@ -4986,7 +5090,9 @@
                       "Y no lo olvides...",
                       "¡CREA UNA BUENA RELACIÓN CON TU COMIDA!"
                   ],
-        "tips":  "Picamos la cebolla y el ajo y pochamos, le añadimos luego el pavo y sofreímos un poco más.",
+        "tips":  [
+                     "Picamos la cebolla y el ajo y pochamos, le añadimos luego el pavo y sofreímos un poco más."
+                 ],
         "formatFlag":  false
     },
     {
@@ -5154,7 +5260,9 @@
                       "Y no lo olvides...",
                       "¡CREA UNA BUENA RELACIÓN CON TU COMIDA!"
                   ],
-        "tips":  "¿Pizza carbonara en versión saludable? Te enseñamos cómo hacerla en 5 minutos con una tortita de avena. ¡Prueba esta receta y cuéntanos qué te parece!",
+        "tips":  [
+                     "¿Pizza carbonara en versión saludable? Te enseñamos cómo hacerla en 5 minutos con una tortita de avena. ¡Prueba esta receta y cuéntanos qué te parece!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -5386,7 +5494,9 @@
                       "Sirve con un toque de cilantro fresco",
                       "He utilizado todos los ingredientes de @carrefoures aprovechando su campaña de AFF ya que como dicen todos merecemos lo mejor y al mejor precio Y ademñas en carrefour apuestan por los productos locales, el 90% de sus frutas y verduras son nacionales, como todos sus limones que son de origen España"
                   ],
-        "tips":  "MIS ALBÓNDIGAS AL LIMÓN que es un éxito en la mesa asegurado",
+        "tips":  [
+                     "MIS ALBÓNDIGAS AL LIMÓN que es un éxito en la mesa asegurado"
+                 ],
         "formatFlag":  true
     },
     {
@@ -5429,7 +5539,9 @@
                             "200 g spaghetti",
                             "Speck o taquitos de jamón o panceta"
                         ],
-        "steps":  "Condimenta la calabaza con romero, ajo, aceite, sal y pimienta. Hornea 40 min a 200 grados (airfryer a 190). Tritura la pulpa con el caldo. En una sartén derrite el gorgonzola con un chorrito de leche, remueve bien y añade la crema de calabaza. Cuece la pasta y escúrrela al dente en la sartén. Añade un poco de agua de la cocción y saltéala un minuto. Prepara unos taquitos crujientes de jamón o panceta y sirve con un poco más de gorgonzola",
+        "steps":  [
+                      "Condimenta la calabaza con romero, ajo, aceite, sal y pimienta. Hornea 40 min a 200 grados (airfryer a 190). Tritura la pulpa con el caldo. En una sartén derrite el gorgonzola con un chorrito de leche, remueve bien y añade la crema de calabaza. Cuece la pasta y escúrrela al dente en la sartén. Añade un poco de agua de la cocción y saltéala un minuto. Prepara unos taquitos crujientes de jamón o panceta y sirve con un poco más de gorgonzola"
+                  ],
         "tips":  [
 
                  ],
@@ -5552,7 +5664,9 @@
                       "Hornear a 180/200°C hasta que esté gratinado",
                       "MEJOR COMER REPOSADA DE UN DIA. Comer de un día para otro"
                   ],
-        "tips":  "Boloñesa;",
+        "tips":  [
+                     "Boloñesa;"
+                 ],
         "formatFlag":  false
     },
     {
@@ -5643,7 +5757,9 @@
                       "〰〰〰〰〰〰〰〰〰〰〰〰",
                       "Más recetas de arroces en @arrocesconestilo"
                   ],
-        "tips":  "(Si te lo han enviado te lo están pidiendo )",
+        "tips":  [
+                     "(Si te lo han enviado te lo están pidiendo )"
+                 ],
         "formatFlag":  false
     },
     {
@@ -5826,7 +5942,9 @@
                       "Y no lo olvides...",
                       "¡CREA UNA BUENA RELACIÓN CON TU COMIDA!"
                   ],
-        "tips":  "Pasta a la carbonara de pistacho, y vas a alucinar!",
+        "tips":  [
+                     "Pasta a la carbonara de pistacho, y vas a alucinar!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -5848,7 +5966,9 @@
                       "▫En una sartén con un chorrito de aceite de oliva, añadimos las claras y las cocinamos hasta que estén cuajadas. Incorporamos la zanahoria, los guisantes, el maíz, el jamón y el arroz con las yemas que habíamos reservado.",
                       "▫Cocinamos el conjunto a fuego medio durante 5 minutos, ponemos al punto de sal ¡y listo!"
                   ],
-        "tips":  "A mí me encanta esta forma de prepararlo porque el arroz queda con muchísimo sabor y extra cremoso",
+        "tips":  [
+                     "A mí me encanta esta forma de prepararlo porque el arroz queda con muchísimo sabor y extra cremoso"
+                 ],
         "formatFlag":  false
     },
     {
@@ -5864,7 +5984,9 @@
                       "Mezcla todo y a la airfryer 180C durante 20 min.",
                       "Como depende de la verduras que elijas, el fondo del molde elegido y cantidad de queso igual es necesario 5 min más"
                   ],
-        "tips":  "Verduras variadas (bolsitas que ya viene troceadas)",
+        "tips":  [
+                     "Verduras variadas (bolsitas que ya viene troceadas)"
+                 ],
         "formatFlag":  false
     },
     {
@@ -5915,7 +6037,9 @@
                             "2 huevos",
                             "30-50 g de eritritol (depende del dulzor que necesites)"
                         ],
-        "steps":  "Bate todo y a la airfryer 170C durante 30 min",
+        "steps":  [
+                      "Bate todo y a la airfryer 170C durante 30 min"
+                  ],
         "tips":  [
 
                  ],
@@ -6390,7 +6514,9 @@
                             "Dar la vuelta con cuidado y mientras se cocina la tortilla integral rellenar con aguacate machacado, rucula, tomate en rodajas y pavo.",
                             "Doblar con cuidado y cocinar 2 min más."
                         ],
-        "steps":  "Las sartenes de @pim.pam.cook son sartenes profesionales de la cocina desde 1921. APTA PARA TODAS LAS COCINAS: compatible con todo tipo de fuegos y cocinas: inducción, gas, eléctrica y vitrocerámica. Además son de acero inoxidable, con tecnología All-over y de gran durabilidad y limpieza. Disponibles ya en Amazon",
+        "steps":  [
+                      "Las sartenes de @pim.pam.cook son sartenes profesionales de la cocina desde 1921. APTA PARA TODAS LAS COCINAS: compatible con todo tipo de fuegos y cocinas: inducción, gas, eléctrica y vitrocerámica. Además son de acero inoxidable, con tecnología All-over y de gran durabilidad y limpieza. Disponibles ya en Amazon"
+                  ],
         "tips":  [
 
                  ],
@@ -6609,7 +6735,9 @@
                       "Al horno a 180 grados durante 15 mins.",
                       "¿Te gusta la pinta?"
                   ],
-        "tips":  "Calabacín",
+        "tips":  [
+                     "Calabacín"
+                 ],
         "formatFlag":  false
     },
     {
@@ -6773,7 +6901,9 @@
                       "Los sacamos y servimos.",
                       "PETITCONSEJOS: Podéis rellenarlos con los ingredientes que más os gusten. Podéis sustituir el ricotta por queso crema o queso fresco batido. Podéis hacerlos en el horno a 190ºC con calor arriba y abajo durante 12 minutos."
                   ],
-        "tips":  "WRAP CREMOSO DE POLLO, HUEVO Y ESPINACAS",
+        "tips":  [
+                     "WRAP CREMOSO DE POLLO, HUEVO Y ESPINACAS"
+                 ],
         "formatFlag":  true
     },
     {
@@ -6835,7 +6965,9 @@
                             "Colocamos la tortilla en un recipiente",
                             "Añadimos queso, huevos, espinacas y más queso"
                         ],
-        "steps":  "Cocinamos 10 minutos a 180 grados",
+        "steps":  [
+                      "Cocinamos 10 minutos a 180 grados"
+                  ],
         "tips":  [
 
                  ],
@@ -6962,8 +7094,12 @@
                             "Cuela el caldo, deja que se temple y mételo en la nevera para que se enfríe por completo y puedas desgrasar el caldo fácilmente ¡Caldo listo!",
                             "La sal se la pongo al final según el uso que le vaya a dar."
                         ],
-        "steps":  "Para aprovechar las verduras y el pollo del caldo hago una sopa. Trituro las verduras con un poco de caldo. Luego retiro los huesos y desmigo el pollo, y troceo la patata. Cuezo unos fideos en el caldo y luego añado lo que he triturado, el pollo desmigado y la patata. ¡Sopa de pollo lista!",
-        "tips":  "Si quieres un caldo más concentrado, ponlo a hervir 10 min a fuego fuerte hasta que reduzca un poco.",
+        "steps":  [
+                      "Para aprovechar las verduras y el pollo del caldo hago una sopa. Trituro las verduras con un poco de caldo. Luego retiro los huesos y desmigo el pollo, y troceo la patata. Cuezo unos fideos en el caldo y luego añado lo que he triturado, el pollo desmigado y la patata. ¡Sopa de pollo lista!"
+                  ],
+        "tips":  [
+                     "Si quieres un caldo más concentrado, ponlo a hervir 10 min a fuego fuerte hasta que reduzca un poco."
+                 ],
         "formatFlag":  false
     },
     {
@@ -7029,7 +7165,9 @@
                       "Por último, tritura, si ves que te queda muy espesa puedes ponerle un poco más de agua. -Sirve con cebollino y un chorrito de aceite de oliva virgen extra.",
                       "Gracias también por todos vuestros comentarios y que tengáis un día bonito."
                   ],
-        "tips":  "¿Quieres saber cómo conseguir un 25% de descuento en los frutos secos de marca Eroski? Solo tienes que ser socio de EROSKI club en tu tienda habitual y enseñar este reel en la caja.",
+        "tips":  [
+                     "¿Quieres saber cómo conseguir un 25% de descuento en los frutos secos de marca Eroski? Solo tienes que ser socio de EROSKI club en tu tienda habitual y enseñar este reel en la caja."
+                 ],
         "formatFlag":  false
     },
     {
@@ -7208,7 +7346,9 @@
                       "Saca, decora y devora!",
                       "¿Que te parece? ¿Te animas a prepararlo?"
                   ],
-        "tips":  "Como siempre uso mis sartenes de @tefal_es que tienen mango extraible y son aptas para horno",
+        "tips":  [
+                     "Como siempre uso mis sartenes de @tefal_es que tienen mango extraible y son aptas para horno"
+                 ],
         "formatFlag":  false
     },
     {
@@ -7551,7 +7691,9 @@
                             "1 poco de perejil",
                             "Podéis añadir otras especias si queréis"
                         ],
-        "steps":  "La elaboración facilísima como veis: mezcláis todo y a una sartén antiadherente con un pelín de aceite, le dais la vuelta con cuidado y ya podéis rellenar con lo que más os guste, ¡QUEDA DE ESCÁNDALO!",
+        "steps":  [
+                      "La elaboración facilísima como veis: mezcláis todo y a una sartén antiadherente con un pelín de aceite, le dais la vuelta con cuidado y ya podéis rellenar con lo que más os guste, ¡QUEDA DE ESCÁNDALO!"
+                  ],
         "tips":  [
                      "La verdad es que en casa solemos usar bastante la harina de garbanzos para rebozar, hacer hamburguesas vegetales, incluso algún Dulce, pero esta forma es la que más me gusta, comemos legumbres sin enterarnos",
                      "Para un wrap necesitas:"
@@ -7587,8 +7729,12 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Sigue los pasos del vídeo, cocina en airfryer 10-12 min a 200 grados y lista! A DISFRUTAAAAR",
-        "tips":  "Sin duda esta es de mis formas favoritas de comer repollo, además no puede ser más fácil de preparar",
+        "steps":  [
+                      "Sigue los pasos del vídeo, cocina en airfryer 10-12 min a 200 grados y lista! A DISFRUTAAAAR"
+                  ],
+        "tips":  [
+                     "Sin duda esta es de mis formas favoritas de comer repollo, además no puede ser más fácil de preparar"
+                 ],
         "formatFlag":  false
     },
     {
@@ -7596,7 +7742,9 @@
         "title":  "Quiché de Tomates y Champiñones",
         "category":  "Verduras",
         "url":  "https://www.instagram.com/reel/CsjjqlFoKqe/",
-        "ingredients":  "1 Tortilla de fajita, 2 huevos, 60 g queso crema, 30 g queso rallado, sal, pimienta, especias, tomates cherry en rodajas y champiñones laminados. Bate los huevos, quesos y salpimenta. Coloca una fajita en un recipiente apto y rellena. Cocina 25\u0027 a 180C",
+        "ingredients":  [
+                            "1 Tortilla de fajita, 2 huevos, 60 g queso crema, 30 g queso rallado, sal, pimienta, especias, tomates cherry en rodajas y champiñones laminados. Bate los huevos, quesos y salpimenta. Coloca una fajita en un recipiente apto y rellena. Cocina 25\u0027 a 180C"
+                        ],
         "steps":  [
 
                   ],
@@ -7627,7 +7775,9 @@
         "title":  "Provolone a la Airfryer",
         "category":  "Carne",
         "url":  "https://www.instagram.com/reel/CsjjqlFoKqe/",
-        "ingredients":  "1 queso provolone, orégano, cebolla, pimentón, pimienta, aove. Añade todo a una fuente pequeña. Cocina 8\u0027 a 200C",
+        "ingredients":  [
+                            "1 queso provolone, orégano, cebolla, pimentón, pimienta, aove. Añade todo a una fuente pequeña. Cocina 8\u0027 a 200C"
+                        ],
         "steps":  [
 
                   ],
@@ -7641,7 +7791,9 @@
         "title":  "Salsa de Feta y Tomates para Pasta",
         "category":  "Salsas",
         "url":  "https://www.instagram.com/reel/CsjjqlFoKqe/",
-        "ingredients":  "100 g queso feta, 130 g tomates cherry en mitades, aove y pimienta. Añade a un recipiente apto y cocina 15\u0027 a 180C. Mezcla con la pasta y sirve",
+        "ingredients":  [
+                            "100 g queso feta, 130 g tomates cherry en mitades, aove y pimienta. Añade a un recipiente apto y cocina 15\u0027 a 180C. Mezcla con la pasta y sirve"
+                        ],
         "steps":  [
 
                   ],
@@ -7655,7 +7807,9 @@
         "title":  "Brownie de 3 Ingredientes",
         "category":  "Carne",
         "url":  "https://www.instagram.com/reel/CsjjqlFoKqe/",
-        "ingredients":  "2 plátanos, 50 g manteca de frutos secos, 35 g cacao. Tritura y pasa al molde. Cocina 17\u0027 a 180",
+        "ingredients":  [
+                            "2 plátanos, 50 g manteca de frutos secos, 35 g cacao. Tritura y pasa al molde. Cocina 17\u0027 a 180"
+                        ],
         "steps":  [
 
                   ],
@@ -7699,7 +7853,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Esta no falla! Es muy fácil de hacer y para las albóndigas ni te tienes que manchar las manos",
+        "tips":  [
+                     "Esta no falla! Es muy fácil de hacer y para las albóndigas ni te tienes que manchar las manos"
+                 ],
         "formatFlag":  true
     },
     {
@@ -7773,8 +7929,12 @@
                             "1 huevo",
                             "Especias al gusto"
                         ],
-        "steps":  "Sigue los pasos del vídeo, cocina en airfryer 10-12 min a 200 grados y listos! A DISFRUTAAAR",
-        "tips":  "Para la salsa: 2 cucharadas yogur natural, cucharada mostaza, 1/2 pepinillo grande, cucharadita ajo en polvo, cucharadita pimentón dulce",
+        "steps":  [
+                      "Sigue los pasos del vídeo, cocina en airfryer 10-12 min a 200 grados y listos! A DISFRUTAAAR"
+                  ],
+        "tips":  [
+                     "Para la salsa: 2 cucharadas yogur natural, cucharada mostaza, 1/2 pepinillo grande, cucharadita ajo en polvo, cucharadita pimentón dulce"
+                 ],
         "formatFlag":  false
     },
     {
@@ -7800,7 +7960,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Sin duda uno de los mejores risottos que he probado y suuuuper fácil de hacer.",
+        "tips":  [
+                     "Sin duda uno de los mejores risottos que he probado y suuuuper fácil de hacer."
+                 ],
         "formatFlag":  false
     },
     {
@@ -8193,7 +8355,9 @@
                       "Impregna y masajea con aove",
                       "Impregna con la romesco y hornea 15-20’"
                   ],
-        "tips":  "GUARDA PARA PREPARARLA!",
+        "tips":  [
+                     "GUARDA PARA PREPARARLA!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -8211,8 +8375,12 @@
                             "Ajo en polvo",
                             "Obleas de arroz"
                         ],
-        "steps":  "Sigue los pasos del vídeo, sirve con sésamo por encima y salsa de soja y…A DISFRUTAAAR",
-        "tips":  "Últimamente estoy obsesionada con esta receta! Quedan espectaculares y además es una forma deliciosa de comer verdura",
+        "steps":  [
+                      "Sigue los pasos del vídeo, sirve con sésamo por encima y salsa de soja y…A DISFRUTAAAR"
+                  ],
+        "tips":  [
+                     "Últimamente estoy obsesionada con esta receta! Quedan espectaculares y además es una forma deliciosa de comer verdura"
+                 ],
         "formatFlag":  false
     },
     {
@@ -8229,7 +8397,9 @@
         "steps":  [
 
                   ],
-        "tips":  "¿Te son útiles mis recetas? Pues nada me ayuda más que vuestros LIKES y COMENTARIOS ¡Muchas gracias!",
+        "tips":  [
+                     "¿Te son útiles mis recetas? Pues nada me ayuda más que vuestros LIKES y COMENTARIOS ¡Muchas gracias!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -8270,7 +8440,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "6.- Tartaleta caliente de manzana al ron, helado de vainilla y Chantillí 7.- Crema tostada de queso con plátano. @restaurantebatik.",
+        "steps":  [
+                      "6.- Tartaleta caliente de manzana al ron, helado de vainilla y Chantillí 7.- Crema tostada de queso con plátano. @restaurantebatik."
+                  ],
         "tips":  [
                      "2.- Gambones en gabardina de curry-tandoori con alioli de piquillo y almendras. (Muy rica la salsa).",
                      "3.- Tomate eco, burrita y bacon crujiente con vinagreta de almendra dulce y balsámico.",
@@ -8367,7 +8539,9 @@
                             "1 cucharadita comino en polvo",
                             "Pimienta negra molida al gusto"
                         ],
-        "steps":  "Aceite de oliva virgen extra (dorar las láminas)",
+        "steps":  [
+                      "Aceite de oliva virgen extra (dorar las láminas)"
+                  ],
         "tips":  [
                      "By: @purahealthyvida",
                      "Hacer láminas de calabacín con ayuda de un pelador de patatas o mandolina. Poner sobre papel absorbente 10 minutos.",
@@ -8393,7 +8567,9 @@
                       "Sigue los pasos del vídeo, cocina en airfryer 6 min a 195 grados (a los 3 min te aconsejo darles la vuelta) y a disfrutar!",
                       "Te va a encantar"
                   ],
-        "tips":  "Tienes que probar esta receta porque te va a encantar! Además es una receta rapidísima y va a triunfar en casa!",
+        "tips":  [
+                     "Tienes que probar esta receta porque te va a encantar! Además es una receta rapidísima y va a triunfar en casa!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -8587,7 +8763,9 @@
                       "De postre, dorayaki casero y té matcha con un delicioso mochi",
                       "Pero, sin duda, lo más divertido fue ver a nuestra peque pasándoselo taaan bien. Os recomiendo que vayáis, con o sin niños, solos o con quien os dé la gana. Que dentro de 25 años tengamos más recuerdos que valgan la nostalgia."
                   ],
-        "tips":  "Anoche, un cuarto de siglo después, me hacía gracia cada vez que Ayako sacaba un plato de la barra a nuestra mesa, donde nos sentamos a probar gran parte de la carta del @yatairamenedupa No lo hubiera jurado entonces, pero un plato de takoyaki, bolas de pulpo riquísimas muy típicas en Osaka, es más apetecible que un cerebrito.",
+        "tips":  [
+                     "Anoche, un cuarto de siglo después, me hacía gracia cada vez que Ayako sacaba un plato de la barra a nuestra mesa, donde nos sentamos a probar gran parte de la carta del @yatairamenedupa No lo hubiera jurado entonces, pero un plato de takoyaki, bolas de pulpo riquísimas muy típicas en Osaka, es más apetecible que un cerebrito."
+                 ],
         "formatFlag":  false
     },
     {
@@ -8799,7 +8977,9 @@
         "title":  "Ravioli de Calabacín",
         "category":  "Pasta",
         "url":  "https://www.instagram.com/reel/CjgP1_Ig345/",
-        "ingredients":  "1 calabacín grande",
+        "ingredients":  [
+                            "1 calabacín grande"
+                        ],
         "steps":  [
                       "Jamón cocido para el relleno",
                       "Mozzarella",
@@ -8813,7 +8993,9 @@
                       "En un molde apto para horno, ponemos salsa de tomate y encima los ravioli; añadimos un poco más de mozzarella y horneamos con el horno precalentado a 200 grados unos 35 minutos.",
                       "Y listos! Quedan súper súper ricos, la verdad que no sé cómo he tardado tanto tiempo en probarlos!"
                   ],
-        "tips":  "Receta viral que todavía no había hecho y que la he dejado como colofón a esta temporada de calabacines. Adiós calabacines! Os echaré mucho de menos, hemos disfrutado mucho de vosotros",
+        "tips":  [
+                     "Receta viral que todavía no había hecho y que la he dejado como colofón a esta temporada de calabacines. Adiós calabacines! Os echaré mucho de menos, hemos disfrutado mucho de vosotros"
+                 ],
         "formatFlag":  false
     },
     {
@@ -9095,7 +9277,9 @@
                             "3 Lonchas de pechuga de pavo @lacarlotena",
                             "1 Huevo (para debozar)"
                         ],
-        "steps":  "Copos de maíz sin azúcar triturados (para debozar)",
+        "steps":  [
+                      "Copos de maíz sin azúcar triturados (para debozar)"
+                  ],
         "tips":  [
                      "By: @viajeroscocinillas",
                      "Esta idea la probamos en casa por que Sara desde pequeña odia los sanjacobos y por que Alex no es muy fan de la berenjena. Pero después de probar esta receta los dos hemos cambiado el chip y repetiremos sin duda por que quedan increibles y super crujientes.",
@@ -9730,7 +9914,9 @@
         "title":  "Pizzas de Berenjena",
         "category":  "Pizzas",
         "url":  "https://www.instagram.com/p/CWjDotIM6hg/",
-        "ingredients":  "1 berenjena",
+        "ingredients":  [
+                            "1 berenjena"
+                        ],
         "steps":  [
                       "Tomate frito de @labentabola",
                       "Jamón serrano",
@@ -9754,7 +9940,9 @@
         "title":  "Libritos de Pollo",
         "category":  "Carne",
         "url":  "https://www.instagram.com/p/CVcqND9IRBP/",
-        "ingredients":  "1 vez lo tengamos montado lo rebozamos, para ello necesitamos machacar un poco los copos de maiz junto con el perejil y batir el huevo en un cuenco. En en un plato ponemos los copos de maíz machacados y procedemos a enpanarlos, pasa primerlo el sanjacobo por los copos de maíz, luego por el huevo y por último otra vez por los copos de maíz. Colocamos el sanjacobo encima de una bandeja de horno con papel vegetal o papel de aluminio engrasado con un poquito de AOVE. Horneamos unos 30min y listo.",
+        "ingredients":  [
+                            "1 vez lo tengamos montado lo rebozamos, para ello necesitamos machacar un poco los copos de maiz junto con el perejil y batir el huevo en un cuenco. En en un plato ponemos los copos de maíz machacados y procedemos a enpanarlos, pasa primerlo el sanjacobo por los copos de maíz, luego por el huevo y por último otra vez por los copos de maíz. Colocamos el sanjacobo encima de una bandeja de horno con papel vegetal o papel de aluminio engrasado con un poquito de AOVE. Horneamos unos 30min y listo."
+                        ],
         "steps":  [
 
                   ],
@@ -9812,7 +10000,9 @@
         "title":  "Contramuslos de Pollo con Calabacín y Limón",
         "category":  "Carne",
         "url":  "https://www.instagram.com/p/CUubjKAj5x7/",
-        "ingredients":  "1 receta muy sencilla para aprovechar la temporada de calabacín.",
+        "ingredients":  [
+                            "1 receta muy sencilla para aprovechar la temporada de calabacín."
+                        ],
         "steps":  [
                       "Me gusta reducir la salsa poniéndola en un cazo a fuego fuerte para concentrar el sabor y que no quede tan líquida.",
                       "2 o 3 contramuslos de pollo ecológicos.",
@@ -9823,7 +10013,9 @@
                       "Sal y pimienta.",
                       "Opcional: un poquito de caldo de pollo o vino blanco para la salsa."
                   ],
-        "tips":  "Yo utilicé contramuslos porque son bastante jugosos en comparación con las pechugas pero podéis hacerlo con un pollo entero o solo con las pechugas. En ese caso cambian los tiempos de cocción.",
+        "tips":  [
+                     "Yo utilicé contramuslos porque son bastante jugosos en comparación con las pechugas pero podéis hacerlo con un pollo entero o solo con las pechugas. En ese caso cambian los tiempos de cocción."
+                 ],
         "formatFlag":  false
     },
     {
@@ -9948,7 +10140,9 @@
                       "Nuestra experiencia fue increíble. No solo nos encantó la sensación de salir de “los típicos platos de moda” para degustar platos de siempre y de nuestra tierra sino que también nos encantó el trato por parte de Alejandro y Carmen (ambos encantadores).",
                       "¡Os lo recomendamos!"
                   ],
-        "tips":  "Hoy os queremos hablar de @taberna_monroy",
+        "tips":  [
+                     "Hoy os queremos hablar de @taberna_monroy"
+                 ],
         "formatFlag":  false
     },
     {
@@ -10158,7 +10352,9 @@
         "title":  "Empanada Mejicana",
         "category":  "Carne",
         "url":  "https://www.instagram.com/p/CN5EZJFnrUR/",
-        "ingredients":  "200 g de carne picada",
+        "ingredients":  [
+                            "200 g de carne picada"
+                        ],
         "steps":  [
                       "Tomate frito",
                       "1 lamina de hojaldre",
@@ -10190,7 +10386,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Mi nueva cena favorita son estos bocados de pollo explosivos de queso, con un rebozado de sésamo negro que es total!",
+        "tips":  [
+                     "Mi nueva cena favorita son estos bocados de pollo explosivos de queso, con un rebozado de sésamo negro que es total!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -10237,7 +10435,9 @@
                             "2 cucharadas de salsa teriyaki",
                             "1/2 vaso de agua o caldo"
                         ],
-        "steps":  "Se trocea la cebolla y la zanahoria y se frie hasta que la cebolla este transparente. Se marcan el solomillo por los dos lados se añade la manzana pelada, la mostaza, la salsa teriyaki y el agua. Se cocina en la olla rápida durante 10 minutos. Se pasa la salsa y lista para comer.",
+        "steps":  [
+                      "Se trocea la cebolla y la zanahoria y se frie hasta que la cebolla este transparente. Se marcan el solomillo por los dos lados se añade la manzana pelada, la mostaza, la salsa teriyaki y el agua. Se cocina en la olla rápida durante 10 minutos. Se pasa la salsa y lista para comer."
+                  ],
         "tips":  [
 
                  ],
@@ -10319,7 +10519,9 @@
         "title":  "Hachís Parmentier",
         "category":  "Carne",
         "url":  "https://www.instagram.com/p/CL42hG-ny_B/",
-        "ingredients":  "Puré de patatas",
+        "ingredients":  [
+                            "Puré de patatas"
+                        ],
         "steps":  [
                       "Carne picada",
                       "Huevos duros",
@@ -10490,7 +10692,9 @@
                       "Incorpora el caldo y programa 20 min/100°C/vel 1.",
                       "Añade el queso parmesano rallado reservado y tritura 30 seg/vel 5-10 progresivamente. Reparte la crema en boles, añade los picatostes, espolvorea con queso parmesano en lascas y el cebollino picado y sirve caliente."
                   ],
-        "tips":  "El puerro es un alimento que refuerza el sistema inmunológico y además tiene propiedades diuréticas. ¡Vamos con la receta!",
+        "tips":  [
+                     "El puerro es un alimento que refuerza el sistema inmunológico y además tiene propiedades diuréticas. ¡Vamos con la receta!"
+                 ],
         "formatFlag":  true
     },
     {
@@ -10570,7 +10774,9 @@
                       "Por último, sacamos la ramita de canela y añadimos agua hasta cubrir el guiso y la salsa de soja de la marinada y dejamos cocer hasta que la salsa quede trabada. En ese momento añadimos las almendras enteras, removemos y dejamos reposar 5 minutos.",
                       "Está riquísimo y podemos acompañarlo con arroz blanco o cuscus de verduras (en www.labentabola.com)"
                   ],
-        "tips":  "#",
+        "tips":  [
+                     "#"
+                 ],
         "formatFlag":  false
     },
     {
@@ -10669,7 +10875,9 @@
                       "En www.labentabola.com muchas variantes del San Jacobo: cerdo, pollo, cabrales, bacon,...",
                       "Link en la bio!⤴"
                   ],
-        "tips":  "Aplastar los filetes lo más finos que se pueda, poner lonchas de queso y después de jamón",
+        "tips":  [
+                     "Aplastar los filetes lo más finos que se pueda, poner lonchas de queso y después de jamón"
+                 ],
         "formatFlag":  false
     },
     {
@@ -10690,7 +10898,9 @@
                             "Chorrito de brandy",
                             "Salsa de trufa o aceite de trufa"
                         ],
-        "steps":  "Se trocea el ajo y se frie, se trocean las cebolletas tanto la parte blanca como la verde y se añaden. Se trocean las setas y se echan con las cebolletas y el ajo, cuando esten guisadas, se añade la pasta, salamos y cubrimos de caldo, y el chorrito de brandy, removemos continuamente, cuando se quede sin liquido añadimos más caldo, y repetimos la operación sin parar de remover, hasta que quede tierno. Rectificamos de sal o le podemos añadir un poco de salsa de soja. Se ralla el parmesano y se mezcla con la pasta, se añade salsa de trufa o aceite de trufa, se pica un poco de cebollino y se añade.",
+        "steps":  [
+                      "Se trocea el ajo y se frie, se trocean las cebolletas tanto la parte blanca como la verde y se añaden. Se trocean las setas y se echan con las cebolletas y el ajo, cuando esten guisadas, se añade la pasta, salamos y cubrimos de caldo, y el chorrito de brandy, removemos continuamente, cuando se quede sin liquido añadimos más caldo, y repetimos la operación sin parar de remover, hasta que quede tierno. Rectificamos de sal o le podemos añadir un poco de salsa de soja. Se ralla el parmesano y se mezcla con la pasta, se añade salsa de trufa o aceite de trufa, se pica un poco de cebollino y se añade."
+                  ],
         "tips":  [
 
                  ],
@@ -10732,7 +10942,9 @@
         "title":  "Ensalada de Pollo Teriyaki",
         "category":  "Carne",
         "url":  "https://www.instagram.com/p/CC1JFhunBBO/",
-        "ingredients":  "1 ensalada rica, rica y sabrosa con un toque diferente",
+        "ingredients":  [
+                            "1 ensalada rica, rica y sabrosa con un toque diferente"
+                        ],
         "steps":  [
                       "Mezcla de lechugas",
                       "Pechugas de pollo",
@@ -10865,7 +11077,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Poner capas alargadas o en rodajas de calabacín, tomate, jamón y mozarella así repetidamente.",
+        "tips":  [
+                     "Poner capas alargadas o en rodajas de calabacín, tomate, jamón y mozarella así repetidamente."
+                 ],
         "formatFlag":  false
     },
     {
@@ -11060,7 +11274,9 @@
                       "Para aprovechar la verdura del cocido se puede triturar y hacer puré.",
                       "Se sirve con un trocito de chorizo, de morcilla, de ternera y de pollo."
                   ],
-        "tips":  "Se hace un cocido con la zanahoria, la cebolla, la patatas, los puerros, el apio la carne y los garbanzos (receta en @labentabola)",
+        "tips":  [
+                     "Se hace un cocido con la zanahoria, la cebolla, la patatas, los puerros, el apio la carne y los garbanzos (receta en @labentabola)"
+                 ],
         "formatFlag":  false
     },
     {
@@ -11155,7 +11371,9 @@
                       "En una sartén antiadherente grande poner un chorrito de AOVE, con fuego medio-bajo, cuando esté caliente echar los huevos batidos y distribuir por encima el resto de los ingredientes",
                       "Dejar que se cuaje el huevo al gusto y lista para degustar!"
                   ],
-        "tips":  "Esta buenísima! Ingredientes",
+        "tips":  [
+                     "Esta buenísima! Ingredientes"
+                 ],
         "formatFlag":  true
     },
     {
@@ -11218,7 +11436,9 @@
                       "Esta buenísimo!",
                       "Puede hacerse más pequeño y servir de aperitivo!"
                   ],
-        "tips":  "Tiras de pechugas de pollo",
+        "tips":  [
+                     "Tiras de pechugas de pollo"
+                 ],
         "formatFlag":  false
     },
     {
@@ -11710,7 +11930,9 @@
                       "Oferta por tiempo limitado. Link en nuestro perfil @myrealfood_app",
                       "—"
                   ],
-        "tips":  "Las cantidades de los platos deben ser individualizadas según tus requerimientos.",
+        "tips":  [
+                     "Las cantidades de los platos deben ser individualizadas según tus requerimientos."
+                 ],
         "formatFlag":  false,
         "mix":  true
     },
@@ -11738,8 +11960,12 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Y recuerda: cenar demasiado poco no necesariamente te ayudará a perder más grasa. Si la cena se queda corta, es mucho más fácil acabar picando después, tener más hambre o levantarte al día siguiente con más ansiedad por la comida.",
-        "tips":  "Y esta vez no te dejo solo la idea: en cada una tienes los ingredientes y la elaboración paso a paso para que puedas prepararla fácilmente en casa.",
+        "steps":  [
+                      "Y recuerda: cenar demasiado poco no necesariamente te ayudará a perder más grasa. Si la cena se queda corta, es mucho más fácil acabar picando después, tener más hambre o levantarte al día siguiente con más ansiedad por la comida."
+                  ],
+        "tips":  [
+                     "Y esta vez no te dejo solo la idea: en cada una tienes los ingredientes y la elaboración paso a paso para que puedas prepararla fácilmente en casa."
+                 ],
         "formatFlag":  false,
         "mix":  true
     },
@@ -11757,7 +11983,9 @@
                       "No olvides seguirme para más contenido como este y recuerda: la vida real es complicada. Hay días en los que tienes tiempo para cocinar y otros en los que necesitas resolver una cena en 10 minutos. Y no pasa nada.",
                       "Porque comer saludable también puede ser fácil, rápido y estar muy rico"
                   ],
-        "tips":  "Os dejo por aquí tal como me pedisteis nuestro post con ideas y sus RECETAS",
+        "tips":  [
+                     "Os dejo por aquí tal como me pedisteis nuestro post con ideas y sus RECETAS"
+                 ],
         "formatFlag":  false,
         "mix":  true
     },
@@ -11981,7 +12209,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Pesto de aguacate con tomate!",
+        "tips":  [
+                     "Pesto de aguacate con tomate!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -12008,7 +12238,9 @@
         "title":  "Organizador de Menús Semanales",
         "category":  "Otras",
         "url":  "https://www.instagram.com/reel/DcTDDHBxz5S/",
-        "ingredients":  "1 forma súper sencilla de organizar los menús de la semana y, además, hacer partícipes a los peques",
+        "ingredients":  [
+                            "1 forma súper sencilla de organizar los menús de la semana y, además, hacer partícipes a los peques"
+                        ],
         "steps":  [
                       "¿Quieres más ideas de menús y un montón de recursos para organizar la vuelta al cole?",
                       "Escribe IDEAS MENÚ en comentarios y te los mandamos!",
@@ -12335,7 +12567,9 @@
                       "Una forma sencilla de comer limpio, con proteína y sin sufrir cada bocado.",
                       "Porque estar en dieta no significa comer triste"
                   ],
-        "tips":  "Lanzó una pregunta que muchos nos hemos hecho alguna vez…",
+        "tips":  [
+                     "Lanzó una pregunta que muchos nos hemos hecho alguna vez…"
+                 ],
         "formatFlag":  false
     },
     {
@@ -12656,7 +12890,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Tiene esto.",
+        "tips":  [
+                     "Tiene esto."
+                 ],
         "formatFlag":  false
     },
     {
@@ -12904,7 +13140,9 @@
                       "Recuerda que la información es poder",
                       "©@blwideasapp"
                   ],
-        "tips":  "Introducir la comida puede resultar aterrador, al principio todo es muy nuevo para ti y para el bebé ‍ Pero puedes contar con nosotras para hacer este proceso mucho más fácil",
+        "tips":  [
+                     "Introducir la comida puede resultar aterrador, al principio todo es muy nuevo para ti y para el bebé ‍ Pero puedes contar con nosotras para hacer este proceso mucho más fácil"
+                 ],
         "formatFlag":  false
     },
     {
@@ -12928,7 +13166,9 @@
         "title":  "Menú de Alimentación Complementaria para Bebés",
         "category":  "Bebe",
         "url":  "https://www.instagram.com/p/DXJ0ZF5CMKH/",
-        "ingredients":  "1 de las preguntas que más me llegan es siempre la misma: ¿por dónde empiezo?",
+        "ingredients":  [
+                            "1 de las preguntas que más me llegan es siempre la misma: ¿por dónde empiezo?"
+                        ],
         "steps":  [
                       "Por eso te he preparado este menú con los 5 primeros alimentos que puedes ofrecer esta semana, con las dos formas de hacerlo: BLW y triturado.",
                       "Sin complicaciones. Sin recetas elaboradas.",
@@ -12941,7 +13181,9 @@
                       "Escribe en comentarios “TALLER ALIMENTOS” y te paso toda la info.",
                       "¿Tienes alguna duda sobre cómo introducir algún alimento? ¡Os leo en comentarios!"
                   ],
-        "tips":  "Y tiene sentido. Hay mucha información, mucha contradicción, y cuando tienes a tu bebé delante con ganas de explorar... el miedo puede más que las ganas.",
+        "tips":  [
+                     "Y tiene sentido. Hay mucha información, mucha contradicción, y cuando tienes a tu bebé delante con ganas de explorar... el miedo puede más que las ganas."
+                 ],
         "formatFlag":  false
     },
     {
@@ -12973,7 +13215,9 @@
                             "especias al gusto: puse ajo y orégano",
                             "30 g queso mozzarella"
                         ],
-        "steps":  "Rellena al gusto y disfruta",
+        "steps":  [
+                      "Rellena al gusto y disfruta"
+                  ],
         "tips":  [
 
                  ],
@@ -13030,7 +13274,9 @@
                       "Acaba con la vinagreta y tus especias preferidas",
                       "Mil gracias!"
                   ],
-        "tips":  "ESTÁ IDEA!",
+        "tips":  [
+                     "ESTÁ IDEA!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -13142,7 +13388,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "El aceite, no lo tires, lo podrás usar para cocinar, queda con un saborcito súper rico.",
+        "steps":  [
+                      "El aceite, no lo tires, lo podrás usar para cocinar, queda con un saborcito súper rico."
+                  ],
         "tips":  [
 
                  ],
@@ -13189,7 +13437,9 @@
         "title":  "Salsa de Huevo y Queso Batido con Ajo",
         "category":  "Salsas",
         "url":  "https://www.instagram.com/reel/DUVjElrjIHX/",
-        "ingredients":  "1 huevo cocido y 250 g queso batido y ajo en polvo.",
+        "ingredients":  [
+                            "1 huevo cocido y 250 g queso batido y ajo en polvo."
+                        ],
         "steps":  [
 
                   ],
@@ -13203,7 +13453,9 @@
         "title":  "Salsa de Alubias y Pimientos del Piquillo",
         "category":  "Salsas",
         "url":  "https://www.instagram.com/reel/DUVjElrjIHX/",
-        "ingredients":  "100 g Alubias y 5 pimientos piquillo, pimentón un chorrito de líquido de los pimientos.",
+        "ingredients":  [
+                            "100 g Alubias y 5 pimientos piquillo, pimentón un chorrito de líquido de los pimientos."
+                        ],
         "steps":  [
 
                   ],
@@ -13249,7 +13501,9 @@
         "title":  "Salsa de Alubias y Aceitunas con Anchoa",
         "category":  "Salsas",
         "url":  "https://www.instagram.com/reel/DUVjElrjIHX/",
-        "ingredients":  "100 g de alubias y 60 g de aceitunas con anchoa y líquido de las aceitunas.",
+        "ingredients":  [
+                            "100 g de alubias y 60 g de aceitunas con anchoa y líquido de las aceitunas."
+                        ],
         "steps":  [
 
                   ],
@@ -13372,7 +13626,9 @@
                             "Miel (aprox 5 cucharadas)",
                             "Aceite de girasol (un buen chorro)"
                         ],
-        "steps":  "Si la quieres opción choco, agrégalo en trocitos al final, cuando ya esté cocinada y fuera del horno fría!",
+        "steps":  [
+                      "Si la quieres opción choco, agrégalo en trocitos al final, cuando ya esté cocinada y fuera del horno fría!"
+                  ],
         "tips":  [
 
                  ],
@@ -13561,7 +13817,9 @@
         "title":  "Saquitos de Queso de Cabra y Miel",
         "category":  "Entrantes y Aperitivos",
         "url":  "https://www.instagram.com/reel/DRUV-wzCBVo/",
-        "ingredients":  "1 vez templados, decoro con cebollino y listos.",
+        "ingredients":  [
+                            "1 vez templados, decoro con cebollino y listos."
+                        ],
         "steps":  [
 
                   ],
@@ -13722,7 +13980,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Para Asesorías, escríbeme al WhatsApp de mi perfil.",
+        "tips":  [
+                     "Para Asesorías, escríbeme al WhatsApp de mi perfil."
+                 ],
         "formatFlag":  false
     },
     {
@@ -13779,7 +14039,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "‼ Haz tu reserva de mesa para el día y hora que prefieras. Enlace directamente en la bio",
+        "steps":  [
+                      "‼ Haz tu reserva de mesa para el día y hora que prefieras. Enlace directamente en la bio"
+                  ],
         "tips":  [
                      "1 Siempre lo vas a probar, mi padre invita",
                      "2 Significa que tenemos receta nueva",
@@ -13939,7 +14201,9 @@
         "title":  "Crema Proteica de Chocolate",
         "category":  "Sopas y Cremas",
         "url":  "https://www.instagram.com/reel/DNxikpgWpBR/",
-        "ingredients":  "1 receta fit, fácil y alta en proteína, por lo que te saciará muchísimo y te vas a nutrir sin necesidad de bollería o ultraprocesados.",
+        "ingredients":  [
+                            "1 receta fit, fácil y alta en proteína, por lo que te saciará muchísimo y te vas a nutrir sin necesidad de bollería o ultraprocesados."
+                        ],
         "steps":  [
                       "Solo necesitas triturar:",
                       "200 g queso cottage (te sirve yogur o queso fresco batido)",
@@ -14021,7 +14285,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Más trucos de cocina, ideas y recetas deliciosas @futurlife21",
+        "steps":  [
+                      "Más trucos de cocina, ideas y recetas deliciosas @futurlife21"
+                  ],
         "tips":  [
 
                  ],
@@ -14181,7 +14447,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Pero mucho más nutritivo. No soy enemiga del pan, pero si como a mí te cuesta comer legumbres en verano, esta es una opción que a nosotros en casa nos va fenomenal",
+        "tips":  [
+                     "Pero mucho más nutritivo. No soy enemiga del pan, pero si como a mí te cuesta comer legumbres en verano, esta es una opción que a nosotros en casa nos va fenomenal"
+                 ],
         "formatFlag":  false
     },
     {
@@ -14269,7 +14537,9 @@
                       "1.Tritura todo y deja enfriar.",
                       "Mil gracias!"
                   ],
-        "tips":  "Guarda porque queda brutal.!",
+        "tips":  [
+                     "Guarda porque queda brutal.!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -14361,11 +14631,15 @@
         "title":  "Arroz Frito en Airfryer",
         "category":  "Arroces",
         "url":  "https://www.instagram.com/reel/DIZkrDTs8KQ/",
-        "ingredients":  "15 minutos en la airfryer",
+        "ingredients":  [
+                            "15 minutos en la airfryer"
+                        ],
         "steps":  [
 
                   ],
-        "tips":  "Ya sabes qué hacer con tus próximas sobras de arroz",
+        "tips":  [
+                     "Ya sabes qué hacer con tus próximas sobras de arroz"
+                 ],
         "formatFlag":  false
     },
     {
@@ -14383,8 +14657,12 @@
                             "Sal y pimienta al gusto",
                             "1 huevo batido"
                         ],
-        "steps":  "Cocina 30 min a 190 grados",
-        "tips":  "Sólo te harán falta:",
+        "steps":  [
+                      "Cocina 30 min a 190 grados"
+                  ],
+        "tips":  [
+                     "Sólo te harán falta:"
+                 ],
         "formatFlag":  false
     },
     {
@@ -14626,7 +14904,9 @@
                       "4.Moja con salsa de yogur y a disfrutar",
                       "Salsa de yogur:Mezcla 1 yogur griego con un Chorrito de limón, pizca de jengibre, cebollino picado, pimienta y una cucharadita de mostaza."
                   ],
-        "tips":  "GUARDA PORQUE QUEDAN BRUTALES!",
+        "tips":  [
+                     "GUARDA PORQUE QUEDAN BRUTALES!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -14809,7 +15089,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "La salsa de tomate me sorprendió por lo sabrosa que sale. Si quisieras hacer tomate frito, una vez triturada, no tienes más que ponerla en una sartén con aceite y que se fría durante 20/30 minutos.",
+        "steps":  [
+                      "La salsa de tomate me sorprendió por lo sabrosa que sale. Si quisieras hacer tomate frito, una vez triturada, no tienes más que ponerla en una sartén con aceite y que se fría durante 20/30 minutos."
+                  ],
         "tips":  [
 
                  ],
@@ -14823,7 +15105,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Las berenjenas… me gustan tanto así que nunca más las voy a hacer fritas con aceite. El truco para que queden ultra jugosas, lo da la leche.",
+        "steps":  [
+                      "Las berenjenas… me gustan tanto así que nunca más las voy a hacer fritas con aceite. El truco para que queden ultra jugosas, lo da la leche."
+                  ],
         "tips":  [
 
                  ],
@@ -14842,7 +15126,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Sólo necesitas:",
+        "tips":  [
+                     "Sólo necesitas:"
+                 ],
         "formatFlag":  false
     },
     {
@@ -14892,7 +15178,9 @@
                       "Haz 2 huecos en la sartén. Casca 2 huevos y ponles un poco de sal. Tápalos y deja que cuajen unos 3 minutos.",
                       "Reparte en 2 táperes y listo."
                   ],
-        "tips":  "2 Táperes en 10 min‼",
+        "tips":  [
+                     "2 Táperes en 10 min‼"
+                 ],
         "formatFlag":  false
     },
     {
@@ -14928,7 +15216,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Hazla con:",
+        "tips":  [
+                     "Hazla con:"
+                 ],
         "formatFlag":  false
     },
     {
@@ -15108,7 +15398,9 @@
                             "1 masa de hojaldre",
                             "Sal"
                         ],
-        "steps":  "( @cocinacongent )",
+        "steps":  [
+                      "( @cocinacongent )"
+                  ],
         "tips":  [
 
                  ],
@@ -15706,7 +15998,9 @@
                       "Corta en rodajas y sumerge en chocolate fundido.Refrigera hasta que cuaje el chocolate y listo",
                       "Mil gracias!"
                   ],
-        "tips":  "GUARDA PARA PREPARARLAS PORQUE ESTÁN BRUTALES Y SON MUY FÁCILES!",
+        "tips":  [
+                     "GUARDA PARA PREPARARLAS PORQUE ESTÁN BRUTALES Y SON MUY FÁCILES!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -15753,7 +16047,9 @@
                       "Si te gusta más o menos cuajado solo tienes que variar el tiempo a tu gusto.",
                       "Puedes rehogar las verduras antes en la sartén si las quieres más blanditas. Yo las pongo directamente, la textura me gusta."
                   ],
-        "tips":  "Guárdate este idea para hacerla sin parar, puedes ir cambiando las verduras y siempre sale rica. Te va a encantar!",
+        "tips":  [
+                     "Guárdate este idea para hacerla sin parar, puedes ir cambiando las verduras y siempre sale rica. Te va a encantar!"
+                 ],
         "formatFlag":  true
     },
     {
@@ -15761,7 +16057,9 @@
         "title":  "Carpaccio de Remolacha",
         "category":  "Verduras",
         "url":  "https://www.instagram.com/reel/C1peqsWtG2T/",
-        "ingredients":  "1 cena ligera, rápida y deliciosa, para dar un respiro al estómago antes de que llegue el roscón",
+        "ingredients":  [
+                            "1 cena ligera, rápida y deliciosa, para dar un respiro al estómago antes de que llegue el roscón"
+                        ],
         "steps":  [
                       "Es tan fácil como cortar una remolacha en rodajas muy finas.",
                       "Aliña con un poco de salsa de mostaza y miel o únicamente con mostaza.",
@@ -15779,7 +16077,9 @@
         "title":  "Galette de Pera y Quesos",
         "category":  "Entrantes y Aperitivos",
         "url":  "https://www.instagram.com/reel/C1J8iMEIA9L/",
-        "ingredients":  "1 receta muy esperada por mi hermana. Exactamente 2 años, desde que salió mi libro",
+        "ingredients":  [
+                            "1 receta muy esperada por mi hermana. Exactamente 2 años, desde que salió mi libro"
+                        ],
         "steps":  [
                       "Pero me he propuesto, que, de estas navidades, no pase, y sorprenderla con esta receta que lleva esperando tanto tiempo. Y además, desde que es madre, el tiempo de cocinar para ella es escaso, así que esta noche, me encargo yo de la cena ‍",
                       "Le he dado un toque diferente, con ingredientes que sé que le encantan: puerro, pera y sus quesos favoritos.",
@@ -15925,7 +16225,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Si se te acaban las ideas para cocinar, escribe los alimentos que tienes en la nevera en la app MyRealFood y te daremos una comida saludable con esos ingredientes Descarga la app gratis en la BIO de @myrealfood_app",
+        "steps":  [
+                      "Si se te acaban las ideas para cocinar, escribe los alimentos que tienes en la nevera en la app MyRealFood y te daremos una comida saludable con esos ingredientes Descarga la app gratis en la BIO de @myrealfood_app"
+                  ],
         "tips":  [
 
                  ],
@@ -16003,7 +16305,9 @@
         "title":  "Tortita de Avena Rellena de Espinacas",
         "category":  "Verduras",
         "url":  "https://www.instagram.com/reel/Cwnib2pLEJx/",
-        "ingredients":  ", perfecta para los días con menos tiempo y que quieras cuidarte disfrutando de una rica cena. Además es una receta muy versátil con mil posibilidades de rellenos",
+        "ingredients":  [
+                            ", perfecta para los días con menos tiempo y que quieras cuidarte disfrutando de una rica cena. Además es una receta muy versátil con mil posibilidades de rellenos"
+                        ],
         "steps":  [
                       "Tortita de avena",
                       "Un puñado de espinacas frescas",
@@ -16061,7 +16365,9 @@
                       "Asa los pimientos en horno o airfryer (20’ a 190/200), quita la piel, tallo y pepitas y tritura con el resto",
                       "Decora con el extra"
                   ],
-        "tips":  "Fácil, saludable y perfecto para dipear!",
+        "tips":  [
+                     "Fácil, saludable y perfecto para dipear!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -16142,7 +16448,9 @@
                       "Puedes sustituir los frutos secos por copos de maíz sin azúcar",
                       "Puedes sustituir el huevo por harina de garbanzos y agua."
                   ],
-        "tips":  "Aquí tienes la solución a tus cenas de verano!",
+        "tips":  [
+                     "Aquí tienes la solución a tus cenas de verano!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -16184,7 +16492,9 @@
                       "Por encima espolvoreé una mezcla de parmesano y orégano y le dio un toque espectacular!",
                       "A DISFRUTAAAR"
                   ],
-        "tips":  "No os puedo explicar lo rica que queda esta piadina-pizza! La combinación de ingredientes es brutal y queda suuuper crujiente",
+        "tips":  [
+                     "No os puedo explicar lo rica que queda esta piadina-pizza! La combinación de ingredientes es brutal y queda suuuper crujiente"
+                 ],
         "formatFlag":  false
     },
     {
@@ -16266,7 +16576,9 @@
                       "A pesar de su tamaño, tendréis aquí todas las comodidades necesarias - baño completo con ducha, cocina exterior con zona chill out, piscina en la que refrescaros durante el verano, y, si os preocupan los días calurosos, esta mini casa cuenta también con aire acondicionado.",
                       "Gracias a su situación, disfrutaréis desde ella de unas increíbles vistas a la Costa del Sol desde la privacidad y la tranquilidad del alojamiento, y a 5 minutos en coche, de la Playa de Benajarafe."
                   ],
-        "tips":  "Hoy os traemos esta original mini casa: una cabaña alpina totalmente acristalada en Chilches, en la cálida provincia de Málaga.",
+        "tips":  [
+                     "Hoy os traemos esta original mini casa: una cabaña alpina totalmente acristalada en Chilches, en la cálida provincia de Málaga."
+                 ],
         "formatFlag":  false,
         "mix":  true
     },
@@ -16386,7 +16698,9 @@
                       "Os dejo el enlace con los descuentos en stories.",
                       "Publi"
                   ],
-        "tips":  "Te voy a dejar sin palabras con este brócoli cremoso y delicioso, con un sutil sabor a queso que le va ideal",
+        "tips":  [
+                     "Te voy a dejar sin palabras con este brócoli cremoso y delicioso, con un sutil sabor a queso que le va ideal"
+                 ],
         "formatFlag":  false
     },
     {
@@ -16440,8 +16754,12 @@
                             "2 cucharadas de aove",
                             "Sal"
                         ],
-        "steps":  "Sigue los pasos del vídeo, cocina en airfryer 20 min a 200 grados y listo! A DISFRUTAAAR",
-        "tips":  "Estas chips son un vicio total, además no pueden ser más fáciles!",
+        "steps":  [
+                      "Sigue los pasos del vídeo, cocina en airfryer 20 min a 200 grados y listo! A DISFRUTAAAR"
+                  ],
+        "tips":  [
+                     "Estas chips son un vicio total, además no pueden ser más fáciles!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -16600,7 +16918,9 @@
                       "Hornea 25-30 min (180°C) o hasta que la superficie esté dorada.",
                       "Coloca en el centro de la galette, la burrata y espolvorea con la pimienta rosa. Corta en porciones y sirve."
                   ],
-        "tips":  "Anota esta receta de galette de brócoli que también verás en",
+        "tips":  [
+                     "Anota esta receta de galette de brócoli que también verás en"
+                 ],
         "formatFlag":  false
     },
     {
@@ -16754,7 +17074,9 @@
                       "Pasa a un molde o recio puente apto para microondas, ligeramente engrasado y cocina 2,5’ a Máxima potencia",
                       "Desmolda, corta por la mitad, rellena, pasa por la plancha y listo!"
                   ],
-        "tips":  "GUARDA PORQUE QUEDA BRUTAL!",
+        "tips":  [
+                     "GUARDA PORQUE QUEDA BRUTAL!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -16865,7 +17187,9 @@
         "steps":  [
 
                   ],
-        "tips":  "GUARDA PORQUE EN MENOS DE 10’ LA TIENES LISTA Y QUEDA BRUTAL!",
+        "tips":  [
+                     "GUARDA PORQUE EN MENOS DE 10’ LA TIENES LISTA Y QUEDA BRUTAL!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -17038,7 +17362,9 @@
                       "Sigue los pasos y cocina en airfryer 20 min a 200 grados. Sirve y DISFRUTAAA",
                       "Te van a encantar"
                   ],
-        "tips":  "Si os gustan las cosas crujientes, tenéis que probar esta receta! Me ha FASCINADO! No me extraña que sea taaan viral",
+        "tips":  [
+                     "Si os gustan las cosas crujientes, tenéis que probar esta receta! Me ha FASCINADO! No me extraña que sea taaan viral"
+                 ],
         "formatFlag":  false
     },
     {
@@ -17046,7 +17372,9 @@
         "title":  "Dip de Yogur y Garbanzos con Pan Naan",
         "category":  "Entrantes y Aperitivos",
         "url":  "https://www.instagram.com/reel/CmCcVYoIqIn/",
-        "ingredients":  "Por otro lado hacemos la salsa, poniendo en una olla a calentar el aceite y mientras se",
+        "ingredients":  [
+                            "Por otro lado hacemos la salsa, poniendo en una olla a calentar el aceite y mientras se"
+                        ],
         "steps":  [
                       "Calienta, pica fino el ajo, la cebolleta y ponlo en un recipiente resistente al calor, junto con el",
                       "Chile o tus especias favoritas.",
@@ -17237,7 +17565,9 @@
                       "Enfría, corta y",
                       "¡GOZA!"
                   ],
-        "tips":  "Nuevo snack favorito. Los garbanzos crujientes quedan increíbles con el chocolate. Un toque se sal y alucina",
+        "tips":  [
+                     "Nuevo snack favorito. Los garbanzos crujientes quedan increíbles con el chocolate. Un toque se sal y alucina"
+                 ],
         "formatFlag":  false
     },
     {
@@ -17258,7 +17588,9 @@
                       "Puedes acompañarlo de alguna salsa que te guste o mermelada y el resultado ya te digo que es puffff demasiado",
                       "Como siempre con mi freidora @jataytuhogar"
                   ],
-        "tips":  "Si hay algo a lo que le quedan bien los Corn flakes es al queso, y si es de cabra ya ni te cuento.",
+        "tips":  [
+                     "Si hay algo a lo que le quedan bien los Corn flakes es al queso, y si es de cabra ya ni te cuento."
+                 ],
         "formatFlag":  false
     },
     {
@@ -17444,7 +17776,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Disponemos por encima el carpaccio de bacalao. Lo hemos comprado en La Sirena, un descubrimiento. Ponemos los huevos de codorniz.",
+        "tips":  [
+                     "Disponemos por encima el carpaccio de bacalao. Lo hemos comprado en La Sirena, un descubrimiento. Ponemos los huevos de codorniz."
+                 ],
         "formatFlag":  false
     },
     {
@@ -17718,13 +18052,17 @@
         "title":  "Pizza de Patata con un Ingrediente",
         "category":  "Pizzas",
         "url":  "https://www.instagram.com/reel/CgRqvqno2Dh/",
-        "ingredients":  "2 Patatas",
+        "ingredients":  [
+                            "2 Patatas"
+                        ],
         "steps":  [
                       "Ralla la patata y escurre bien",
                       "Forma la pizza sobre un papel de horno engrasado con las manos, y hornea durante unos 10-15 minutos a 180-200C",
                       "Añade los toppings y vuelve a hornear"
                   ],
-        "tips":  "Toppings opcionales: Salsa de tomates casera, queso rallado, champiñones, cebolla y cebollino",
+        "tips":  [
+                     "Toppings opcionales: Salsa de tomates casera, queso rallado, champiñones, cebolla y cebollino"
+                 ],
         "formatFlag":  false
     },
     {
@@ -17895,7 +18233,9 @@
                       "Y listo‼en unos minutos tendremos nuestra cena preparada para disfrutar!",
                       "No es más que un plato de verduras salteadas con Tortilla pero hecho de diferente forma para no aburrirnos‼"
                   ],
-        "tips":  "Tercera vez que publico esta receta y es de mis favoritas para cenar, me parece súper divertida y resultona!",
+        "tips":  [
+                     "Tercera vez que publico esta receta y es de mis favoritas para cenar, me parece súper divertida y resultona!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -18357,7 +18697,9 @@
                             "100 gramos de parmesano rallado",
                             "Especias al gusto"
                         ],
-        "steps":  "La elaboración es tan sencilla como en el vídeo. Horneamos a 200 grados hasta que las veáis doradas, unos 20 minutos.",
+        "steps":  [
+                      "La elaboración es tan sencilla como en el vídeo. Horneamos a 200 grados hasta que las veáis doradas, unos 20 minutos."
+                  ],
         "tips":  [
                      "Hace semanas que veo una receta muy rica de Torres de patata pero yo he querido versionarlo con calabacín y he de decir que ES UNA DELICIA",
                      "Es tan fácil que tenéis que hacerlas"
@@ -18369,11 +18711,15 @@
         "title":  "Judías Verdes a la Griega",
         "category":  "Verduras",
         "url":  "https://www.instagram.com/p/CaDOtchuAXb/",
-        "ingredients":  "1 vez hechas las judías, les añadimos tomate frito y aceitunas negras y removemos bien. Añadimos el queso feta y dejamos al fuego un par de minutos más, para que el queso vaya fundiendo e integrándose con la salsa.",
+        "ingredients":  [
+                            "1 vez hechas las judías, les añadimos tomate frito y aceitunas negras y removemos bien. Añadimos el queso feta y dejamos al fuego un par de minutos más, para que el queso vaya fundiendo e integrándose con la salsa."
+                        ],
         "steps":  [
 
                   ],
-        "tips":  "Es un plato maravilloso para aprovechar unas sobras de judías verdes que tengas ya cocidas y pululando por la nevera.",
+        "tips":  [
+                     "Es un plato maravilloso para aprovechar unas sobras de judías verdes que tengas ya cocidas y pululando por la nevera."
+                 ],
         "formatFlag":  false
     },
     {
@@ -18663,7 +19009,9 @@
                             "1 chorrito de Zumo de limón",
                             "Comino y sal al gusto"
                         ],
-        "steps":  "Triturar todo junto hasta que esté cremoso. Añadir las cucharadas de agua de una en una hasta tener la textura que nos guste.",
+        "steps":  [
+                      "Triturar todo junto hasta que esté cremoso. Añadir las cucharadas de agua de una en una hasta tener la textura que nos guste."
+                  ],
         "tips":  [
                      "¿Eres fan de hummus? Si es así hoy te traemos otra alternativa al hummus clásico que te encantará!",
                      "¿Te apetece probar? Guarda la publicación para no perderla!",
@@ -18689,7 +19037,9 @@
                       "Tan solo necesitan una botella de vino con una caja de madera y unas cartas. Cada uno escribirá en ellas los motivos por los que ha decidido casarse y qué es lo que le gusta de la otra persona. Eso esto lo presentarán en la ceremonia e incluirán (sin abrir) las cartas en el interior de la caja de vino y la cerrarán. La idea es que pasados los 5 años de casados lo celebren abriendo la caja, tomándose el vino y leyendo las cartas que escribieron.",
                       "Síganme para más ideas @soylanovia"
                   ],
-        "tips":  "Esta ceremonia simbólica es ideal para matrimonios al aire libre y consiste en plantar con tu pareja un árbol o flor que represente el inicio de sus vidas juntos, el trabajo en equipo y el cuidado que deben tener por su relación.",
+        "tips":  [
+                     "Esta ceremonia simbólica es ideal para matrimonios al aire libre y consiste en plantar con tu pareja un árbol o flor que represente el inicio de sus vidas juntos, el trabajo en equipo y el cuidado que deben tener por su relación."
+                 ],
         "formatFlag":  false,
         "mix":  true
     },
@@ -18755,7 +19105,9 @@
                       "Sacar y a degustar!",
                       "Se puede tomar caliente o frío acompañado de un buen tinto de verano o una cerveza fresquita!"
                   ],
-        "tips":  "En una sartén pochar la cebolla en cuadraditos, cuando esté añadir el calabacín partido en cuadraditos y freír",
+        "tips":  [
+                     "En una sartén pochar la cebolla en cuadraditos, cuando esté añadir el calabacín partido en cuadraditos y freír"
+                 ],
         "formatFlag":  false
     },
     {
@@ -18861,7 +19213,9 @@
                       "No dejéis de enviar vuestras fotos.",
                       "Os van a encantar!"
                   ],
-        "tips":  "INGREDIENTES para 12 galletes grandes (6 personas)",
+        "tips":  [
+                     "INGREDIENTES para 12 galletes grandes (6 personas)"
+                 ],
         "formatFlag":  false
     },
     {
@@ -19166,7 +19520,9 @@
                       "En una sarten caliente con un poco de aceite, echamos la mitad de la mezcla de huevo y patatas, y ponemos el fuego medio-bajo. Ponemos el relleno encima (ver fotografías), y luego verter encima el resto de la mezcla de huevos y patatas. Cuajamos la tortilla como siempre a fuego medio bajo para que cuaje y se derrita e integre el relleno.",
                       "Lista la tortilla...y a disfrutar!"
                   ],
-        "tips":  "Ingredientes: (las cantidades dependerán del tamaño de la sartén y del número de comensales)",
+        "tips":  [
+                     "Ingredientes: (las cantidades dependerán del tamaño de la sartén y del número de comensales)"
+                 ],
         "formatFlag":  false
     },
     {
@@ -19408,7 +19764,9 @@
                             "4 yogures griego sin azucar",
                             "1 lata pequeña de leche condensada"
                         ],
-        "steps":  "Se mezcla todo y se bate hasta que haga espuma. Se mete en el congelador. Para servirla hay que sacarla 30 minutos antes.",
+        "steps":  [
+                      "Se mezcla todo y se bate hasta que haga espuma. Se mete en el congelador. Para servirla hay que sacarla 30 minutos antes."
+                  ],
         "tips":  [
 
                  ],
@@ -19422,7 +19780,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Mezclamos todos los ingredientes y amasamos hasta que nos quede una masa fina y elástica, dejar reposar 30 minutos. Dividirla en porciones de unos 45 g (si se quieren para aperitivo 12 g) se forman bolitas, dejar reposar 10 minutos, estirar con un rodillo o aplastar con la mano hasta formar unos discos de masa y poner un trozo de papel de horno y doblar para que no se pegue, dejar otros 30 minutos de reposo tapados con un paño húmedo para que no se sequen. Una vez que hayan doblado su tamaño colocarlo sobre la vaporera con un papel de horno en la base para que no se peguen al recipiente los tapamos y dejamos al vapor unos 8 a 10 minutos y listos! Salen buenísimos y son ideales para rellenarlos con lo que mas nos guste, ideal para los niños.",
+        "steps":  [
+                      "Mezclamos todos los ingredientes y amasamos hasta que nos quede una masa fina y elástica, dejar reposar 30 minutos. Dividirla en porciones de unos 45 g (si se quieren para aperitivo 12 g) se forman bolitas, dejar reposar 10 minutos, estirar con un rodillo o aplastar con la mano hasta formar unos discos de masa y poner un trozo de papel de horno y doblar para que no se pegue, dejar otros 30 minutos de reposo tapados con un paño húmedo para que no se sequen. Una vez que hayan doblado su tamaño colocarlo sobre la vaporera con un papel de horno en la base para que no se peguen al recipiente los tapamos y dejamos al vapor unos 8 a 10 minutos y listos! Salen buenísimos y son ideales para rellenarlos con lo que mas nos guste, ideal para los niños."
+                  ],
         "tips":  [
 
                  ],
@@ -19796,7 +20156,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Alguno más tiene esa receta comodín que cuando ni sabe que hacerse recurre siempre a ella? Esta es la mía!",
+        "tips":  [
+                     "Alguno más tiene esa receta comodín que cuando ni sabe que hacerse recurre siempre a ella? Esta es la mía!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -19877,7 +20239,9 @@
                       "Sal",
                       "#"
                   ],
-        "tips":  "O como convertir una simple tortilla francesa en una cena mucho más apetecible.",
+        "tips":  [
+                     "O como convertir una simple tortilla francesa en una cena mucho más apetecible."
+                 ],
         "formatFlag":  false
     },
     {
@@ -20068,7 +20432,9 @@
                       "¡Y listo! Tienes que probarlo, es una delicia",
                       "Cenasaludable airfryerrecipes"
                   ],
-        "tips":  "Tenéis que preparar esta receta, es perfecta en todos los sentidos Fácil, rica y se prepara en un momentito, es ideal para comer, cenar o incluso si tenéis invitados",
+        "tips":  [
+                     "Tenéis que preparar esta receta, es perfecta en todos los sentidos Fácil, rica y se prepara en un momentito, es ideal para comer, cenar o incluso si tenéis invitados"
+                 ],
         "formatFlag":  false
     },
     {
@@ -20305,7 +20671,9 @@
                       "Quinoa con pollo/pavo",
                       "Espero que os sirva y os encante!"
                   ],
-        "tips":  "Calendario recomendado:",
+        "tips":  [
+                     "Calendario recomendado:"
+                 ],
         "formatFlag":  false
     },
     {
@@ -20588,7 +20956,9 @@
                       "No hay excusas: se hace solo mientras recoges la cocina.",
                       "Ideal para llevar, para comer frío o caliente, y para esos días en los que quieres comer rico sin complicarte."
                   ],
-        "tips":  "Hoy te traigo mi táper salvavidas: rápido, saludable y listo en la freidora de aire en menos de 20 minutos.",
+        "tips":  [
+                     "Hoy te traigo mi táper salvavidas: rápido, saludable y listo en la freidora de aire en menos de 20 minutos."
+                 ],
         "formatFlag":  false
     },
     {
@@ -21026,7 +21396,9 @@
         "steps":  [
 
                   ],
-        "tips":  "En SOLO 5 MINUTOS,fácil, saludable y el sabor es increíble!",
+        "tips":  [
+                     "En SOLO 5 MINUTOS,fácil, saludable y el sabor es increíble!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -21185,7 +21557,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Cambia por amarillo el tomate y pimiento de tu receta de gazpacho y conseguirás un sabor más suave, dulce y delicioso. Añade también 1cc comino + 1cc cúrcuma + 1/2 pimienta para darle propiedades antiinflamatorias además de saborazo.",
+        "tips":  [
+                     "Cambia por amarillo el tomate y pimiento de tu receta de gazpacho y conseguirás un sabor más suave, dulce y delicioso. Añade también 1cc comino + 1cc cúrcuma + 1/2 pimienta para darle propiedades antiinflamatorias además de saborazo."
+                 ],
         "formatFlag":  false
     },
     {
@@ -21242,7 +21616,9 @@
                       "Y no lo olvides...",
                       "¡CREA UNA BUENA RELACIÓN CON TU COMIDA!"
                   ],
-        "tips":  "Corta el atún en daditos y ponlos a macerar junto con el resto de ingredientes, al menos 1h.",
+        "tips":  [
+                     "Corta el atún en daditos y ponlos a macerar junto con el resto de ingredientes, al menos 1h."
+                 ],
         "formatFlag":  false
     },
     {
@@ -21370,7 +21746,9 @@
         "steps":  [
 
                   ],
-        "tips":  "El combo perfecto, vaya",
+        "tips":  [
+                     "El combo perfecto, vaya"
+                 ],
         "formatFlag":  false
     },
     {
@@ -21465,7 +21843,9 @@
         "title":  "Bechamel Mornay",
         "category":  "Pescado",
         "url":  "https://www.instagram.com/reel/DE9xRPJt9Tf/",
-        "ingredients":  "100 g mantequilla, 100 g harina, 1 l leche, 2 yemas de huevo, 150 g parmesano.",
+        "ingredients":  [
+                            "100 g mantequilla, 100 g harina, 1 l leche, 2 yemas de huevo, 150 g parmesano."
+                        ],
         "steps":  [
 
                   ],
@@ -21479,7 +21859,9 @@
         "title":  "Velouté Normanda",
         "category":  "Sopas y Cremas",
         "url":  "https://www.instagram.com/reel/DE9xRPJt9Tf/",
-        "ingredients":  "100 g mantequilla, 100 g harina, 1 l Caldo de marisco, 6 champiñones, 100 ml nata.",
+        "ingredients":  [
+                            "100 g mantequilla, 100 g harina, 1 l Caldo de marisco, 6 champiñones, 100 ml nata."
+                        ],
         "steps":  [
 
                   ],
@@ -21509,7 +21891,9 @@
         "title":  "Salsa de Tomate Puttanesca",
         "category":  "Salsas",
         "url":  "https://www.instagram.com/reel/DE9xRPJt9Tf/",
-        "ingredients":  "1 cebolla, 2 zanahorias, 800 g tomate triturado.",
+        "ingredients":  [
+                            "1 cebolla, 2 zanahorias, 800 g tomate triturado."
+                        ],
         "steps":  [
 
                   ],
@@ -21523,7 +21907,9 @@
         "title":  "Salsa Holandesa Maltesa",
         "category":  "Salsas",
         "url":  "https://www.instagram.com/reel/DE9xRPJt9Tf/",
-        "ingredients":  "2 yemas, zumo de 1/2 limón, zumo de 1 naranja, 1 naranja cortada, 250 g mantequilla clarificada, sal, agua.",
+        "ingredients":  [
+                            "2 yemas, zumo de 1/2 limón, zumo de 1 naranja, 1 naranja cortada, 250 g mantequilla clarificada, sal, agua."
+                        ],
         "steps":  [
 
                   ],
@@ -21549,7 +21935,9 @@
                       "5.- Udon con gambas.",
                       "6.- Mochi de mango."
                   ],
-        "tips":  "Calle Echegaray, número 3, Málaga.",
+        "tips":  [
+                     "Calle Echegaray, número 3, Málaga."
+                 ],
         "formatFlag":  false
     },
     {
@@ -21557,7 +21945,9 @@
         "title":  "Canelones de Atún y Jamón",
         "category":  "Pasta",
         "url":  "https://www.instagram.com/reel/DBHR5dbocEO/",
-        "ingredients":  "▫ 1 lata de atún claro",
+        "ingredients":  [
+                            "▫ 1 lata de atún claro"
+                        ],
         "steps":  [
                       "▫ tomate frito",
                       "▫ 6 lonchas jamón cocido (2/ canelón)",
@@ -21710,7 +22100,9 @@
         "title":  "Pastel Fácil de Verduras",
         "category":  "Verduras",
         "url":  "https://www.instagram.com/reel/DCr03QEuPvd/",
-        "ingredients":  "1 calabacín pequeño, 2 zanahorias pequeñas, 3 huevos, 40 g de queso rallado, especias al gusto, tomates cherry. Rallar el calabacín y las zanahorias, escurrir el calabacín. Bate los huevos y mézclalo junto a las zanahorias, el calabacín, el queso y las especias. Llévalo a una fuente apta para Airfryer y decora con tomate cherry. Cocínalo al airfryer 180 grados - 20 minutos.",
+        "ingredients":  [
+                            "1 calabacín pequeño, 2 zanahorias pequeñas, 3 huevos, 40 g de queso rallado, especias al gusto, tomates cherry. Rallar el calabacín y las zanahorias, escurrir el calabacín. Bate los huevos y mézclalo junto a las zanahorias, el calabacín, el queso y las especias. Llévalo a una fuente apta para Airfryer y decora con tomate cherry. Cocínalo al airfryer 180 grados - 20 minutos."
+                        ],
         "steps":  [
 
                   ],
@@ -21724,7 +22116,9 @@
         "title":  "Pastel de Yogur y Arándanos",
         "category":  "Pescado",
         "url":  "https://www.instagram.com/reel/DCr03QEuPvd/",
-        "ingredients":  "1 tortita integral, 80 g de yogur, 1 huevo, 1 CS de eritritol, 1 plátano, arándanos al gusto. Mezcla todos los ingredientes, salvo la tortita. En molde 15 cm coloca la base de tortita y rellena con la mezcla. En airfryer 160C durante 20 minutos.",
+        "ingredients":  [
+                            "1 tortita integral, 80 g de yogur, 1 huevo, 1 CS de eritritol, 1 plátano, arándanos al gusto. Mezcla todos los ingredientes, salvo la tortita. En molde 15 cm coloca la base de tortita y rellena con la mezcla. En airfryer 160C durante 20 minutos."
+                        ],
         "steps":  [
 
                   ],
@@ -21841,7 +22235,9 @@
         "title":  "Verduras Asadas con Burrata",
         "category":  "Verduras",
         "url":  "https://www.instagram.com/reel/DAB4txvutDM/",
-        "ingredients":  "1 burrata, bolsa de parrillada de verduras, un poco de AOVE, sal y especias italianas. Cocina las verduras con un poco de AOVE durante 8 minutos y condimenta. Sirve junto con la burrata.",
+        "ingredients":  [
+                            "1 burrata, bolsa de parrillada de verduras, un poco de AOVE, sal y especias italianas. Cocina las verduras con un poco de AOVE durante 8 minutos y condimenta. Sirve junto con la burrata."
+                        ],
         "steps":  [
 
                   ],
@@ -21855,7 +22251,9 @@
         "title":  "Quesadillas Popeye",
         "category":  "Pescado",
         "url":  "https://www.instagram.com/reel/DAB4txvutDM/",
-        "ingredients":  "2 tortitas integrales, 70 g de pollo desmenuzado, un puñado de espinacas, 2 lonchas de queso. Coloca una tortita en la sartén, rellena con los ingredientes y tapa con la otra tortita. Cocina 3-4 min por cada lado para que dore.",
+        "ingredients":  [
+                            "2 tortitas integrales, 70 g de pollo desmenuzado, un puñado de espinacas, 2 lonchas de queso. Coloca una tortita en la sartén, rellena con los ingredientes y tapa con la otra tortita. Cocina 3-4 min por cada lado para que dore."
+                        ],
         "steps":  [
 
                   ],
@@ -21869,7 +22267,9 @@
         "title":  "Revuelto de Gambas",
         "category":  "Pescado",
         "url":  "https://www.instagram.com/reel/DAB4txvutDM/",
-        "ingredients":  "200 g de salteado, 2 huevos, un poco de AOVE, sal y especias al gusto. Saltea la verdura con un poco de AOVE y las especias durante 6-7 minutos. Añade los huevos y remueve hasta que quede a tu gusto.",
+        "ingredients":  [
+                            "200 g de salteado, 2 huevos, un poco de AOVE, sal y especias al gusto. Saltea la verdura con un poco de AOVE y las especias durante 6-7 minutos. Añade los huevos y remueve hasta que quede a tu gusto."
+                        ],
         "steps":  [
 
                   ],
@@ -21920,7 +22320,9 @@
                       "Crema de setas...",
                       "Y a vosotros... ¿qué rellenos se os ocurren?"
                   ],
-        "tips":  "Por fin una receta viral que sí merece la pena!",
+        "tips":  [
+                     "Por fin una receta viral que sí merece la pena!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -21995,7 +22397,9 @@
                       "DISFRUTAAAR",
                       "Te va a encantar"
                   ],
-        "tips":  "Estoy viciadisima con la combinación de este wrap! Además no puede ser más fácil!",
+        "tips":  [
+                     "Estoy viciadisima con la combinación de este wrap! Además no puede ser más fácil!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -22022,7 +22426,9 @@
         "steps":  [
 
                   ],
-        "tips":  "La receta mejorada del plato que marcó un antes y un después en el perfil.",
+        "tips":  [
+                     "La receta mejorada del plato que marcó un antes y un después en el perfil."
+                 ],
         "formatFlag":  false
     },
     {
@@ -22206,7 +22612,9 @@
                       "Pica el resto del puerro y cocina en una sartén con el resto de verduras y cuando estén en su punto añade el atún y el tomate y cocina unos minutos más",
                       "Añade el relleno a las láminas que teníamos reservadas, forma el canelón y cocínalos en una fuente de horno con un poco de tomate en la base y por encima durante unos 10 minutos a 200°C"
                   ],
-        "tips":  "Fácil, saludable y brutal!",
+        "tips":  [
+                     "Fácil, saludable y brutal!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -22255,7 +22663,9 @@
         "title":  "Pastel de Atún en Tortilla",
         "category":  "Pescado",
         "url":  "https://www.instagram.com/reel/C5L-L_KtSgL/",
-        "ingredients":  "6 tortillas de trigo integral, 2 latas de atún, 40 g de queso rallado, lonchas de queso, 2 cucharadas de salsa de tomate, un poco más de salsa de tomate diluida en agua para pintar la superficie, sésamo. Cortamos las tortitas. Mezclamos el atún con el queso y la salsa de tomate. Colocamos en cada tortilla una loncha de queso y parte del relleno. Cerramos. Pintamos con salsa de tomate. Cocinamos 10 minutos a 200 grados (últimos 3 por el otro lado).",
+        "ingredients":  [
+                            "6 tortillas de trigo integral, 2 latas de atún, 40 g de queso rallado, lonchas de queso, 2 cucharadas de salsa de tomate, un poco más de salsa de tomate diluida en agua para pintar la superficie, sésamo. Cortamos las tortitas. Mezclamos el atún con el queso y la salsa de tomate. Colocamos en cada tortilla una loncha de queso y parte del relleno. Cerramos. Pintamos con salsa de tomate. Cocinamos 10 minutos a 200 grados (últimos 3 por el otro lado)."
+                        ],
         "steps":  [
 
                   ],
@@ -22269,7 +22679,9 @@
         "title":  "Pizza Rolls de Jamón y Queso",
         "category":  "Pizzas",
         "url":  "https://www.instagram.com/reel/C5L-L_KtSgL/",
-        "ingredients":  "2 tortillas wraps integrales, lonchas de jamón cocido, salsa de tomate, queso rallado. Untamos la tortilla con salsa de tomate, colocamos el jamón y el queso. Enrollamos, cortamos en porciones. Colocamos en un recipiente. Cocinamos 8 minutos a 190 grados.",
+        "ingredients":  [
+                            "2 tortillas wraps integrales, lonchas de jamón cocido, salsa de tomate, queso rallado. Untamos la tortilla con salsa de tomate, colocamos el jamón y el queso. Enrollamos, cortamos en porciones. Colocamos en un recipiente. Cocinamos 8 minutos a 190 grados."
+                        ],
         "steps":  [
 
                   ],
@@ -22283,7 +22695,9 @@
         "title":  "Burger Pocket en Tortilla",
         "category":  "Pescado",
         "url":  "https://www.instagram.com/reel/C5L-L_KtSgL/",
-        "ingredients":  "3 tortillas de trigo, mini hamburguesas, cebolla caramelizada, queso rallado, 1 huevo, sésamo. Cortamos las tortillas en dos. Aplastamos la mini hamburguesa en la superficie. Añadimos cebolla caramelizada y queso. Cerramos. Pintamos con huevo batido. Añadimos sésamo. Cocinamos 15 minutos a 180 grados (últimos 4 minutos por el otro lado).",
+        "ingredients":  [
+                            "3 tortillas de trigo, mini hamburguesas, cebolla caramelizada, queso rallado, 1 huevo, sésamo. Cortamos las tortillas en dos. Aplastamos la mini hamburguesa en la superficie. Añadimos cebolla caramelizada y queso. Cerramos. Pintamos con huevo batido. Añadimos sésamo. Cocinamos 15 minutos a 180 grados (últimos 4 minutos por el otro lado)."
+                        ],
         "steps":  [
 
                   ],
@@ -22348,7 +22762,9 @@
         "title":  "Hamburguesas de Salmón al Horno",
         "category":  "Pescado",
         "url":  "https://www.instagram.com/reel/C4GuL8HonDP/",
-        "ingredients":  "200 g salmón, 80 g de arroz integral cocido, 50 ml leche o bebida vegetal, cebolla en polvo, orégano, pimienta negra, sal. Trocea el salmón en trozos. Tritura junto al arroz, la leche, las especias y la sal. Forma las bolitas con las manos mojadas. Hornea 12-15 min a 180C.",
+        "ingredients":  [
+                            "200 g salmón, 80 g de arroz integral cocido, 50 ml leche o bebida vegetal, cebolla en polvo, orégano, pimienta negra, sal. Trocea el salmón en trozos. Tritura junto al arroz, la leche, las especias y la sal. Forma las bolitas con las manos mojadas. Hornea 12-15 min a 180C."
+                        ],
         "steps":  [
 
                   ],
@@ -22362,7 +22778,9 @@
         "title":  "Brócoli Estilo Asiático",
         "category":  "Verduras",
         "url":  "https://www.instagram.com/reel/C4GuL8HonDP/",
-        "ingredients":  "200 g de brócoli en florecitas, 1 cucharada aceite de coco, 15-20 ml salsa de soja, 1 cucharada miel, 20 g de nueces picadas, 1 cucharadita de jengibre en polvo, semillas de sésamo. Lava y corta el brócoli en arbolitos. En una sartén caliente, pon el aceite. Añade el brócoli y cocinar unos minutos a fuego medio. Agregar la salsa de soja, el jengibre y una cucharadita de miel. Añadir nueces picadas y semillas de sésamo. Cocinar unos minutos y retirar del fuego.",
+        "ingredients":  [
+                            "200 g de brócoli en florecitas, 1 cucharada aceite de coco, 15-20 ml salsa de soja, 1 cucharada miel, 20 g de nueces picadas, 1 cucharadita de jengibre en polvo, semillas de sésamo. Lava y corta el brócoli en arbolitos. En una sartén caliente, pon el aceite. Añade el brócoli y cocinar unos minutos a fuego medio. Agregar la salsa de soja, el jengibre y una cucharadita de miel. Añadir nueces picadas y semillas de sésamo. Cocinar unos minutos y retirar del fuego."
+                        ],
         "steps":  [
 
                   ],
@@ -22376,7 +22794,9 @@
         "title":  "Ñoquis Caprese en Airfryer",
         "category":  "Pescado",
         "url":  "https://www.instagram.com/reel/C4EFXnZotmB/",
-        "ingredients":  "250 g de ñoquis, 4 cucharadas de tomate frito, 2 hojas de albahaca o hierbas secas, 1/2-1 vaso de agua, 1/2 mozzarella. En un recipiente apto para horno pon el tomate, los ñoquis y mezcla. Añade la albahaca o las hierbas secas, salpimienta y echa agua justo hasta cubrirlos. Pon la mozzarella en rodajas por encima y mete a la airfryer 10\u0027 a 200°C.",
+        "ingredients":  [
+                            "250 g de ñoquis, 4 cucharadas de tomate frito, 2 hojas de albahaca o hierbas secas, 1/2-1 vaso de agua, 1/2 mozzarella. En un recipiente apto para horno pon el tomate, los ñoquis y mezcla. Añade la albahaca o las hierbas secas, salpimienta y echa agua justo hasta cubrirlos. Pon la mozzarella en rodajas por encima y mete a la airfryer 10\u0027 a 200°C."
+                        ],
         "steps":  [
 
                   ],
@@ -22416,7 +22836,9 @@
         "title":  "Pollo al Curry con Yogur",
         "category":  "Pescado",
         "url":  "https://www.instagram.com/reel/C4EFXnZotmB/",
-        "ingredients":  "1 pechuga de pollo, 1 cucharadita de curry en polvo, 2 cucharadas de yogur griego. Pon en un bol el pollo troceado y añade sal, pimienta, curry y yogur. Mezcla bien y si tienes tiempo deja reposar en la nevera 30\u0027. Luego ponlo en un papel de horno y mete a la airfryer 6\u0027 a 200°C. Acompaña con arroz o la base que quieras.",
+        "ingredients":  [
+                            "1 pechuga de pollo, 1 cucharadita de curry en polvo, 2 cucharadas de yogur griego. Pon en un bol el pollo troceado y añade sal, pimienta, curry y yogur. Mezcla bien y si tienes tiempo deja reposar en la nevera 30\u0027. Luego ponlo en un papel de horno y mete a la airfryer 6\u0027 a 200°C. Acompaña con arroz o la base que quieras."
+                        ],
         "steps":  [
 
                   ],
@@ -22532,7 +22954,9 @@
                       "Haz otro 10 minutos de chup chup…",
                       "‍ ¡Y tacháaan! ¡A comer!"
                   ],
-        "tips":  "No me extraña que ayer cuando la enseñé en Stories quisierais la receta. Es demasiado fácil para lo rico que queda. Apenas 15 minutos para una comida de categoría.",
+        "tips":  [
+                     "No me extraña que ayer cuando la enseñé en Stories quisierais la receta. Es demasiado fácil para lo rico que queda. Apenas 15 minutos para una comida de categoría."
+                 ],
         "formatFlag":  false
     },
     {
@@ -22650,7 +23074,9 @@
                       "Puedes congelarlas también",
                       "¿Te animas a prepararlas?"
                   ],
-        "tips":  "2x1 en recetas",
+        "tips":  [
+                     "2x1 en recetas"
+                 ],
         "formatFlag":  true
     },
     {
@@ -22789,8 +23215,12 @@
                             "Sal",
                             "Tortilla para wrap"
                         ],
-        "steps":  "Sigue los pasos del vídeo, cocina en una sartén con aove y listo!",
-        "tips":  "1/2 aguacate",
+        "steps":  [
+                      "Sigue los pasos del vídeo, cocina en una sartén con aove y listo!"
+                  ],
+        "tips":  [
+                     "1/2 aguacate"
+                 ],
         "formatFlag":  false
     },
     {
@@ -22803,7 +23233,9 @@
                             "1 cucharada queso de untar",
                             "Especias"
                         ],
-        "steps":  "Sigue los pasos del vídeo, rellena de tus ingredientes favoritos Y listo!",
+        "steps":  [
+                      "Sigue los pasos del vídeo, rellena de tus ingredientes favoritos Y listo!"
+                  ],
         "tips":  [
 
                  ],
@@ -22819,7 +23251,9 @@
                             "2 Huevos",
                             "Especias"
                         ],
-        "steps":  "Relleno al gusto (queso de untar y jamón cocido)",
+        "steps":  [
+                      "Relleno al gusto (queso de untar y jamón cocido)"
+                  ],
         "tips":  [
 
                  ],
@@ -22838,7 +23272,9 @@
                             "Tortilla para fajitas",
                             "Queso"
                         ],
-        "steps":  "Sigue los pasos del vídeo, déjala que se dore para que quede crujiente y lista! A DISFRUTAAAAR",
+        "steps":  [
+                      "Sigue los pasos del vídeo, déjala que se dore para que quede crujiente y lista! A DISFRUTAAAAR"
+                  ],
         "tips":  [
 
                  ],
@@ -22970,7 +23406,9 @@
                             "Chorrito de limón",
                             "20 ml de aceite de oliva"
                         ],
-        "steps":  "Procesa todo hasta obtener una textura homogénea y cremosa. Sino te gusta tan densa, aligera con un pelín de agua",
+        "steps":  [
+                      "Procesa todo hasta obtener una textura homogénea y cremosa. Sino te gusta tan densa, aligera con un pelín de agua"
+                  ],
         "tips":  [
 
                  ],
@@ -22987,8 +23425,12 @@
                             "1 cucharada sopera de vinagre de manzana",
                             "20 ml de aceite de oliva"
                         ],
-        "steps":  "Bate bien hasta que se integre todo bien y quede una textura bien fina",
-        "tips":  "3-4 fresas pequeñas",
+        "steps":  [
+                      "Bate bien hasta que se integre todo bien y quede una textura bien fina"
+                  ],
+        "tips":  [
+                     "3-4 fresas pequeñas"
+                 ],
         "formatFlag":  false
     },
     {
@@ -22996,7 +23438,9 @@
         "title":  "Pesto de Avellanas y Tomates Asados",
         "category":  "Salsas",
         "url":  "https://www.instagram.com/reel/CtpIvIpA2hd/",
-        "ingredients":  "1 puñado de avellanas tostadas",
+        "ingredients":  [
+                            "1 puñado de avellanas tostadas"
+                        ],
         "steps":  [
                       "Tomates asados (si son grandes con uno servirá, yo he puesto cherry, 100 gramos aprox)",
                       "Albahaca fresca al gusto",
@@ -23106,7 +23550,9 @@
                       "En un procesador tritura los huevos con las espinacas y especias. Vierte en una sartén caliente con aove y coloca la tortilla encima. Cuando esté lista dale la vuelta, rellena con tus ingredientes favoritos y A DISFRUTAAAR",
                       "Para darle saborazo a mis comidas siempre uso los sazonadores de @justapices_es Con mi código JUSTANNAPPLEADAY tenéis mi sazonador favorito gratis en compras superiores a 20€"
                   ],
-        "tips":  "Esta es una de mis cenas favoritas! Además, lleva una verdura escondida para aquellos que os cuesta más introducirlas, queda increible!",
+        "tips":  [
+                     "Esta es una de mis cenas favoritas! Además, lleva una verdura escondida para aquellos que os cuesta más introducirlas, queda increible!"
+                 ],
         "formatFlag":  true
     },
     {
@@ -23215,7 +23661,9 @@
                       "Cuece los huevos 9 mins, pela, pica y reserva. Cuece también las patatas con su piel, cuando estén al dente, retira, pela y aplasta con un tenedor ligeramente. En un bowl mezcla la patata, huevo picado, pulpo troceado (tienes que dejar unos cuantos trozos para el emplatado), gambas/langostinos picados, un poquito de sal y la mayonesa casera. Pon la ensaladilla en un timbal redondo, cubre con rodajas de pulpo, escamas de sal, pimentón y un chorrito de aceite de oliva… no querías ir de tapas? Pues aquí tienes tres por el precio de una!",
                       "Anímate a preparar esta versión original de la ensaladilla si quieres sorprender algún día a tus invitados. Te deseo un día fantástico… Gracias por tu apoyo!"
                   ],
-        "tips":  "Hoy te traigo un RECETÓN, una fusión de tres clásicos de nuestras tapas: La ensaladilla rusa, las gambas al ajillo y el pulpo a la gallega. Este tres por uno, no te va a dejar indiferente, ya lo intuyes… supongo! La cremosidad de la ensaladilla rusa en boca, con ese toque diferencial del sabor a gambas al ajillo de fondo y el contrapunto del pulpo a la gallega. Date un capricho con esta tapa molona y sorprende a tus comensales… ÉXITO SEGURO!",
+        "tips":  [
+                     "Hoy te traigo un RECETÓN, una fusión de tres clásicos de nuestras tapas: La ensaladilla rusa, las gambas al ajillo y el pulpo a la gallega. Este tres por uno, no te va a dejar indiferente, ya lo intuyes… supongo! La cremosidad de la ensaladilla rusa en boca, con ese toque diferencial del sabor a gambas al ajillo de fondo y el contrapunto del pulpo a la gallega. Date un capricho con esta tapa molona y sorprende a tus comensales… ÉXITO SEGURO!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -23347,7 +23795,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Freidora de aire 190° unos 8 minutos por cada lado ( depende del tamaño de la gamba )",
+        "tips":  [
+                     "Freidora de aire 190° unos 8 minutos por cada lado ( depende del tamaño de la gamba )"
+                 ],
         "formatFlag":  true
     },
     {
@@ -23391,7 +23841,9 @@
                       "Añade el caldo poco a poco, removiendo hasta llegar a unos 16’",
                       "Añade el concentrado de gambón y por último la mantequilla"
                   ],
-        "tips":  "PORQUE ESTÁ BRUTAL!",
+        "tips":  [
+                     "PORQUE ESTÁ BRUTAL!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -23755,7 +24207,9 @@
                       "Monta con este orden: tomate, calabaza, bolognesa, queso, repite y acaba con calabaza, tomate y queso.",
                       "Hornea hasta que el queso esté tostadito, decora con hierbas frescas y ya estaría!"
                   ],
-        "tips":  "2/7 receta del reto",
+        "tips":  [
+                     "2/7 receta del reto"
+                 ],
         "formatFlag":  false
     },
     {
@@ -23872,7 +24326,9 @@
                       "Añade la mantequilla, el queso y la albahaca. Remueve con amor para mantecarlo y sirve inmediatamente. Buon appetito!",
                       "En stories te dejo más tipos de risottos: de 4 quesos, de setas, de sepia, de calabaza…"
                   ],
-        "tips":  "Si no te has marcado un risotto todavía lánzate con esta receta‼Necesitas muy pocos ingredientes y una técnica infalibleRemover con mucho cariño",
+        "tips":  [
+                     "Si no te has marcado un risotto todavía lánzate con esta receta‼Necesitas muy pocos ingredientes y una técnica infalibleRemover con mucho cariño"
+                 ],
         "formatFlag":  true
     },
     {
@@ -23948,7 +24404,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Lo siento, pero vas a dejar de lado la tortilla francesa después de probarla. ¡Yo estoy enganchada a esta cena!",
+        "tips":  [
+                     "Lo siento, pero vas a dejar de lado la tortilla francesa después de probarla. ¡Yo estoy enganchada a esta cena!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -24114,7 +24572,9 @@
         "title":  "Lubina con Puerro al Curry",
         "category":  "Pescado",
         "url":  "https://www.instagram.com/reel/CfBvYn1KlIU/",
-        "ingredients":  "Añadimos la leche de coco, y dejamos otros 5 minutos más al fuego.",
+        "ingredients":  [
+                            "Añadimos la leche de coco, y dejamos otros 5 minutos más al fuego."
+                        ],
         "steps":  [
                       "Incorporamos las lubinas a la sartén, con la piel hacia abajo. Dejamos unos minutos, bajamos el fuego, tapamos la sartén y dejamos que se terminen de hacer con el calor residual y el vapor. Así no se reseca el pescado y queda muy jugoso.",
                       "400 ml leche de coco = 1,2R (comprueba tu etiqueta)",
@@ -24165,7 +24625,9 @@
                       ": 608 23 89 55",
                       "Dirección: C. Ola, 12, Zahara de los Atunes, Cádiz"
                   ],
-        "tips":  "Solo hay que venir a nuestro restaurante para comprobarlo.",
+        "tips":  [
+                     "Solo hay que venir a nuestro restaurante para comprobarlo."
+                 ],
         "formatFlag":  false
     },
     {
@@ -24231,7 +24693,9 @@
                       "Dejamos enfriar y desmoldamos. Partimos por la mitad, le ponemos el relleno que más nos guste y al grill unos minutos para que se tueste.",
                       "Y listo! Si no lo habéis probado, ya veréis que rico queda!"
                   ],
-        "tips":  "Cena rica y fácil, y se hace en un momentín! Estoy segura que ya conocéis la receta pero, por si acaso, la comparto por aquí porque es deliciosa! Como veis se hace con atún, y prometido que os encantará!",
+        "tips":  [
+                     "Cena rica y fácil, y se hace en un momentín! Estoy segura que ya conocéis la receta pero, por si acaso, la comparto por aquí porque es deliciosa! Como veis se hace con atún, y prometido que os encantará!"
+                 ],
         "formatFlag":  true
     },
     {
@@ -24272,7 +24736,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Ponemos en un molde apto para horno, pintado con un poco de aceite de oliva o forrado con papel vegetal y metemos al horno a 200ºC unos 25 minutos.",
+        "steps":  [
+                      "Ponemos en un molde apto para horno, pintado con un poco de aceite de oliva o forrado con papel vegetal y metemos al horno a 200ºC unos 25 minutos."
+                  ],
         "tips":  [
 
                  ],
@@ -24352,7 +24818,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Y maíz picante. 3.- Huevo 63o tartar de atún rojo picante y patatas crujientes. 4.- Xiaolongbao de Carbonara japonesa con panceta y enokis confitado. @yubarestaurante",
+        "steps":  [
+                      "Y maíz picante. 3.- Huevo 63o tartar de atún rojo picante y patatas crujientes. 4.- Xiaolongbao de Carbonara japonesa con panceta y enokis confitado. @yubarestaurante"
+                  ],
         "tips":  [
 
                  ],
@@ -24530,7 +24998,9 @@
                       "5 Helado de pistacho",
                       "Nuestros platos favoritos de allí y que os recomendamos si vais son el tartar de atún, el steak tartar con ostras y el brioche de lomo."
                   ],
-        "tips":  "Como podéis ver en las últimas fotos, es un sitio precioso. De hecho, por la noche el ambiente es más romántico.",
+        "tips":  [
+                     "Como podéis ver en las últimas fotos, es un sitio precioso. De hecho, por la noche el ambiente es más romántico."
+                 ],
         "formatFlag":  false
     },
     {
@@ -24719,7 +25189,9 @@
                       "Pasado ese tiempo, volver a pintar con huevo y hornear a 200º durante 6 min, bajar a 180º y hornear 12 min hasta que estén dorados",
                       "Y listos para tomar solos, rellenos de mermelada, jamón, salmón.."
                   ],
-        "tips":  "Ponemos la harina en el recipiente del robot y añadimos por este orden la sal, el azúcar, la leche, la mantequilla a temperatura ambiente, y la levadura.",
+        "tips":  [
+                     "Ponemos la harina en el recipiente del robot y añadimos por este orden la sal, el azúcar, la leche, la mantequilla a temperatura ambiente, y la levadura."
+                 ],
         "formatFlag":  true
     },
     {
@@ -25126,7 +25598,9 @@
                       "Primero mezclar bien el surimi, el aguacate y el gengibre con la mayonesa (previamente mezclada con el kimuchi) y luego agregar el wakame, se termina de mezclar.",
                       "Servir colocando encima las huevas para decorar."
                   ],
-        "tips":  "De Harué",
+        "tips":  [
+                     "De Harué"
+                 ],
         "formatFlag":  false
     },
     {
@@ -25327,7 +25801,9 @@
                             "cucharada de crema avellana",
                             "60 g leche en polvo"
                         ],
-        "steps":  "Congela mínimo 3h",
+        "steps":  [
+                      "Congela mínimo 3h"
+                  ],
         "tips":  [
                      "Al final del vídeo lo prueba baby Nilo, creéis que le ha gustado?",
                      "Ingredientes más o menos a ojo no os preocupéis"
@@ -25480,7 +25956,9 @@
                       "Si quieres puedes añadirle unos trozos de panceta, bacon o sobrasada, le va genial.",
                       "En cuanto esté bien dorado está listo."
                   ],
-        "tips":  "GUÁRDATE la receta que te la van a pedir",
+        "tips":  [
+                     "GUÁRDATE la receta que te la van a pedir"
+                 ],
         "formatFlag":  false
     },
     {
@@ -25497,7 +25975,9 @@
                       "Boniato, queda dulzón y delicioso",
                       "Si has llegado hasta aquí, déjame un me gusta y coméntame con cual te quedas…"
                   ],
-        "tips":  "Tienes 15% de descuento en toda la web de Moulinex con mi código: SABINA15MLX",
+        "tips":  [
+                     "Tienes 15% de descuento en toda la web de Moulinex con mi código: SABINA15MLX"
+                 ],
         "formatFlag":  false
     },
     {
@@ -25669,7 +26149,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Es la receta de noodles más fácil más rica que he preparado hasta ahora EL SECRETO ESTÁ EN LA SALSA",
+        "tips":  [
+                     "Es la receta de noodles más fácil más rica que he preparado hasta ahora EL SECRETO ESTÁ EN LA SALSA"
+                 ],
         "formatFlag":  false
     },
     {
@@ -25823,7 +26305,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Para hacerla sólo necesitarás 100 gramos de pistachos naturales ya pelados (¡sin sal!)",
+        "steps":  [
+                      "Para hacerla sólo necesitarás 100 gramos de pistachos naturales ya pelados (¡sin sal!)"
+                  ],
         "tips":  [
 
                  ],
@@ -25852,7 +26336,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Me he vuelto muy fan de estas recetas. Rápidas sencillas y en cinco minutos, una merienda un postre rápido y sin complicaciones.",
+        "tips":  [
+                     "Me he vuelto muy fan de estas recetas. Rápidas sencillas y en cinco minutos, una merienda un postre rápido y sin complicaciones."
+                 ],
         "formatFlag":  false
     },
     {
@@ -26012,7 +26498,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Quinta crema de la lista; sigue el mismo procedimiento base de rehogar, cocer con el líquido, triturar y decorar con toppings (el texto original no detalla ingredientes específicos para esta receta).",
+        "steps":  [
+                      "Quinta crema de la lista; sigue el mismo procedimiento base de rehogar, cocer con el líquido, triturar y decorar con toppings (el texto original no detalla ingredientes específicos para esta receta)."
+                  ],
         "tips":  [
 
                  ],
@@ -26091,7 +26579,9 @@
                       "Envasa como ves en el vídeo y enfría unas 2 horas aunque te vale un rato en congelador",
                       "Reboza con el resto de mezcla"
                   ],
-        "tips":  "GUARDA PARA PREPARARLO!",
+        "tips":  [
+                     "GUARDA PARA PREPARARLO!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -26318,7 +26808,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Ingredientes (3-4 raciones): 1 puerro y 1 diente de ajo, 500 gramos de calabaza, 2 zanahorias, 3 tazas de caldo (puedes añadir más si la quieres más líquida), sal, pimienta y un toque de nuez moscada.",
+        "tips":  [
+                     "Ingredientes (3-4 raciones): 1 puerro y 1 diente de ajo, 500 gramos de calabaza, 2 zanahorias, 3 tazas de caldo (puedes añadir más si la quieres más líquida), sal, pimienta y un toque de nuez moscada."
+                 ],
         "formatFlag":  false
     },
     {
@@ -26562,7 +27054,9 @@
                       "1 Pizca de pimentón picante",
                       "Mezcla, reparte sobre el plato y decora con hierbas frescas, sal y pimienta."
                   ],
-        "tips":  "Lo he preparado con mi plancha de @jataytuhogar que ya sabéis que funciona súper bien",
+        "tips":  [
+                     "Lo he preparado con mi plancha de @jataytuhogar que ya sabéis que funciona súper bien"
+                 ],
         "formatFlag":  false
     },
     {
@@ -26587,7 +27081,9 @@
                       "Mis topping: manzana y queso a dados, un poco más de AOVE y especias para topping",
                       "‼Recordatorio‼ dentro de mi ebook de infografias encontrarás una guía para gazpachos con 14 recetas 3S, ademas de muchas más recetas e ideas perfectas para este verano. Lo puedes adquirir desde mi bio o en mi web."
                   ],
-        "tips":  "¡Te va a sorprender este delicioso gazpacho! tanto por su color, como por su sabor, es delicioso y fácil de preparar. Ideal para este verano.",
+        "tips":  [
+                     "¡Te va a sorprender este delicioso gazpacho! tanto por su color, como por su sabor, es delicioso y fácil de preparar. Ideal para este verano."
+                 ],
         "formatFlag":  false
     },
     {
@@ -26643,7 +27139,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Para asesorías, escríbeme al WhatsApp de mi perfil.",
+        "tips":  [
+                     "Para asesorías, escríbeme al WhatsApp de mi perfil."
+                 ],
         "formatFlag":  true
     },
     {
@@ -26692,7 +27190,9 @@
                       "Sirve y disfruta! Te aseguro que te va a FLIPAR!",
                       "Os gusta más las recetas DULCES O SALADAS? te leo en comentarios"
                   ],
-        "tips":  "Si eres de l@s que no sabe comer sin salsa esta receta te va a flipar súper saludable y sin nata!",
+        "tips":  [
+                     "Si eres de l@s que no sabe comer sin salsa esta receta te va a flipar súper saludable y sin nata!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -26733,8 +27233,12 @@
                             "Queso Rallado",
                             "Sal"
                         ],
-        "steps":  "Introducir en el horno a 190°c hasta que veas que esta doradito, unos 45 minutos",
-        "tips":  "Prueba de hacerlo y me cuentas, estoy seguro que te encantará",
+        "steps":  [
+                      "Introducir en el horno a 190°c hasta que veas que esta doradito, unos 45 minutos"
+                  ],
+        "tips":  [
+                     "Prueba de hacerlo y me cuentas, estoy seguro que te encantará"
+                 ],
         "formatFlag":  false
     },
     {
@@ -26782,7 +27286,9 @@
                       "2.tritura con el resto de ingredientes hasta obtener una textura lo más lisa posible",
                       "Decora con especias al gusto y un chorro de aove y listo!"
                   ],
-        "tips":  "GUARDA PORQUE LA VAS A NECESITAR!",
+        "tips":  [
+                     "GUARDA PORQUE LA VAS A NECESITAR!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -26825,7 +27331,9 @@
                       "Tritura junto con las especias, sal, aove y leche de coco",
                       "Emplata y decora."
                   ],
-        "tips":  "GUARDA PARA PREPARARLA!",
+        "tips":  [
+                     "GUARDA PARA PREPARARLA!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -27057,7 +27565,9 @@
                       "Si la queréis modificar a receta Express, con garbanzos de bote, podéis añadir al final del todo(tras espinacas o con ellas) y dejar cocinar 5 min a fuego medio bajo y listo!",
                       "Estaba delicioso."
                   ],
-        "tips":  "(Potaje versionado)",
+        "tips":  [
+                     "(Potaje versionado)"
+                 ],
         "formatFlag":  false
     },
     {
@@ -27087,7 +27597,9 @@
                             "125 g de yogur natural",
                             "Siempre es misma cantidad de uno que de otro"
                         ],
-        "steps":  "El “pringue” es ajito picado, perejil, y aceite de oliva",
+        "steps":  [
+                      "El “pringue” es ajito picado, perejil, y aceite de oliva"
+                  ],
         "tips":  [
                      "Este pan no puede ser más fácil de hacer y queda perfecto! Lee abajo que te dejo tips importantes",
                      "Para hacer 4 panes necesitas estos 2 ingredientes:",
@@ -27312,7 +27824,9 @@
         "title":  "Tostada de Aguacate y Queso Fresco",
         "category":  "Sopas y Cremas",
         "url":  "https://www.instagram.com/p/CO40ajfKKrl/",
-        "ingredients":  "230 - 250 g de queso fresco en trozos",
+        "ingredients":  [
+                            "230 - 250 g de queso fresco en trozos"
+                        ],
         "steps":  [
                       "2 - 3 pellizco de sal",
                       "20 g de aceite de oliva (y un poco más para servir)",
@@ -27325,7 +27839,9 @@
                       "2 Añade las nueces y tritura 12 seg/vel 5. Retira a un bol. Unta las tostadas con la crema y coloca encima las rebanadas de aguacate. Espolvorea con sal y pimienta, riegue con un chorrito de aceite de oliva y sirve.",
                       "¿Quién se apunta al brunch?"
                   ],
-        "tips":  "Esta tostada de aguacate y queso fresco con nueces puede ser una muy buena opción para tu increíble desayuno de fin de semana. Lo puedes acompañar de un rico frappé de café al limón, que podrás encontrar en Cookidoo.",
+        "tips":  [
+                     "Esta tostada de aguacate y queso fresco con nueces puede ser una muy buena opción para tu increíble desayuno de fin de semana. Lo puedes acompañar de un rico frappé de café al limón, que podrás encontrar en Cookidoo."
+                 ],
         "formatFlag":  true
     },
     {
@@ -27791,7 +28307,9 @@
                       "En una cacerola se cuece el arroz y se añade al potaje cuando se va a comer.",
                       "Como alternativa, se puede añadir al potaje un chorizo y un poco de morcilla, antes de cerrar la olla."
                   ],
-        "tips":  "Se ponen en la olla rápida las judias, el pimiento, la cebolla, el ajo y el tomate, se añade agua hasta que cubra las judías.",
+        "tips":  [
+                     "Se ponen en la olla rápida las judias, el pimiento, la cebolla, el ajo y el tomate, se añade agua hasta que cubra las judías."
+                 ],
         "formatFlag":  false
     },
     {
@@ -27936,7 +28454,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Verduras de verano, albahaca y una crema fresca y envolvente. La pasta que vas a querer repetir hasta septiembre",
+        "tips":  [
+                     "Verduras de verano, albahaca y una crema fresca y envolvente. La pasta que vas a querer repetir hasta septiembre"
+                 ],
         "formatFlag":  false
     },
     {
@@ -28045,7 +28565,9 @@
         "steps":  [
 
                   ],
-        "tips":  "¡Arrancamos!",
+        "tips":  [
+                     "¡Arrancamos!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -28315,7 +28837,9 @@
                       "Queso Parmesano",
                       "Ideas de entrantes"
                   ],
-        "tips":  "〰〰〰〰〰〰〰〰〰〰〰〰",
+        "tips":  [
+                     "〰〰〰〰〰〰〰〰〰〰〰〰"
+                 ],
         "formatFlag":  false
     },
     {
@@ -28396,7 +28920,9 @@
         "title":  "Pasta Cremosa de Tomate",
         "category":  "Pasta",
         "url":  "https://www.instagram.com/reel/DMqY-2_ou6O/",
-        "ingredients":  "queda un plato buenísimo, prometido",
+        "ingredients":  [
+                            "queda un plato buenísimo, prometido"
+                        ],
         "steps":  [
                       ". Como siempre con la garantía de por vida Le Creuset. Yo he querido mostraros que se pueden hacer salsas en acero inoxidable sin que se peguen. UNA PASADA",
                       "Gramos de pasta por persona ( yo espaguetis)",
@@ -28709,7 +29235,9 @@
         "title":  "Cacio e Pepe",
         "category":  "Pasta",
         "url":  "https://www.instagram.com/reel/DGd7ZTNowbm/",
-        "ingredients":  "1 plato perfecto para esos días en los que te apetece algo rico sin complicarte.",
+        "ingredients":  [
+                            "1 plato perfecto para esos días en los que te apetece algo rico sin complicarte."
+                        ],
         "steps":  [
 
                   ],
@@ -28812,7 +29340,9 @@
                       "Cubre la última capa con mozzarella rallada.",
                       "Hornea a 180 grados 20-25 minutos. Yo lo tapo con un poco de papel de horno para que no se queme el queso. Después lo quito para que se dore los últimos 5 minutos."
                   ],
-        "tips":  "Amo esta receta. Me parece de esas recetas sencillas pero muy resultonas, para estas fiestas o para cuando tienes invitados en casa nos encanta lo bueno es que la podéis hacer a vuestro gusto, aunque a mí así me parece maravillosa",
+        "tips":  [
+                     "Amo esta receta. Me parece de esas recetas sencillas pero muy resultonas, para estas fiestas o para cuando tienes invitados en casa nos encanta lo bueno es que la podéis hacer a vuestro gusto, aunque a mí así me parece maravillosa"
+                 ],
         "formatFlag":  false
     },
     {
@@ -28893,7 +29423,9 @@
                       "Y no lo olvides...",
                       "¡CREA UNA BUENA RELACIÓN CON TU COMIDA!"
                   ],
-        "tips":  "¡Prepárate para la pasta más cremosa y deliciosa que vas a probar! Una receta que te hará la agua, boca",
+        "tips":  [
+                     "¡Prepárate para la pasta más cremosa y deliciosa que vas a probar! Una receta que te hará la agua, boca"
+                 ],
         "formatFlag":  false
     },
     {
@@ -29114,7 +29646,9 @@
                       "Añade la pasta y ya estaría!",
                       "Mil gracias!"
                   ],
-        "tips":  "Fácil, saludable y brutal!",
+        "tips":  [
+                     "Fácil, saludable y brutal!"
+                 ],
         "formatFlag":  true
     },
     {
@@ -29237,7 +29771,9 @@
                             "1 cucharadita de azúcar",
                             "Pimienta negra"
                         ],
-        "steps":  "Pelamos y cortamos la pera en daditos. En una sartén derretimos una cucharada de mantequilla y echamos la pera junto a una cucharadita de azúcar moreno. Dejamos caramelizar unos 5 minutos y guardamos en un bol. En la misma sartén derretimos el gorgonzola y el mascarpone (el mío de Lidl es un mix de las dos cosas) y un chorrito de leche. Picamos unas nueces y mezclamos todo. Cocemos la pasta y la escurrimos al dente en la salsa. Añadimos un poco de agua de la cocción y mezclamos bien. Finalmente un poco de parmesano rallado y pimienta negra al gusto. Servimos con las peras caramelizadas y más nueces.",
+        "steps":  [
+                      "Pelamos y cortamos la pera en daditos. En una sartén derretimos una cucharada de mantequilla y echamos la pera junto a una cucharadita de azúcar moreno. Dejamos caramelizar unos 5 minutos y guardamos en un bol. En la misma sartén derretimos el gorgonzola y el mascarpone (el mío de Lidl es un mix de las dos cosas) y un chorrito de leche. Picamos unas nueces y mezclamos todo. Cocemos la pasta y la escurrimos al dente en la salsa. Añadimos un poco de agua de la cocción y mezclamos bien. Finalmente un poco de parmesano rallado y pimienta negra al gusto. Servimos con las peras caramelizadas y más nueces."
+                  ],
         "tips":  [
 
                  ],
@@ -29678,8 +30214,12 @@
                             "1/2 taza de bebida vegetal",
                             "1 chorrito de limón"
                         ],
-        "steps":  "Tritura todos los ingredientes hasta conseguir una consistencia muy cremosa, ajusta la densidad añadiendo más o menos agua y ajusta la cantidad de mostaza y ajo al gusto.",
-        "tips":  "Tiempo de conservación: 3-4 días en la nevera.",
+        "steps":  [
+                      "Tritura todos los ingredientes hasta conseguir una consistencia muy cremosa, ajusta la densidad añadiendo más o menos agua y ajusta la cantidad de mostaza y ajo al gusto."
+                  ],
+        "tips":  [
+                     "Tiempo de conservación: 3-4 días en la nevera."
+                 ],
         "formatFlag":  false
     },
     {
@@ -29693,7 +30233,9 @@
                             "Sal y pimienta al gusto",
                             "2 semillas de cilantro (opcional)"
                         ],
-        "steps":  "Tuesta en una sartén sin sal las avellanas y las semillas unos minutos. Luego tritura levemente hasta conseguir una textura arenosa.",
+        "steps":  [
+                      "Tuesta en una sartén sin sal las avellanas y las semillas unos minutos. Luego tritura levemente hasta conseguir una textura arenosa."
+                  ],
         "tips":  [
                      "Tiempo de conservación: 15 días en la nevera",
                      "1/2 taza de avellanas"
@@ -29713,8 +30255,12 @@
                             "Zumo de medio limón",
                             "Sal al gusto"
                         ],
-        "steps":  "Tritura hasta conseguir la consistencia cremosa.",
-        "tips":  "Tiempo de conservación: 5-6 días en la nevera",
+        "steps":  [
+                      "Tritura hasta conseguir la consistencia cremosa."
+                  ],
+        "tips":  [
+                     "Tiempo de conservación: 5-6 días en la nevera"
+                 ],
         "formatFlag":  false
     },
     {
@@ -29871,7 +30417,9 @@
         "steps":  [
 
                   ],
-        "tips":  "A base de nueces, dátil, cacao y un toque opcional a café que le va de vicio. Y si te atreves, el toque de sal es ya otro nivel",
+        "tips":  [
+                     "A base de nueces, dátil, cacao y un toque opcional a café que le va de vicio. Y si te atreves, el toque de sal es ya otro nivel"
+                 ],
         "formatFlag":  false
     },
     {
@@ -29987,7 +30535,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Receta 3/5 del reto!",
+        "tips":  [
+                     "Receta 3/5 del reto!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -30027,7 +30577,9 @@
                       "With Love \u0026 Passion",
                       "Lo"
                   ],
-        "tips":  "Muchos me habéis dicho que como a mi, la salsa putanesca os encanta y aquí os vengo con mi versión! Es de mis salsas para pasta (con tomate) preferidas, cuenta con ingredientes súper potentes de sabor: anchoas, alcaparras, guanciale, aceitunas negras… y los que me vais conociendo sabéis que para mi lo importante en los platos es el sabor.",
+        "tips":  [
+                     "Muchos me habéis dicho que como a mi, la salsa putanesca os encanta y aquí os vengo con mi versión! Es de mis salsas para pasta (con tomate) preferidas, cuenta con ingredientes súper potentes de sabor: anchoas, alcaparras, guanciale, aceitunas negras… y los que me vais conociendo sabéis que para mi lo importante en los platos es el sabor."
+                 ],
         "formatFlag":  true
     },
     {
@@ -30204,7 +30756,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Para emplatar poner una base de queso rallado en el fondo, colocar los spaghettis sacandolos del cuenco con la forma redonda, alrededor se ponen las verduras, en el centro el huevo y el bacon crunchy.",
+        "tips":  [
+                     "Para emplatar poner una base de queso rallado en el fondo, colocar los spaghettis sacandolos del cuenco con la forma redonda, alrededor se ponen las verduras, en el centro el huevo y el bacon crunchy."
+                 ],
         "formatFlag":  false
     },
     {
@@ -30512,7 +31066,9 @@
                       "Queso rallado para gratinar.",
                       "Sal y pimienta."
                   ],
-        "tips":  "Como os he contado por stories me he convertido en embajadora de @pastagarofaloes una marca que utilizo muchísimo en casa por su buenísima calidad. Es una pasta con certificación IGP Gragnano (Nápoles).",
+        "tips":  [
+                     "Como os he contado por stories me he convertido en embajadora de @pastagarofaloes una marca que utilizo muchísimo en casa por su buenísima calidad. Es una pasta con certificación IGP Gragnano (Nápoles)."
+                 ],
         "formatFlag":  false
     },
     {
@@ -30937,7 +31493,9 @@
         "steps":  [
 
                   ],
-        "tips":  "El astro portugués @cristiano admitió que este clásico de la gastronomía portuguesa es el plato que más disfruta.",
+        "tips":  [
+                     "El astro portugués @cristiano admitió que este clásico de la gastronomía portuguesa es el plato que más disfruta."
+                 ],
         "formatFlag":  false
     },
     {
@@ -30956,7 +31514,9 @@
         "steps":  [
 
                   ],
-        "tips":  "La tortilla más cremosa que vas a probar. Lo mejor del huevo es la yema, ¿Por qué no potenciar su sabor y textura?",
+        "tips":  [
+                     "La tortilla más cremosa que vas a probar. Lo mejor del huevo es la yema, ¿Por qué no potenciar su sabor y textura?"
+                 ],
         "formatFlag":  false
     },
     {
@@ -31114,7 +31674,9 @@
                       "Y no lo olvides...",
                       "¡CREA UNA BUENA RELACIÓN CON TU COMIDA!"
                   ],
-        "tips":  "Este plato se va a convertir en vuestro plato estrella estás navidades!",
+        "tips":  [
+                     "Este plato se va a convertir en vuestro plato estrella estás navidades!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -31200,7 +31762,9 @@
                       "Molde de 15cm",
                       "Mil gracias!"
                   ],
-        "tips":  "TARTA DE CHOCOLATE SOLO 2 INGREDIENTES!",
+        "tips":  [
+                     "TARTA DE CHOCOLATE SOLO 2 INGREDIENTES!"
+                 ],
         "formatFlag":  false
     },
     {
@@ -31525,7 +32089,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Rápido, sin complicaciones y espectacular",
+        "tips":  [
+                     "Rápido, sin complicaciones y espectacular"
+                 ],
         "formatFlag":  false
     },
     {
@@ -31575,7 +32141,9 @@
         "title":  "Falsas Migas de Coliflor",
         "category":  "Postres",
         "url":  "https://www.instagram.com/reel/ClOQLlBKmTB/",
-        "ingredients":  "1 coliflor rallada gruesa",
+        "ingredients":  [
+                            "1 coliflor rallada gruesa"
+                        ],
         "steps":  [
                       "Pimentón dulce o picante al gusto",
                       "Sal al gusto",
@@ -31729,7 +32297,9 @@
                       "Mezcla y cocina en horno o airfryer a 200 grados 15-20 minutos removiendo de vez en cuando hasta que estén doradas.",
                       "Acompaña con la salsa y DELICIA!"
                   ],
-        "tips":  "Tan sólo necesitas:",
+        "tips":  [
+                     "Tan sólo necesitas:"
+                 ],
         "formatFlag":  false
     },
     {
@@ -31773,7 +32343,9 @@
                       "3.- Tartar clásico.",
                       "4.- Tarta de queso curado."
                   ],
-        "tips":  "1.- Maki Alcazaba.",
+        "tips":  [
+                     "1.- Maki Alcazaba."
+                 ],
         "formatFlag":  false
     },
     {
@@ -31873,7 +32445,9 @@
                             "1 puñado de alcaparras",
                             "1 puñado de pasas."
                         ],
-        "steps":  "Picar las pasas, las alcaparras y el salchichón sin piel y mezclar con la mayonesa y la mermelada y listo!",
+        "steps":  [
+                      "Picar las pasas, las alcaparras y el salchichón sin piel y mezclar con la mayonesa y la mermelada y listo!"
+                  ],
         "tips":  [
 
                  ],
@@ -31945,7 +32519,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Acabando el año como dios manda. Porque no es una dieta, es un cambio de hábitos. (Brócoli al vapor con claras de huevo y jamón + pimentón rojo picante)..",
+        "steps":  [
+                      "Acabando el año como dios manda. Porque no es una dieta, es un cambio de hábitos. (Brócoli al vapor con claras de huevo y jamón + pimentón rojo picante).."
+                  ],
         "tips":  [
 
                  ],
@@ -31989,7 +32565,9 @@
                       "5.Sírvelos calientes, con un extra de parmesano por encima si quieres.",
                       "Todo un platazo para ti, o para tus invitados"
                   ],
-        "tips":  "Enciende tu air fryer, que se vienen unos espárragos crujientes con parmesano de locos",
+        "tips":  [
+                     "Enciende tu air fryer, que se vienen unos espárragos crujientes con parmesano de locos"
+                 ],
         "formatFlag":  false
     },
     {
@@ -32041,7 +32619,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Reservas abiertas este fin de semana.",
+        "steps":  [
+                      "Reservas abiertas este fin de semana."
+                  ],
         "tips":  [
                      "Desde la tierra a tu mesa.",
                      "Nuestra selección de quesos, cuidadosamente elegidos para sorprenderte."
@@ -32071,7 +32651,9 @@
         "title":  "Guía del ABC del Freezer",
         "category":  "Otras",
         "url":  "https://www.instagram.com/p/DYNp5lrERnG/",
-        "ingredients":  "1 post para guardar y tener a mano ABC del freezer visítanos en @cocinaastuta",
+        "ingredients":  [
+                            "1 post para guardar y tener a mano ABC del freezer visítanos en @cocinaastuta"
+                        ],
         "steps":  [
 
                   ],
@@ -32086,7 +32668,9 @@
         "title":  "Croquetas de Pasta Carbonara",
         "category":  "Pasta",
         "url":  "https://www.instagram.com/reel/C_Jbqc8pxlh/",
-        "ingredients":  "1 CLÁSICO ITALIANO, HECHO DE UNA MANERA MUY DISTINTA: Croquetas Carbonara",
+        "ingredients":  [
+                            "1 CLÁSICO ITALIANO, HECHO DE UNA MANERA MUY DISTINTA: Croquetas Carbonara"
+                        ],
         "steps":  [
                       "Estuve recorriendo Italia, y una receta muy clásica, y deliciosa, es la Pasta Carbonara: una mezcla de sabores impresionantes. Usando esos mismos sabores, quise hacer algo diferente, y salieron, LAS CROQUETAS",
                       "Vas a necesitar:",
@@ -32145,7 +32729,9 @@
                       "Gracias al reposo la salsa tendrá más cuerpo y sabor. Transforma lo ordinario en extraordinario con esta salsa",
                       "▶¿Es para tí la mejor salsa del mundo?"
                   ],
-        "tips":  "▶¡Hola familia! Menuda receta más rica os traigo hoy. Considerada para muchas personas, la mejor salsa del mundo. La salsa de yema de huevo",
+        "tips":  [
+                     "▶¡Hola familia! Menuda receta más rica os traigo hoy. Considerada para muchas personas, la mejor salsa del mundo. La salsa de yema de huevo"
+                 ],
         "formatFlag":  false
     },
     {
@@ -32259,7 +32845,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Estas bombas de pizza son el típico picoteo que podríamos comer uuuuuna y otra vez. Y como las pruebes, a ti te va a pasar lo mismo",
+        "steps":  [
+                      "Estas bombas de pizza son el típico picoteo que podríamos comer uuuuuna y otra vez. Y como las pruebes, a ti te va a pasar lo mismo"
+                  ],
         "tips":  [
 
                  ],
@@ -32326,7 +32914,9 @@
                       "¡¡¡Importante! ¡¡Si no encuentras todos los ingredientes, no sufras, inventa! ¡¡Be gipsy! Fíate de tu intuición y tira ‘palante’. La verdadera esencia de la cocina habita en probar y guisar con cariño.",
                       "Comparte | Comenta | Cocina"
                   ],
-        "tips":  "Quiche de queso perfecta| Gipsy Chef",
+        "tips":  [
+                     "Quiche de queso perfecta| Gipsy Chef"
+                 ],
         "formatFlag":  false
     },
     {
@@ -32399,7 +32989,9 @@
                       "Con un buen producto, aplicamos técnicas de cocina y evolucionamos nuestras recetas para conseguir el mejor resultado...",
                       "#CocinamosParaTí en nuestras 4 tiendas, eventos, caterings, celebraciones, Cantina Digital, menús de empresa..."
                   ],
-        "tips":  "Así es @foodlona",
+        "tips":  [
+                     "Así es @foodlona"
+                 ],
         "formatFlag":  false,
         "mix":  true
     },
@@ -32552,7 +33144,9 @@
         "steps":  [
 
                   ],
-        "tips":  "Aquí te dejo esta teja crujiente estilo Michelin, chef",
+        "tips":  [
+                     "Aquí te dejo esta teja crujiente estilo Michelin, chef"
+                 ],
         "formatFlag":  false
     },
     {
@@ -32769,7 +33363,9 @@
         "steps":  [
 
                   ],
-        "tips":  "GARBANZOS CARBONARA • Una versión original y deliciosa de la clásica carbonara, sustituyendo la pasta por garbanzos para un plato cremoso, sabroso y lleno de proteína.",
+        "tips":  [
+                     "GARBANZOS CARBONARA • Una versión original y deliciosa de la clásica carbonara, sustituyendo la pasta por garbanzos para un plato cremoso, sabroso y lleno de proteína."
+                 ],
         "formatFlag":  false
     },
     {
@@ -32824,7 +33420,9 @@
                       "Con este sistema, la termoterapia, podrás conservar fresas, frambuesas, arándanos y uvas hasta 7 en la nevera sin que salga moho.",
                       "La termoterapia consiste en sumergir los frutos durante un minuto en agua 60° escurrir esa agua y luego sumergirlos durante un minuto en agua fría. Este choque temperaturas hace que los microorganismos presentes en los frutos mueran. A continuación hay que colocar las fresas en una fuente cubierta con papel de cocina y tapar con film, agujereadolo con un palillo de dientes para que salga la humedad."
                   ],
-        "tips":  "Cómo conservar FRESAS",
+        "tips":  [
+                     "Cómo conservar FRESAS"
+                 ],
         "formatFlag":  false,
         "mix":  true
     },
@@ -32857,7 +33455,9 @@
                       "A Chuchi le convencí y se comió los garbanzos (y yo también ).",
                       "Receta molona que hice para @carrefoures en la otra red social"
                   ],
-        "tips":  "Si te da pereza comer garbanzos… prueba a transformarlos en churros (o galletitas de té, que con manga pastelera parecen más eso).",
+        "tips":  [
+                     "Si te da pereza comer garbanzos… prueba a transformarlos en churros (o galletitas de té, que con manga pastelera parecen más eso)."
+                 ],
         "formatFlag":  false
     },
     {
@@ -33048,8 +33648,12 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Reserva para comer o cenar.",
-        "tips":  "Pure de palomitas.",
+        "steps":  [
+                      "Reserva para comer o cenar."
+                  ],
+        "tips":  [
+                     "Pure de palomitas."
+                 ],
         "formatFlag":  false
     },
     {
@@ -33159,7 +33763,9 @@
                       "Vierte la mezcla en un molde forrado con papel manteca y cúbrela con film.",
                       "Llévala al refrigerador 2-3 horas hasta que quede lista."
                   ],
-        "tips":  "Sin azúcar añadida, sin leche y sin ultraprocesados. Ideal para bebés que no aceptan bien la fruta, como colación ligera o primer postre en la alimentación complementaria.",
+        "tips":  [
+                     "Sin azúcar añadida, sin leche y sin ultraprocesados. Ideal para bebés que no aceptan bien la fruta, como colación ligera o primer postre en la alimentación complementaria."
+                 ],
         "formatFlag":  true
     },
     {
@@ -33331,7 +33937,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Todo lo que tienes que saber sobre carne, sartén de acero inoxidable, temperatura para cocinar y tiempo…",
+        "steps":  [
+                      "Todo lo que tienes que saber sobre carne, sartén de acero inoxidable, temperatura para cocinar y tiempo…"
+                  ],
         "tips":  [
 
                  ],
@@ -33533,7 +34141,9 @@
                       "Barra de sushi",
                       "Comer en Málaga"
                   ],
-        "tips":  "Esta barra lleva apenas 2 semanas abierta y ya se hace complicado conseguir hueco para comer en ella",
+        "tips":  [
+                     "Esta barra lleva apenas 2 semanas abierta y ya se hace complicado conseguir hueco para comer en ella"
+                 ],
         "formatFlag":  false
     },
     {
@@ -33610,7 +34220,9 @@
         "ingredients":  [
 
                         ],
-        "steps":  "Publi- El Buffet de Sushi más caro de Madrid: en pleno centro y con un nivel bestial para que comas Nigiris sin límite de los 20 tipos que disponen, nada sencillos ni parecidos a los de un buffet de 20-30, que sin desmerecerlos, estos están un paso más allá. Disponible de Lunes a Miércoles para comer y cenar en el Restaurante Ikigai de la calle Flor Baja al lado de plaza de España (ojo en la sede de Velazquez no). Cuesta 59€ por persona y como decimos los madrileños: RENTA MUCHO. Recomiendo reservar porque se va a llenar...",
+        "steps":  [
+                      "Publi- El Buffet de Sushi más caro de Madrid: en pleno centro y con un nivel bestial para que comas Nigiris sin límite de los 20 tipos que disponen, nada sencillos ni parecidos a los de un buffet de 20-30, que sin desmerecerlos, estos están un paso más allá. Disponible de Lunes a Miércoles para comer y cenar en el Restaurante Ikigai de la calle Flor Baja al lado de plaza de España (ojo en la sede de Velazquez no). Cuesta 59€ por persona y como decimos los madrileños: RENTA MUCHO. Recomiendo reservar porque se va a llenar..."
+                  ],
         "tips":  [
 
                  ],

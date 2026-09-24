@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>A fuego lento</title>
-<meta name="description" content="A fuego lento: recetas para salir de la rutina.">
+<title>Harina, huevo y pan rallao</title>
+<meta name="description" content="Harina, huevo y pan rallao: recetas para salir de la rutina.">
 <meta name="theme-color" content="#EFEFE3" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1A1C15" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="A fuego lento">
+<meta name="apple-mobile-web-app-title" content="Harina, huevo y pan rallao">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -640,7 +640,7 @@
 <body>
 <div class="wrap">
   <header class="top">
-    <h1 class="title">A fuego lento</h1>
+    <h1 class="title">Harina, huevo y pan rallao</h1>
     <p class="subtitle">Recetas para salir de la rutina.</p>
     <div class="stats">
       <span class="stat"><b id="statTotal">–</b> recetas</span>
@@ -653,7 +653,7 @@
     <div class="search-row">
       <div class="searchbox">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
-        <input id="search" type="text" placeholder="Buscar por nombre, ingrediente…" autocomplete="off">
+        <input id="search" type="text" placeholder="Buscar por nombre, ingrediente…" autocomplete="off" inputmode="search" enterkeyhint="search">
       </div>
       <button class="add-btn cart-toggle-btn" id="cartBtn" type="button" hidden>🛒 Lista <span id="cartCount">0</span></button>
       <button class="add-btn cart-toggle-btn" id="planBtn" type="button">📅 Plan semanal</button>
@@ -687,6 +687,7 @@
 <script>
 (function(){
   const API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/store-api";
+  const CLEAN_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/clean-recipe";
   const PASSKEY = "recetario_passcode_v1";
 
   const CATEGORY_ORDER = ["Entrantes y Aperitivos","Sopas y Cremas","Ensaladas","Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y Bocadillos","Salsas","Postres","Desayunos","Bebe","Otras"];
@@ -1361,6 +1362,8 @@
           '<div class="sheet-top"><h2>Añadir receta</h2>' +
           '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
           '<form class="add-form" id="addForm">' +
+            '<label>Pega aquí el texto (de Instagram o de donde sea)<textarea id="f_raw" style="min-height:100px" placeholder="Pega el texto tal cual y pulsa Limpiar con IA..."></textarea></label>' +
+            '<p style="margin:-6px 0 4px"><button type="button" class="delete-link" id="aiCleanBtn">✨ Limpiar con IA</button> <span class="form-hint" id="aiStatus"></span></p>' +
             '<label>Título<input type="text" id="f_title" required maxlength="120" placeholder="Ej. Tarta de manzana de la abuela"></label>' +
             '<label>Categoría<select id="f_cat">' +
               CATEGORY_ORDER.map(c => '<option value="' + escapeAttr(c) + '">' + escapeHtml(catLabel(c)) + '</option>').join('') +
@@ -1377,6 +1380,34 @@
     document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
     document.addEventListener('keydown', escClose);
     document.getElementById('f_title').focus();
+    const aiCleanBtn = document.getElementById('aiCleanBtn');
+    const aiStatus = document.getElementById('aiStatus');
+    aiCleanBtn.addEventListener('click', async () => {
+      const raw = document.getElementById('f_raw').value.trim();
+      if (!raw) { aiStatus.textContent = 'Pega primero el texto de la receta.'; return; }
+      aiCleanBtn.disabled = true;
+      aiStatus.textContent = 'Limpiando con IA…';
+      try {
+        const res = await fetch(CLEAN_API_BASE, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: raw, passcode: getStoredPasscode() || '' })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'error desconocido');
+        const r = data.result;
+        document.getElementById('f_title').value = r.title || '';
+        document.getElementById('f_cat').value = r.category || 'Otras';
+        document.getElementById('f_ingredients').value = (r.ingredients || []).join('\n');
+        document.getElementById('f_steps').value = (r.steps || []).join('\n');
+        document.getElementById('f_tips').value = (r.tips || []).join('\n');
+        aiStatus.textContent = 'Listo (' + data.provider + '). Revisa y ajusta antes de guardar.';
+      } catch (err) {
+        aiStatus.textContent = 'No se pudo limpiar con IA: ' + err.message;
+      } finally {
+        aiCleanBtn.disabled = false;
+      }
+    });
     document.getElementById('addForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const title = document.getElementById('f_title').value.trim();
@@ -1803,6 +1834,15 @@
       state.visible = PAGE_SIZE;
       render();
     }, 120);
+  });
+  searchEl.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    clearTimeout(debounceTimer);
+    state.q = norm(searchEl.value.trim());
+    state.visible = PAGE_SIZE;
+    render();
+    searchEl.blur();
   });
 
   loadMoreBtn.addEventListener('click', () => {
