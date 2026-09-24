@@ -1035,6 +1035,7 @@
   }
 
   let currentDetailId = null;
+  let currentDetailEditing = false;
 
   function openDetail(r, editing) {
     history.pushState({ view: 'detail', id: r.id }, '', '#receta-' + encodeURIComponent(r.id));
@@ -1042,6 +1043,7 @@
   }
 
   function renderDetailPage(r, editing) {
+    currentDetailEditing = editing;
     currentDetailId = r.id;
     const isFav = favs.has(r.id);
     const inCart = cart.has(r.id);
@@ -1052,6 +1054,10 @@
       : '<h2>' + escapeHtml(r.title) + '</h2>';
     const bodyBlock = editing
       ? '<div class="edit-toolbar"><button type="button" id="boldBtn" class="bold-btn" title="Negrita">B</button><span class="form-hint">Selecciona texto y pulsa B para ponerlo en negrita · un elemento por línea</span></div>' +
+        '<p style="margin:2px 0 10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap">' +
+          '<button type="button" class="delete-link" id="aiCleanExistingBtn">✨ Limpiar con IA</button>' +
+          '<span class="form-hint" id="aiExistingStatus"></span>' +
+        '</p>' +
         '<label class="edit-section-label" for="editIngredients">Ingredientes</label>' +
         '<textarea id="editIngredients" class="edit-text-input" style="min-height:110px">' + escapeHtml((r.ingredients||[]).join('\n')) + '</textarea>' +
         '<label class="edit-section-label" for="editSteps">Elaboración</label>' +
@@ -1135,6 +1141,39 @@
       saveEdit(r, newTitle, newIngredients, newSteps, newTips);
       renderDetailPage(r, false);
     });
+    const aiCleanExistingBtn = document.getElementById('aiCleanExistingBtn');
+    if (aiCleanExistingBtn) aiCleanExistingBtn.addEventListener('click', async () => {
+      const aiExistingStatus = document.getElementById('aiExistingStatus');
+      const rawParts = [
+        document.getElementById('editTitle').value,
+        document.getElementById('editIngredients').value,
+        document.getElementById('editSteps').value,
+        document.getElementById('editTips').value
+      ].filter(Boolean);
+      const raw = rawParts.join('\n');
+      if (!raw.trim()) { aiExistingStatus.textContent = 'No hay texto que limpiar.'; return; }
+      aiCleanExistingBtn.disabled = true;
+      aiExistingStatus.textContent = 'Limpiando con IA…';
+      try {
+        const res = await fetch(CLEAN_API_BASE, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: raw, passcode: getStoredPasscode() || '' })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'error desconocido');
+        const rr = data.result;
+        document.getElementById('editTitle').value = rr.title || r.title;
+        document.getElementById('editIngredients').value = (rr.ingredients || []).join('\n');
+        document.getElementById('editSteps').value = (rr.steps || []).join('\n');
+        document.getElementById('editTips').value = (rr.tips || []).join('\n');
+        aiExistingStatus.textContent = 'Listo (' + data.provider + '). Revisa y guarda cuando quieras.';
+      } catch (err) {
+        aiExistingStatus.textContent = 'No se pudo limpiar con IA: ' + err.message;
+      } finally {
+        aiCleanExistingBtn.disabled = false;
+      }
+    });
     const boldBtn = document.getElementById('boldBtn');
     if (boldBtn) boldBtn.addEventListener('click', () => {
       const active = document.activeElement;
@@ -1208,6 +1247,7 @@
     pageRoot.innerHTML = "";
     document.removeEventListener('keydown', pageEscClose);
     currentDetailId = null;
+    currentDetailEditing = false;
   }
 
   window.addEventListener('popstate', (e) => {
@@ -1375,7 +1415,7 @@
     docs.forEach(d => { if (d.data && Array.isArray(d.data.tags)) dbTags[d.id] = d.data.tags; });
     applyOverrides();
     render();
-    if (currentDetailId) {
+    if (currentDetailId && !currentDetailEditing) {
       const r = recipes.find(x => x.id === currentDetailId);
       if (r) renderDetailPage(r, false);
     }
