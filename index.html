@@ -565,6 +565,41 @@
     resize: vertical;
   }
   .notes-box textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .notes-box input[type="text"] {
+    font: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--card);
+  }
+  .notes-box input[type="text"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .tag-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag-chips:empty { display: none; }
+  .tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 4px 6px 4px 10px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .tag-chip-x {
+    font: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--accent);
+    opacity: .7;
+    font-size: 14px;
+    line-height: 1;
+    padding: 2px;
+  }
+  .tag-chip-x:hover { opacity: 1; }
   .card-rating { font-size: 12px; color: var(--accent-2); letter-spacing: 1px; }
 
   .add-form { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
@@ -824,6 +859,10 @@
       if (isLowContent(r) && state.cat !== "REVISAR") return false;
       if (state.cat === "FAV") { if (!favs.has(r.id)) return false; }
       else if (state.cat === "REVISAR") { if (!isLowContent(r)) return false; }
+      else if (state.cat.indexOf("TAG:") === 0) {
+        const tagName = state.cat.slice(4);
+        if (!r.tags || r.tags.indexOf(tagName) === -1) return false;
+      }
       else if (state.cat !== "TODAS" && r.category !== state.cat) return false;
     }
     if (state.q) {
@@ -850,6 +889,14 @@
     ];
     if (lowContentCount > 0) all.push({key:"REVISAR", label:"⚠️ Revisar", n: lowContentCount});
     if (mixCount > 0) all.push({key:"MIX", label:"🎭 Mix", n: mixCount});
+    const tagCounts = {};
+    recipes.forEach(r => {
+      if (hiddenIds.has(r.id) || isMix(r) || isLowContent(r)) return;
+      (r.tags || []).forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; });
+    });
+    getAllTags().forEach(t => {
+      if (tagCounts[t]) all.push({key: "TAG:" + t, label: "🏷️ " + t, n: tagCounts[t]});
+    });
     return all;
   }
 
@@ -1045,6 +1092,12 @@
               '<div class="notes-row"><span class="notes-label">Mi valoración</span>' + starsHtml(rating, true) + '</div>' +
               '<label class="notes-label" for="noteText">Mis notas</label>' +
               '<textarea id="noteText" placeholder="Ej. le pondría menos sal, muy rica, la hice el 12/3...">' + escapeHtml(note) + '</textarea>' +
+              '<label class="notes-label" for="tagInput">Etiquetas</label>' +
+              '<div class="tag-chips" id="tagChips">' +
+                (r.tags || []).map(t => '<span class="tag-chip">' + escapeHtml(t) + '<button type="button" class="tag-chip-x" data-tag="' + escapeAttr(t) + '" aria-label="Quitar etiqueta">×</button></span>').join('') +
+              '</div>' +
+              '<input type="text" id="tagInput" list="tagSuggestions" placeholder="Escribe una etiqueta y pulsa Enter…" autocomplete="off">' +
+              '<datalist id="tagSuggestions">' + getAllTags().map(t => '<option value="' + escapeAttr(t) + '">').join('') + '</datalist>' +
             '</div>'
           : '') +
         (!editing
@@ -1118,6 +1171,33 @@
         noteTimer = setTimeout(() => saveNote(r.id, noteEl.value), 500);
       });
     }
+    const tagInput = document.getElementById('tagInput');
+    if (tagInput) {
+      tagInput.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        const val = tagInput.value.trim();
+        if (!val) return;
+        const current = r.tags || [];
+        if (!current.some(t => t.toLowerCase() === val.toLowerCase())) {
+          saveTags(r, current.concat([val]));
+        } else {
+          tagInput.value = '';
+        }
+      });
+    }
+    document.querySelectorAll('[data-tag]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tag = btn.getAttribute('data-tag');
+        saveTags(r, (r.tags || []).filter(t => t !== tag));
+      });
+    });
+  }
+
+  function getAllTags() {
+    const set = new Set();
+    recipes.forEach(r => { (r.tags || []).forEach(t => set.add(t)); });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'es'));
   }
 
   function escClose(e) { if (e.key === 'Escape') closeDetail(); }
@@ -1171,6 +1251,7 @@
 
   let canEdit = false;
   const dbOverrides = {};
+  const dbTags = {};
   const hiddenIds = new Set();
   const myRatings = {};
   const myNotes = {};
@@ -1190,6 +1271,7 @@
       r.ingredients = edit ? edit.ingredients : r.baseIngredients;
       r.steps = edit ? edit.steps : r.baseSteps;
       r.tips = edit ? edit.tips : r.baseTips;
+      r.tags = dbTags[r.id] || [];
     });
   }
 
@@ -1288,6 +1370,16 @@
     applyOverrides();
     render();
   }
+  function applyTagsDocs(docs) {
+    for (const k of Object.keys(dbTags)) delete dbTags[k];
+    docs.forEach(d => { if (d.data && Array.isArray(d.data.tags)) dbTags[d.id] = d.data.tags; });
+    applyOverrides();
+    render();
+    if (currentDetailId) {
+      const r = recipes.find(x => x.id === currentDetailId);
+      if (r) renderDetailPage(r, false);
+    }
+  }
   function applyPlanDocs(docs) {
     plan = {};
     docs.forEach(d => { plan[d.id] = (d.data && d.data.recipeId) || ''; });
@@ -1310,6 +1402,14 @@
     r.category = newCat;
     render();
     if (canEdit) await apiSetDoc('overrides', r.id, { category: newCat });
+  }
+
+  async function saveTags(r, tags) {
+    dbTags[r.id] = tags;
+    r.tags = tags;
+    render();
+    if (currentDetailId === r.id) renderDetailPage(r, false);
+    if (canEdit) await apiSetDoc('tags', r.id, { tags });
   }
 
   function upsertManualLocal(id, data) {
@@ -1834,6 +1934,7 @@
     startPolling('hidden', applyHiddenDocs, 25000);
     startPolling('notes', applyNotesDocs, 25000);
     startPolling('edits', applyEditsDocs, 25000);
+    startPolling('tags', applyTagsDocs, 25000);
     if (canEdit) {
       startPolling('plan', applyPlanDocs, 15000);
     } else {
