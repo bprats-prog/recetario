@@ -1362,26 +1362,39 @@
           '<div class="sheet-top"><h2>Añadir receta</h2>' +
           '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
           '<form class="add-form" id="addForm">' +
-            '<label>Pega aquí el texto (de Instagram o de donde sea)<textarea id="f_raw" style="min-height:100px" placeholder="Pega el texto tal cual y pulsa Limpiar con IA..."></textarea></label>' +
-            '<p style="margin:-6px 0 4px"><button type="button" class="delete-link" id="aiCleanBtn">✨ Limpiar con IA</button> <span class="form-hint" id="aiStatus"></span></p>' +
-            '<label>Título<input type="text" id="f_title" required maxlength="120" placeholder="Ej. Tarta de manzana de la abuela"></label>' +
-            '<label>Categoría<select id="f_cat">' +
-              CATEGORY_ORDER.map(c => '<option value="' + escapeAttr(c) + '">' + escapeHtml(catLabel(c)) + '</option>').join('') +
-            '</select></label>' +
-            '<label>Ingredientes (uno por línea)<textarea id="f_ingredients" placeholder="200 g de harina&#10;2 huevos&#10;..."></textarea></label>' +
-            '<label>Elaboración (un paso por línea)<textarea id="f_steps" placeholder="Mezcla los ingredientes...&#10;Hornea 20 min..."></textarea></label>' +
-            '<label>Tips (opcional, uno por línea)<textarea id="f_tips" placeholder="..."></textarea></label>' +
-            '<label>Enlace (opcional)<input type="url" id="f_url" placeholder="https://www.instagram.com/..."></label>' +
-            '<button type="submit" class="submit-btn">Guardar receta</button>' +
+            '<label>Pega aquí el texto entero (de Instagram o de donde sea)<textarea id="f_raw" style="min-height:160px" placeholder="Pega el texto tal cual, con ingredientes, elaboración, todo junto... y pulsa Limpiar con IA."></textarea></label>' +
+            '<p style="margin:-6px 0 4px; display:flex; align-items:center; gap:10px; flex-wrap:wrap">' +
+              '<button type="button" class="submit-btn" id="aiCleanBtn" style="padding:9px 18px; font-size:14px">✨ Limpiar con IA</button>' +
+              '<button type="button" class="delete-link" id="manualBtn">Prefiero rellenarlo a mano</button>' +
+              '<span class="form-hint" id="aiStatus"></span>' +
+            '</p>' +
+            '<div id="structuredFields" hidden>' +
+              '<label>Título<input type="text" id="f_title" maxlength="120" placeholder="Ej. Tarta de manzana de la abuela"></label>' +
+              '<label>Categoría<select id="f_cat">' +
+                CATEGORY_ORDER.map(c => '<option value="' + escapeAttr(c) + '">' + escapeHtml(catLabel(c)) + '</option>').join('') +
+              '</select></label>' +
+              '<label>Ingredientes (uno por línea)<textarea id="f_ingredients" placeholder="200 g de harina&#10;2 huevos&#10;..."></textarea></label>' +
+              '<label>Elaboración (un paso por línea)<textarea id="f_steps" placeholder="Mezcla los ingredientes...&#10;Hornea 20 min..."></textarea></label>' +
+              '<label>Tips o extras (opcional, uno por línea)<textarea id="f_tips" placeholder="..."></textarea></label>' +
+              '<label>Enlace (opcional)<input type="url" id="f_url" placeholder="https://www.instagram.com/..."></label>' +
+              '<button type="submit" class="submit-btn">Guardar receta</button>' +
+            '</div>' +
           '</form>' +
         '</div>' +
       '</div>';
     document.getElementById('closeBtn').addEventListener('click', closeDetail);
     document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
     document.addEventListener('keydown', escClose);
-    document.getElementById('f_title').focus();
+    document.getElementById('f_raw').focus();
     const aiCleanBtn = document.getElementById('aiCleanBtn');
+    const manualBtn = document.getElementById('manualBtn');
     const aiStatus = document.getElementById('aiStatus');
+    const structuredFields = document.getElementById('structuredFields');
+    manualBtn.addEventListener('click', () => {
+      structuredFields.hidden = false;
+      aiStatus.textContent = '';
+      document.getElementById('f_title').focus();
+    });
     aiCleanBtn.addEventListener('click', async () => {
       const raw = document.getElementById('f_raw').value.trim();
       if (!raw) { aiStatus.textContent = 'Pega primero el texto de la receta.'; return; }
@@ -1396,12 +1409,14 @@
         const data = await res.json();
         if (!res.ok || !data.ok) throw new Error(data.error || 'error desconocido');
         const r = data.result;
+        structuredFields.hidden = false;
         document.getElementById('f_title').value = r.title || '';
         document.getElementById('f_cat').value = r.category || 'Otras';
         document.getElementById('f_ingredients').value = (r.ingredients || []).join('\n');
         document.getElementById('f_steps').value = (r.steps || []).join('\n');
         document.getElementById('f_tips').value = (r.tips || []).join('\n');
         aiStatus.textContent = 'Listo (' + data.provider + '). Revisa y ajusta antes de guardar.';
+        document.getElementById('f_title').focus();
       } catch (err) {
         aiStatus.textContent = 'No se pudo limpiar con IA: ' + err.message;
       } finally {
