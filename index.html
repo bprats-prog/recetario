@@ -600,6 +600,19 @@
     padding: 2px;
   }
   .tag-chip-x:hover { opacity: 1; }
+  .tag-pills-row { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 14px; }
+  .tag-pill {
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .tag-pill:hover { background: var(--accent); color: var(--accent-ink); }
   .card-rating { font-size: 12px; color: var(--accent-2); letter-spacing: 1px; }
 
   .add-form { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
@@ -636,6 +649,9 @@
   .plan-day h3 { font-size: 15px; margin: 0 0 8px; }
   .plan-slot { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); }
   .plan-day:last-child .plan-slot:last-child { border-bottom: none; }
+  .plan-slot-sub { padding: 5px 0 8px; opacity: .75; }
+  .plan-slot-sub .plan-slot-recipe { font-size: 13px; }
+  .plan-slot-sub .plan-slot-label { font-size: 10.5px; }
   .plan-slot-label { flex: none; width: 62px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-soft); }
   .plan-slot-recipe { flex: 1; font-size: 14.5px; cursor: pointer; }
   .plan-slot-recipe.empty { color: var(--ink-soft); font-style: italic; }
@@ -1085,6 +1101,9 @@
             '<span class="fav-btn' + (isFav?' on':'') + '" id="detailFav" role="button" tabindex="0" aria-label="favorita" style="font-size:20px">' + (isFav?'★':'☆') + '</span>' +
           '</span>' +
         '</div>' +
+        (!editing && r.tags && r.tags.length
+          ? '<div class="tag-pills-row">' + r.tags.map(t => '<button type="button" class="tag-pill" data-tag-filter="' + escapeAttr(t) + '">🏷️ ' + escapeHtml(t) + '</button>').join('') + '</div>'
+          : '') +
         photoBlock +
         bodyBlock +
         (editing
@@ -1119,6 +1138,9 @@
     document.getElementById('backBtn').addEventListener('click', () => history.back());
     document.getElementById('detailFav').addEventListener('click', (e) => toggleFav(r.id, e.currentTarget));
     document.getElementById('detailCart').addEventListener('click', (e) => toggleCart(r.id, e.currentTarget));
+    document.querySelectorAll('[data-tag-filter]').forEach(btn => {
+      btn.addEventListener('click', () => filterByTag(btn.getAttribute('data-tag-filter')));
+    });
     document.addEventListener('keydown', pageEscClose);
     if (isInstagramUrl && !editing) processInstagramEmbeds();
     const sel = document.getElementById('catSelect');
@@ -1452,6 +1474,13 @@
     if (canEdit) await apiSetDoc('tags', r.id, { tags });
   }
 
+  function filterByTag(tag) {
+    state.cat = 'TAG:' + tag;
+    state.visible = PAGE_SIZE;
+    render();
+    history.back();
+  }
+
   function upsertManualLocal(id, data) {
     const obj = {
       id,
@@ -1765,12 +1794,22 @@
     }
   }
 
-  const MEAL_CATEGORIES = new Set(["Entrantes y Aperitivos","Sopas y Cremas","Ensaladas","Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y Bocadillos"]);
+  const MAIN_CATEGORIES = new Set(["Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y Bocadillos"]);
+  const STARTER_CATEGORIES = new Set(["Entrantes y Aperitivos","Sopas y Cremas","Ensaladas"]);
   const GUIDE_TITLE_RE = /^(gu[ií]a|c[oó]mo|consejo|truco|idea[s]?|primeros alimentos|qu[eé]\s|men[uú]|plan (de|semanal)|batch cooking|especias para|alimentaci[oó]n|\d+\s+(ideas?|formas?|recetas?|maneras?|trucos?|consejos?)\b)/i;
   const BABY_TREAT_RE = /(porridge|papilla|helado|gelatina|torrija|kinder|compota|mousse|flan|pud[ií]n|bizcocho|galleta|batido|yogur)/i;
+  // some "Verduras"/other-category titles are actually soups, broths or bases,
+  // not a full standalone dish - keep those out of the "main course" pool
+  const SOUP_LIKE_RE = /(sopa|crema de|vichyssoise|gazpacho|consom[eé]|veloute|velout[eé]|potaje|caldo)/i;
+  const NOT_A_DISH_RE = /(pastillas? de|concentrado de|fondo de|base (de|para))/i;
 
-  function isRealMeal(r) {
-    return MEAL_CATEGORIES.has(r.category) && !GUIDE_TITLE_RE.test((r.title || '').trim());
+  function isRealMain(r) {
+    const title = (r.title || '').trim();
+    if (GUIDE_TITLE_RE.test(title) || NOT_A_DISH_RE.test(title) || SOUP_LIKE_RE.test(title)) return false;
+    return MAIN_CATEGORIES.has(r.category);
+  }
+  function isRealStarter(r) {
+    return STARTER_CATEGORIES.has(r.category) && !GUIDE_TITLE_RE.test((r.title || '').trim());
   }
   function isRealBabyDish(r) {
     return r.category === 'Bebe' && !GUIDE_TITLE_RE.test((r.title || '').trim()) && !BABY_TREAT_RE.test(r.title || '');
@@ -1792,14 +1831,30 @@
     return false;
   }
 
+  // finer-grained than SYNONYM_GROUPS: used only to avoid repeating the same
+  // protein two slots in a row when planning the week (chicken, beef, salmon...)
+  const PROTEIN_GROUPS = [
+    ["pollo"], ["pavo"], ["ternera","vacuno","buey","wagyu"], ["cerdo","panceta","bacon","cochinillo","secreto","presa"],
+    ["cordero"], ["salmon"], ["atun"], ["merluza","bacalao","rape","lubina","dorada","trucha"],
+    ["gamba","langostino","marisco","mejillon","calamar","pulpo","sepia","boqueron","sardina"]
+  ];
+  function proteinTags(r) {
+    const t = norm(r.title);
+    const tags = new Set();
+    PROTEIN_GROUPS.forEach((group, i) => { if (group.some(k => t.includes(k))) tags.add(i); });
+    return tags;
+  }
+
   function autofillPlan() {
-    const usedAdult = new Set();
+    const usedMain = new Set();
+    const usedStarter = new Set();
     const usedBaby = new Set();
     const isUsable = r => !hiddenIds.has(r.id) && !isLowContent(r);
-    const favPool = shuffle(recipes.filter(r => favs.has(r.id) && isUsable(r) && isRealMeal(r)));
-    const ratedPool = shuffle(recipes.filter(r => (myRatings[r.id]||0) >= 4 && isUsable(r) && isRealMeal(r) && !favs.has(r.id)));
-    const anyPool = shuffle(recipes.filter(r => isUsable(r) && isRealMeal(r) && !favs.has(r.id) && (myRatings[r.id]||0) < 4));
-    const adultPool = [...favPool, ...ratedPool, ...anyPool];
+    const favPool = shuffle(recipes.filter(r => favs.has(r.id) && isUsable(r) && isRealMain(r)));
+    const ratedPool = shuffle(recipes.filter(r => (myRatings[r.id]||0) >= 4 && isUsable(r) && isRealMain(r) && !favs.has(r.id)));
+    const anyPool = shuffle(recipes.filter(r => isUsable(r) && isRealMain(r) && !favs.has(r.id) && (myRatings[r.id]||0) < 4));
+    const mainPool = [...favPool, ...ratedPool, ...anyPool];
+    const starterPool = shuffle(recipes.filter(r => isUsable(r) && isRealStarter(r)));
     const babyPool = shuffle(recipes.filter(r => isUsable(r) && isRealBabyDish(r)));
 
     function nextFrom(pool, used, idxRef) {
@@ -1811,21 +1866,58 @@
       }
       return pool[0];
     }
-    const adultIdxRef = { i: 0 };
+    // like nextFrom, but tries first to avoid the protein/category used in the
+    // immediately previous slot, so the week doesn't repeat "pollo" back to back
+    function nextMain(pool, used, idxRef, avoidTags, avoidCategory) {
+      if (!pool.length) return null;
+      for (let tries = 0; tries < pool.length; tries++) {
+        const cand = pool[idxRef.i % pool.length];
+        idxRef.i++;
+        if (used.has(cand.id) && used.size < pool.length) continue;
+        const tags = proteinTags(cand);
+        const proteinClash = avoidTags && avoidTags.size && [...tags].some(t => avoidTags.has(t));
+        const catClash = avoidCategory && cand.category === avoidCategory;
+        if (!proteinClash && !catClash) { used.add(cand.id); return { recipe: cand, tags }; }
+      }
+      const fallback = nextFrom(pool, used, idxRef);
+      return fallback ? { recipe: fallback, tags: proteinTags(fallback) } : null;
+    }
+    const mainIdxRef = { i: 0 };
+    const starterIdxRef = { i: 0 };
     const babyIdxRef = { i: 0 };
     const recipeById = id => recipes.find(x => x.id === id);
 
-    PLAN_DAYS.forEach(day => {
-      const keys = { comida: day.key + '_comida', cena: day.key + '_cena', bebe: day.key + '_bebe' };
+    let lastProteinTags = null;
+    let lastCategory = null;
 
-      ['comida', 'cena'].forEach(slotName => {
-        const key = keys[slotName];
-        if (plan[key]) return;
-        const bebeR = plan[keys.bebe] ? recipeById(plan[keys.bebe]) : null;
-        let pick = bebeR ? adultPool.find(a => !usedAdult.has(a.id) && sharesGroup(a, bebeR)) : null;
-        if (!pick) pick = nextFrom(adultPool, usedAdult, adultIdxRef);
-        else usedAdult.add(pick.id);
-        if (pick) savePlanSlot(key, pick.id, true);
+    PLAN_DAYS.forEach(day => {
+      const keys = {
+        comida: day.key + '_comida', comidaEntrante: day.key + '_comida_entrante',
+        cena: day.key + '_cena', cenaEntrante: day.key + '_cena_entrante',
+        bebe: day.key + '_bebe'
+      };
+
+      [
+        { main: 'comida', starter: 'comidaEntrante' },
+        { main: 'cena', starter: 'cenaEntrante' }
+      ].forEach(slot => {
+        const mainKey = keys[slot.main];
+        const starterKey = keys[slot.starter];
+        if (!plan[mainKey]) {
+          const picked = nextMain(mainPool, usedMain, mainIdxRef, lastProteinTags, lastCategory);
+          if (picked) {
+            savePlanSlot(mainKey, picked.recipe.id, true);
+            lastProteinTags = picked.tags;
+            lastCategory = picked.recipe.category;
+          }
+        } else {
+          const existing = recipeById(plan[mainKey]);
+          if (existing) { lastProteinTags = proteinTags(existing); lastCategory = existing.category; }
+        }
+        if (!plan[starterKey] && starterPool.length && Math.random() < 0.5) {
+          const st = nextFrom(starterPool, usedStarter, starterIdxRef);
+          if (st) savePlanSlot(starterKey, st.id, true);
+        }
       });
 
       if (!plan[keys.bebe]) {
@@ -1846,6 +1938,8 @@
       PLAN_SLOTS.forEach(slot => {
         savePlanSlot(day.key + '_' + slot.key, '', true);
       });
+      savePlanSlot(day.key + '_comida_entrante', '', true);
+      savePlanSlot(day.key + '_cena_entrante', '', true);
     });
     openPlanView();
   }
@@ -1898,21 +1992,30 @@
     renderPicker();
   }
 
+  function planSlotRowHtml(key, label, opts) {
+    opts = opts || {};
+    const recipeId = plan[key];
+    const r = recipeId ? recipes.find(x => x.id === recipeId) : null;
+    return '<div class="plan-slot' + (opts.sub ? ' plan-slot-sub' : '') + '">' +
+      '<span class="plan-slot-label">' + escapeHtml(label) + '</span>' +
+      '<span class="plan-slot-recipe' + (r ? '' : ' empty') + '" data-slotview="' + key + '">' +
+        (r ? escapeHtml(r.title) : (opts.emptyLabel || 'Elegir receta…')) +
+      '</span>' +
+      (r ? '<button type="button" class="plan-clear-btn" data-slotedit="' + key + '" aria-label="Cambiar receta" title="Cambiar receta">✏️</button>' : '') +
+      (r ? '<button type="button" class="plan-clear-btn" data-slotclear="' + key + '" aria-label="Quitar">✕</button>' : '') +
+    '</div>';
+  }
+
   function openPlanView() {
     planViewOpen = true;
     const daysHtml = PLAN_DAYS.map(day => {
       const slotsHtml = PLAN_SLOTS.map(slot => {
         const key = day.key + '_' + slot.key;
-        const recipeId = plan[key];
-        const r = recipeId ? recipes.find(x => x.id === recipeId) : null;
-        return '<div class="plan-slot">' +
-          '<span class="plan-slot-label">' + escapeHtml(slot.label) + '</span>' +
-          '<span class="plan-slot-recipe' + (r ? '' : ' empty') + '" data-slotview="' + key + '">' +
-            (r ? escapeHtml(r.title) : 'Elegir receta…') +
-          '</span>' +
-          (r ? '<button type="button" class="plan-clear-btn" data-slotedit="' + key + '" aria-label="Cambiar receta" title="Cambiar receta">✏️</button>' : '') +
-          (r ? '<button type="button" class="plan-clear-btn" data-slotclear="' + key + '" aria-label="Quitar">✕</button>' : '') +
-        '</div>';
+        let html = planSlotRowHtml(key, slot.label);
+        if (slot.key === 'comida' || slot.key === 'cena') {
+          html += planSlotRowHtml(day.key + '_' + slot.key + '_entrante', 'Entrante', { sub: true, emptyLabel: 'Añadir entrante (opcional)…' });
+        }
+        return html;
       }).join('');
       return '<div class="plan-day"><h3>' + escapeHtml(day.label) + '</h3>' + slotsHtml + '</div>';
     }).join('');
