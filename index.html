@@ -739,6 +739,7 @@
 (function(){
   const API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/store-api";
   const CLEAN_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/clean-recipe";
+  const IG_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/fetch-instagram";
   const PASSKEY = "recetario_passcode_v1";
 
   const CATEGORY_ORDER = ["Entrantes y Aperitivos","Sopas y Cremas","Ensaladas","Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y Bocadillos","Salsas","Postres","Desayunos","Bebe","Otras"];
@@ -1524,14 +1525,27 @@
     return id;
   }
 
-  function openAddForm() {
+  function openAddForm(opts) {
+    // opts.igUrl: auto-import from this Instagram URL on open
+    // opts.prefill: pre-fill the raw textarea with this text
+    opts = opts || {};
     overlayRoot.innerHTML =
       '<div class="overlay" id="ov">' +
         '<div class="sheet" role="dialog" aria-modal="true">' +
           '<div class="sheet-top"><h2>Añadir receta</h2>' +
           '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
           '<form class="add-form" id="addForm">' +
-            '<label>Pega aquí el texto entero (de Instagram o de donde sea)<textarea id="f_raw" style="min-height:160px" placeholder="Pega el texto tal cual, con ingredientes, elaboración, todo junto... y pulsa Limpiar con IA."></textarea></label>' +
+            // Instagram import section
+            '<div id="igSection" style="background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:12px 14px 10px;margin-bottom:14px">' +
+              '<p style="margin:0 0 8px;font-size:13.5px;font-weight:700;color:var(--accent)">📥 Importar desde Instagram</p>' +
+              '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+                '<input type="url" id="f_ig_url" placeholder="https://www.instagram.com/p/..." style="flex:1;min-width:160px;font:inherit;font-size:15px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)">' +
+                '<button type="button" id="igImportBtn" class="submit-btn" style="flex:none;padding:9px 16px;font-size:13.5px;white-space:nowrap">Importar</button>' +
+              '</div>' +
+              '<p id="igStatus" class="form-hint" style="margin:6px 0 0"></p>' +
+            '</div>' +
+            '<p style="text-align:center;color:var(--ink-soft);font-size:12.5px;margin:-6px 0 10px">— o pega el texto directamente —</p>' +
+            '<label>Texto completo de la receta<textarea id="f_raw" style="min-height:120px" placeholder="Pega el texto tal cual, con ingredientes, elaboración, todo junto... y pulsa Limpiar con IA."></textarea></label>' +
             '<p style="margin:-6px 0 4px; display:flex; align-items:center; gap:10px; flex-wrap:wrap">' +
               '<button type="button" class="submit-btn" id="aiCleanBtn" style="padding:9px 18px; font-size:14px">✨ Limpiar con IA</button>' +
               '<button type="button" class="delete-link" id="manualBtn">Prefiero rellenarlo a mano</button>' +
@@ -1554,26 +1568,23 @@
     document.getElementById('closeBtn').addEventListener('click', closeDetail);
     document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
     document.addEventListener('keydown', escClose);
-    document.getElementById('f_raw').focus();
+
+    const igUrlEl = document.getElementById('f_ig_url');
+    const igImportBtn = document.getElementById('igImportBtn');
+    const igStatus = document.getElementById('igStatus');
     const aiCleanBtn = document.getElementById('aiCleanBtn');
     const manualBtn = document.getElementById('manualBtn');
     const aiStatus = document.getElementById('aiStatus');
     const structuredFields = document.getElementById('structuredFields');
-    manualBtn.addEventListener('click', () => {
-      structuredFields.hidden = false;
-      aiStatus.textContent = '';
-      document.getElementById('f_title').focus();
-    });
-    aiCleanBtn.addEventListener('click', async () => {
-      const raw = document.getElementById('f_raw').value.trim();
-      if (!raw) { aiStatus.textContent = 'Pega primero el texto de la receta.'; return; }
+
+    async function runAiClean(text) {
       aiCleanBtn.disabled = true;
       aiStatus.textContent = 'Limpiando con IA…';
       try {
         const res = await fetch(CLEAN_API_BASE, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: raw, passcode: getStoredPasscode() || '' })
+          body: JSON.stringify({ text, passcode: getStoredPasscode() || '' })
         });
         const data = await res.json();
         if (!res.ok || !data.ok) throw new Error(data.error || 'error desconocido');
@@ -1591,7 +1602,61 @@
       } finally {
         aiCleanBtn.disabled = false;
       }
+    }
+
+    async function runIgImport(igUrl) {
+      igImportBtn.disabled = true;
+      igStatus.textContent = 'Descargando publicación…';
+      igStatus.style.color = '';
+      try {
+        const res = await fetch(IG_API_BASE, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: igUrl, passcode: getStoredPasscode() || '' })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'No se pudo obtener la publicación.');
+        // Fill the raw textarea with the extracted caption
+        const rawEl = document.getElementById('f_raw');
+        rawEl.value = data.caption || '';
+        // Also prefill the URL field
+        const urlEl = document.getElementById('f_url');
+        if (urlEl && data.url) urlEl.value = data.url;
+        igStatus.textContent = 'Texto extraído. Limpiando con IA…';
+        // Auto-run AI clean
+        await runAiClean(data.caption);
+        igStatus.textContent = 'Importado. Revisa y ajusta antes de guardar.';
+      } catch (err) {
+        igStatus.textContent = err.message;
+        igStatus.style.color = 'var(--accent-2)';
+      } finally {
+        igImportBtn.disabled = false;
+      }
+    }
+
+    igImportBtn.addEventListener('click', () => {
+      const igUrl = igUrlEl.value.trim();
+      if (!igUrl) { igStatus.textContent = 'Pega primero el enlace de Instagram.'; igStatus.style.color = 'var(--accent-2)'; return; }
+      runIgImport(igUrl);
     });
+
+    // Allow pressing Enter in the URL field to trigger import
+    igUrlEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); igImportBtn.click(); }
+    });
+
+    manualBtn.addEventListener('click', () => {
+      structuredFields.hidden = false;
+      aiStatus.textContent = '';
+      document.getElementById('f_title').focus();
+    });
+
+    aiCleanBtn.addEventListener('click', () => {
+      const raw = document.getElementById('f_raw').value.trim();
+      if (!raw) { aiStatus.textContent = 'Pega primero el texto de la receta.'; return; }
+      runAiClean(raw);
+    });
+
     document.getElementById('addForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const title = document.getElementById('f_title').value.trim();
@@ -1607,6 +1672,18 @@
       saveNewRecipe(recipeData);
       closeDetail();
     });
+
+    // Handle auto-import if called with opts
+    if (opts.igUrl) {
+      igUrlEl.value = opts.igUrl;
+      // Also pre-fill the URL field with the Instagram URL
+      setTimeout(() => runIgImport(opts.igUrl), 100);
+    } else if (opts.prefill) {
+      document.getElementById('f_raw').value = opts.prefill;
+      aiCleanBtn.click();
+    } else {
+      igUrlEl.focus();
+    }
   }
 
   // Bring! (and similar apps) import a recipe by fetching a URL and reading its
@@ -2129,7 +2206,29 @@
       console.error(err);
     });
 
-  initRemote();
+  // Handle Web Share Target: when the user shares an Instagram post to this PWA,
+  // the OS opens the app with ?url=...&text=...&title=... in the URL.
+  // We detect those params, open the add form, and clean the URL so Back works.
+  function handleShareTarget() {
+    const params = new URLSearchParams(location.search);
+    const sharedUrl = params.get('url') || '';
+    const sharedText = params.get('text') || '';
+    if (!sharedUrl && !sharedText) return;
+    // Remove query params from URL so refreshing / using Back doesn't re-trigger
+    history.replaceState(null, '', location.pathname);
+    if (!canEdit) return; // need edit mode to add recipes
+    const igUrl = sharedUrl && sharedUrl.includes('instagram.com') ? sharedUrl : '';
+    const rawText = (sharedText + (sharedUrl && !igUrl ? ' ' + sharedUrl : '')).trim();
+    if (igUrl) {
+      openAddForm({ igUrl });
+    } else if (rawText) {
+      openAddForm({ prefill: rawText });
+    } else {
+      openAddForm();
+    }
+  }
+
+  initRemote().then(handleShareTarget);
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
