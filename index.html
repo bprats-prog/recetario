@@ -704,6 +704,20 @@
   .sl-add-row { display:flex; gap:8px; margin-top:12px; }
   .sl-add-inp { flex:1; font:inherit; font-size:15px; padding:10px 12px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); }
   .sl-add-inp:focus-visible { outline:2px solid var(--focus); outline-offset:1px; }
+  .sl-clear-row { margin: 10px 0 0; display: flex; gap: 16px; flex-wrap: wrap; }
+  .sl-clear-all-btn { color: var(--accent-2); font-weight: 700; }
+  .confirm-clear-box {
+    margin-top: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--accent-2);
+    background: var(--accent-2-soft);
+  }
+  .confirm-clear-title { margin: 0 0 4px; font-weight: 700; color: var(--ink); }
+  .confirm-clear-text { margin: 0 0 12px; font-size: 13.5px; color: var(--ink-soft); }
+  .confirm-clear-actions { display: flex; gap: 18px; align-items: center; }
+  .confirm-clear-actions .delete-link { padding: 8px 2px; font-size: 14px; }
+  .confirm-clear-actions .sl-clear-all-btn { padding: 8px 2px; }
 
   /* review modal checkboxes */
   .review-item { display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); }
@@ -2034,9 +2048,25 @@
     }
   }
 
+  let confirmClearListOpen = false;
+
   function renderCartOverlay() {
     const hasDone = shoppingItems.some(x => x.checked);
+    const hasItems = shoppingItems.length > 0;
     const slHtml = renderShoppingItems();
+    const clearListSection = confirmClearListOpen
+      ? '<div class="confirm-clear-box">' +
+          '<p class="confirm-clear-title">¿Vaciar toda la lista?</p>' +
+          '<p class="confirm-clear-text">Se eliminarán todos los productos de tu lista de la compra.</p>' +
+          '<div class="confirm-clear-actions">' +
+            '<button type="button" class="delete-link" id="cancelClearListBtn">Cancelar</button>' +
+            '<button type="button" class="delete-link sl-clear-all-btn" id="confirmClearListBtn">Vaciar lista</button>' +
+          '</div>' +
+        '</div>'
+      : '<p class="sl-clear-row">' +
+          (hasDone ? '<button type="button" class="delete-link" id="slClearDoneBtn">Eliminar los marcados</button>' : '') +
+          (hasItems ? '<button type="button" class="delete-link sl-clear-all-btn" id="clearListBtn">Vaciar lista</button>' : '') +
+        '</p>';
 
     // Recipe cart section (for Bring!)
     const recipeIds = [...cart];
@@ -2075,7 +2105,7 @@
             '<button type="button" class="submit-btn" id="slAddBtn" style="padding:10px 14px;font-size:13.5px;flex:none;white-space:nowrap">+</button>' +
           '</div>' +
           slHtml +
-          (hasDone ? '<p style="margin:10px 0 0"><button class="delete-link" id="slClearDoneBtn" type="button">Eliminar los marcados</button></p>' : '') +
+          (hasDone || hasItems || confirmClearListOpen ? clearListSection : '') +
           bringSection +
         '</div>' +
       '</div>';
@@ -2459,9 +2489,35 @@
         renderCartOverlay();
       });
     }
+    // "Vaciar lista": borra solo shoppingItems (pendientes + comprados + manuales +
+    // generados desde el plan). No toca `cart` (recetas guardadas para Bring!), ni
+    // `plan`, ni `recipes`, ni `favs` - son estados completamente independientes.
+    const clearListBtn = document.getElementById('clearListBtn');
+    if (clearListBtn) {
+      clearListBtn.addEventListener('click', () => {
+        confirmClearListOpen = true;
+        renderCartOverlay();
+      });
+    }
+    const cancelClearListBtn = document.getElementById('cancelClearListBtn');
+    if (cancelClearListBtn) {
+      cancelClearListBtn.addEventListener('click', () => {
+        confirmClearListOpen = false;
+        renderCartOverlay();
+      });
+    }
+    const confirmClearListBtn = document.getElementById('confirmClearListBtn');
+    if (confirmClearListBtn) {
+      confirmClearListBtn.addEventListener('click', () => {
+        shoppingItems = [];
+        confirmClearListOpen = false;
+        saveShoppingItems();
+        renderCartOverlay();
+      });
+    }
   }
 
-  function openCart() { renderCartOverlay(); }
+  function openCart() { confirmClearListOpen = false; renderCartOverlay(); }
 
   // ---- Edit-mode passcode ---------------------------------------------------
 
