@@ -242,6 +242,19 @@
     border-color: var(--accent);
   }
   .filter-btn.active .n { opacity: .85; }
+  .sort-select {
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .sort-select:hover { border-color: var(--accent); color: var(--ink); }
+  .sort-select:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
   .filter-pick-list { display: flex; flex-direction: column; gap: 6px; max-height: 65vh; overflow-y: auto; }
   .filter-pick-item {
     display: flex;
@@ -398,7 +411,7 @@
   }
   .recipe-page .page-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
   .recipe-page .page-top h2, .recipe-page .page-top .edit-title-input { flex: 1; }
-  .ig-embed { display: flex; justify-content: center; margin: 4px 0 16px; min-height: 60px; }
+  .ig-embed { display: flex; justify-content: center; margin: 22px 0 16px; padding-top: 20px; border-top: 1px solid var(--line); min-height: 60px; }
   .ig-embed iframe { max-width: 100%; }
   .back-btn {
     flex: none;
@@ -618,6 +631,33 @@
   .tag-pill:hover { background: var(--accent); color: var(--accent-ink); }
   .card-rating { font-size: 12px; color: var(--accent-2); letter-spacing: 1px; }
 
+  .normalize-warning {
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--accent-2-soft);
+    color: var(--accent-2);
+    margin: 4px 0 14px;
+  }
+  .normalize-diff-block { margin-bottom: 16px; }
+  .normalize-diff-block h4 {
+    font-family: 'Karla', ui-sans-serif, system-ui, sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: var(--ink-soft);
+    margin: 0 0 6px;
+  }
+  .normalize-diff-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  .diff-line { font-size: 14px; line-height: 1.5; padding: 5px 9px; border-radius: 6px; }
+  .diff-same { color: var(--ink-soft); }
+  .diff-removed { background: rgba(200,60,60,0.12); color: var(--ink); text-decoration: line-through; text-decoration-color: rgba(200,60,60,0.6); }
+  .diff-added { background: var(--accent-soft); color: var(--ink); }
+  .diff-suspicious { background: var(--accent-2-soft); outline: 1.5px solid var(--accent-2); }
+  .diff-warn-badge { font-size: 11px; font-weight: 700; color: var(--accent-2); }
+
   .add-form { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
   .add-form label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
   .add-form input, .add-form select, .add-form textarea {
@@ -747,6 +787,12 @@
         <span id="filterLabel">Filtros</span>
         <span class="n" id="filterCount"></span>
       </button>
+      <select class="sort-select" id="sortSelect" aria-label="Ordenar recetas">
+        <option value="recent">Más recientes primero</option>
+        <option value="oldest">Más antiguas primero</option>
+        <option value="az">A–Z</option>
+        <option value="za">Z–A</option>
+      </select>
     </div>
   </div>
 
@@ -770,6 +816,7 @@
   const API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/store-api";
   const CLEAN_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/clean-recipe";
   const IG_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/fetch-instagram";
+  const NORMALIZE_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/normalize-recipe";
   const PASSKEY = "recetario_passcode_v1";
 
   const CATEGORY_ORDER = ["Entrantes y Aperitivos","Sopas y Cremas","Ensaladas","Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y Bocadillos","Salsas","Postres","Desayunos","Bebe","Otras"];
@@ -796,7 +843,16 @@
   const FAVKEY = "recetario_favs_v1";
   const CARTKEY = "recetario_cart_v1";
   const SLKEY = "recetario_sl_v1";
+  const SORTKEY = "recetario_sort_v1";
+  const SORT_OPTIONS = ["recent", "oldest", "az", "za"];
   const PAGE_SIZE = 39;
+
+  function loadSortPref() {
+    try {
+      const v = localStorage.getItem(SORTKEY);
+      return SORT_OPTIONS.indexOf(v) !== -1 ? v : "recent";
+    } catch (e) { return "recent"; }
+  }
 
   let recipes = [];
   let favs = new Set();
@@ -806,11 +862,19 @@
   let shoppingItems = [];
   try { shoppingItems = JSON.parse(localStorage.getItem(SLKEY) || "[]"); } catch(e) {}
 
-  let state = { q: "", cat: "TODAS", visible: PAGE_SIZE };
+  let state = { q: "", cat: "TODAS", visible: PAGE_SIZE, sort: loadSortPref() };
 
   const grid = document.getElementById('grid');
   const filterBtn = document.getElementById('filterBtn');
   filterBtn.addEventListener('click', () => openFilterPicker());
+  const sortEl = document.getElementById('sortSelect');
+  sortEl.value = state.sort;
+  sortEl.addEventListener('change', () => {
+    state.sort = SORT_OPTIONS.indexOf(sortEl.value) !== -1 ? sortEl.value : "recent";
+    try { localStorage.setItem(SORTKEY, state.sort); } catch (e) {}
+    state.visible = PAGE_SIZE;
+    render();
+  });
   const searchEl = document.getElementById('search');
   const countLine = document.getElementById('countLine');
   const emptyState = document.getElementById('emptyState');
@@ -919,6 +983,39 @@
 
   function isMix(r) { return !!r.mix; }
 
+  // Fecha de incorporación a la app, derivada del id (sin depender de campos que no existen
+  // en recipes.json ni de la fecha de edición/Instagram):
+  // - recetas importadas en el volcado inicial: "n<numero>", el número refleja el orden de
+  //   importación -> se usa como orden relativo (tier 0), nunca como fecha real.
+  // - recetas añadidas a mano desde la app: "m" + Date.now().toString(36) (8 chars) + sufijo
+  //   aleatorio -> el timestamp real de creación se puede decodificar (tier 1, siempre más
+  //   recientes que el volcado inicial). Editar una receta no cambia su id, así que su orden
+  //   de creación no se ve afectado por ediciones posteriores.
+  const ES_COLLATOR = new Intl.Collator('es', { sensitivity: 'base' });
+  function createdAtRank(r) {
+    const m = /^m([0-9a-z]{8})/.exec(r.id);
+    if (m) {
+      const ts = parseInt(m[1], 36);
+      if (!isNaN(ts)) return { tier: 1, key: ts };
+    }
+    const n = /^n(\d+)$/.exec(r.id);
+    if (n) return { tier: 0, key: parseInt(n[1], 10) };
+    return { tier: 0, key: 0 };
+  }
+  function compareCreatedAsc(a, b) {
+    const ra = createdAtRank(a), rb = createdAtRank(b);
+    if (ra.tier !== rb.tier) return ra.tier - rb.tier;
+    return ra.key - rb.key;
+  }
+  function compareRecipes(a, b) {
+    switch (state.sort) {
+      case 'az': return ES_COLLATOR.compare(a.title, b.title);
+      case 'za': return ES_COLLATOR.compare(b.title, a.title);
+      case 'oldest': return compareCreatedAsc(a, b);
+      case 'recent': default: return compareCreatedAsc(b, a);
+    }
+  }
+
   function matches(r) {
     if (hiddenIds.has(r.id)) return false;
     if (state.cat === "MIX") { if (!isMix(r)) return false; }
@@ -1005,6 +1102,7 @@
 
   function render() {
     const filtered = recipes.filter(matches);
+    filtered.sort(compareRecipes);
     const shown = filtered.slice(0, state.visible);
 
     countLine.textContent = filtered.length + (filtered.length === 1 ? ' receta encontrada' : ' recetas encontradas');
@@ -1106,6 +1204,23 @@
     document.body.appendChild(s);
   }
 
+  // La foto/vídeo va al final de la ficha, así que normalmente queda fuera de la
+  // vista inicial: se difiere la carga del script de Instagram (y la creación de
+  // su iframe) hasta que el hueco del embed entra en el viewport.
+  function lazyLoadInstagramEmbed() {
+    const el = document.querySelector('#detailPage .ig-embed');
+    if (!el) return;
+    if (!('IntersectionObserver' in window)) { processInstagramEmbeds(); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        processInstagramEmbeds();
+        io.disconnect();
+      });
+    }, { rootMargin: '200px' });
+    io.observe(el);
+  }
+
   let currentDetailId = null;
   let currentDetailEditing = false;
 
@@ -1128,6 +1243,7 @@
       ? '<div class="edit-toolbar"><button type="button" id="boldBtn" class="bold-btn" title="Negrita">B</button><span class="form-hint">Selecciona texto y pulsa B para ponerlo en negrita · un elemento por línea</span></div>' +
         '<p style="margin:2px 0 10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap">' +
           '<button type="button" class="delete-link" id="aiCleanExistingBtn">✨ Limpiar con IA</button>' +
+          '<button type="button" class="delete-link" id="normalizeBtn">✨ Ordenar receta</button>' +
           '<span class="form-hint" id="aiExistingStatus"></span>' +
         '</p>' +
         '<label class="edit-section-label" for="editIngredients">Ingredientes</label>' +
@@ -1160,7 +1276,6 @@
         (!editing && r.tags && r.tags.length
           ? '<div class="tag-pills-row">' + r.tags.map(t => '<button type="button" class="tag-pill" data-tag-filter="' + escapeAttr(t) + '">🏷️ ' + escapeHtml(t) + '</button>').join('') + '</div>'
           : '') +
-        photoBlock +
         bodyBlock +
         (editing
           ? '<p style="margin-top:12px; display:flex; gap:10px">' +
@@ -1181,6 +1296,7 @@
               '<datalist id="tagSuggestions">' + getAllTags().map(t => '<option value="' + escapeAttr(t) + '">').join('') + '</datalist>' +
             '</div>'
           : '') +
+        photoBlock +
         (!editing
           ? '<p style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap">' +
               (r.url ? '<a class="ig-link" href="' + escapeAttr(r.url) + '" target="_blank" rel="noopener noreferrer">Ver publicación original en Instagram ↗</a>' : '<span></span>') +
@@ -1201,7 +1317,7 @@
       btn.addEventListener('click', () => filterByCategory(btn.getAttribute('data-cat-filter')));
     });
     document.addEventListener('keydown', pageEscClose);
-    if (isInstagramUrl && !editing) processInstagramEmbeds();
+    if (isInstagramUrl && !editing) lazyLoadInstagramEmbed();
     const sel = document.getElementById('catSelect');
     if (sel) sel.addEventListener('change', () => changeCategory(r, sel.value));
     const delBtn = document.getElementById('deleteBtn');
@@ -1253,6 +1369,43 @@
         aiExistingStatus.textContent = 'No se pudo limpiar con IA: ' + err.message;
       } finally {
         aiCleanExistingBtn.disabled = false;
+      }
+    });
+    const normalizeBtn = document.getElementById('normalizeBtn');
+    if (normalizeBtn) normalizeBtn.addEventListener('click', async () => {
+      const aiExistingStatus = document.getElementById('aiExistingStatus');
+      const before = {
+        title: document.getElementById('editTitle').value.trim(),
+        ingredients: linesFromTextarea(document.getElementById('editIngredients')),
+        steps: linesFromTextarea(document.getElementById('editSteps')),
+        tips: linesFromTextarea(document.getElementById('editTips')),
+      };
+      if (!before.title && !before.ingredients.length && !before.steps.length) {
+        aiExistingStatus.textContent = 'No hay receta que ordenar.';
+        return;
+      }
+      normalizeBtn.disabled = true;
+      aiExistingStatus.textContent = 'Ordenando receta con IA…';
+      try {
+        const res = await fetch(NORMALIZE_API_BASE, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...before, passcode: getStoredPasscode() || '' })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'error desconocido');
+        aiExistingStatus.textContent = '';
+        openNormalizeReview(before, data.result, () => {
+          document.getElementById('editTitle').value = data.result.title || before.title;
+          document.getElementById('editIngredients').value = (data.result.ingredients || []).join('\n');
+          document.getElementById('editSteps').value = (data.result.steps || []).join('\n');
+          document.getElementById('editTips').value = (data.result.tips || []).join('\n');
+          aiExistingStatus.textContent = 'Cambios aplicados (' + data.provider + '). Revisa y pulsa "Guardar cambios" para confirmar.';
+        });
+      } catch (err) {
+        aiExistingStatus.textContent = 'No se pudo ordenar la receta: ' + err.message;
+      } finally {
+        normalizeBtn.disabled = false;
       }
     });
     const boldBtn = document.getElementById('boldBtn');
@@ -1359,6 +1512,7 @@
     if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
     if (document.getElementById('editTitle')) return; // don't swipe while editing
     const list = recipes.filter(matches);
+    list.sort(compareRecipes);
     const idx = list.findIndex(x => x.id === currentDetailId);
     if (idx === -1) return;
     const nextIdx = dx < 0 ? idx + 1 : idx - 1;
@@ -1398,6 +1552,101 @@
 
   function linesFromTextarea(ta) {
     return ta.value.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  }
+
+  // ---- "Ordenar receta": revision ANTES/DESPUES de la normalizacion con IA -------
+  // EXTRACCION (clean-recipe, fetch-instagram) = que dice la fuente.
+  // NORMALIZACION (esto) = como estructuramos mejor ese contenido, sin cambiarlo.
+  // La IA nunca escribe directamente en la receta: solo rellena este panel de
+  // revision, y unicamente "Aplicar cambios" copia el resultado a los campos de
+  // edicion (que a su vez requieren "Guardar cambios" para persistir).
+
+  // Diff clasico por lineas (LCS) sobre arrays de strings: cada elemento del array
+  // (un ingrediente, un paso) se trata como una linea a comparar.
+  function diffArrays(oldArr, newArr) {
+    const n = oldArr.length, m = newArr.length;
+    const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+    for (let i = n - 1; i >= 0; i--) {
+      for (let j = m - 1; j >= 0; j--) {
+        dp[i][j] = oldArr[i] === newArr[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+      }
+    }
+    const result = [];
+    let i = 0, j = 0;
+    while (i < n && j < m) {
+      if (oldArr[i] === newArr[j]) { result.push({ type: 'same', text: oldArr[i] }); i++; j++; }
+      else if (dp[i + 1][j] >= dp[i][j + 1]) { result.push({ type: 'removed', text: oldArr[i] }); i++; }
+      else { result.push({ type: 'added', text: newArr[j] }); j++; }
+    }
+    while (i < n) { result.push({ type: 'removed', text: oldArr[i] }); i++; }
+    while (j < m) { result.push({ type: 'added', text: newArr[j] }); j++; }
+    return result;
+  }
+
+  function extractNumberTokens(text) {
+    return (text.match(/\d+(?:[.,]\d+)?/g) || []);
+  }
+
+  // Comprobacion automatica anti-invencion: si una linea nueva contiene un numero
+  // que no aparecia en ningun sitio de esa misma seccion en el original, se marca
+  // como sospechosa (posible cantidad, tiempo o temperatura inventada).
+  function renderDiffBlock(sectionLabel, oldArr, newArr) {
+    const entries = diffArrays(oldArr, newArr);
+    const oldNums = new Set(extractNumberTokens(oldArr.join('\n')));
+    let anyInvented = false;
+    const rows = entries.map(entry => {
+      if (entry.type === 'same') return '<li class="diff-line diff-same">' + escapeHtml(entry.text) + '</li>';
+      if (entry.type === 'removed') return '<li class="diff-line diff-removed">' + escapeHtml(entry.text) + '</li>';
+      const invented = extractNumberTokens(entry.text).some(n => !oldNums.has(n));
+      if (invented) anyInvented = true;
+      return '<li class="diff-line diff-added' + (invented ? ' diff-suspicious' : '') + '">' +
+        escapeHtml(entry.text) + (invented ? ' <span class="diff-warn-badge">⚠️ número nuevo</span>' : '') +
+        '</li>';
+    }).join('');
+    const html = '<div class="normalize-diff-block"><h4>' + escapeHtml(sectionLabel) + '</h4>' +
+      '<ul class="normalize-diff-list">' + (rows || '<li class="form-hint">(sin cambios)</li>') + '</ul></div>';
+    return { html, anyInvented };
+  }
+
+  function openNormalizeReview(before, after, onApply) {
+    // Se suspende temporalmente el cierre-con-Escape de la ficha de receta mientras
+    // este panel esta abierto, para que Escape cierre solo el panel y no toda la ficha.
+    document.removeEventListener('keydown', pageEscClose);
+    function closeReview() {
+      overlayRoot.innerHTML = '';
+      document.removeEventListener('keydown', reviewEscClose);
+      document.addEventListener('keydown', pageEscClose);
+    }
+    function reviewEscClose(e) { if (e.key === 'Escape') closeReview(); }
+
+    const blocks = [
+      renderDiffBlock('Título', [before.title || ''], [after.title || '']),
+      renderDiffBlock('Ingredientes', before.ingredients || [], after.ingredients || []),
+      renderDiffBlock('Elaboración', before.steps || [], after.steps || []),
+      renderDiffBlock('Tips', before.tips || [], after.tips || []),
+    ];
+    const anyInvented = blocks.some(b => b.anyInvented);
+    overlayRoot.innerHTML =
+      '<div class="overlay" id="normOv">' +
+        '<div class="sheet" role="dialog" aria-modal="true">' +
+          '<div class="sheet-top"><h2>Revisa los cambios</h2>' +
+          '<button class="close-btn" id="normCloseBtn" aria-label="Cerrar">✕</button></div>' +
+          '<p class="form-hint">En rojo lo anterior, en verde lo nuevo. Solo se aplica si pulsas "Aplicar cambios".</p>' +
+          (anyInvented
+            ? '<p class="normalize-warning">⚠️ Alguna línea añade números que no estaban en el original (posibles cantidades, tiempos o temperaturas inventadas). Revísala con atención antes de aplicar.</p>'
+            : '') +
+          blocks.map(b => b.html).join('') +
+          '<p style="margin-top:16px; display:flex; gap:10px; justify-content:flex-end">' +
+            '<button type="button" class="delete-link" id="discardNormalizeBtn">Descartar</button>' +
+            '<button type="button" class="submit-btn" id="applyNormalizeBtn">Aplicar cambios</button>' +
+          '</p>' +
+        '</div>' +
+      '</div>';
+    document.getElementById('normCloseBtn').addEventListener('click', closeReview);
+    document.getElementById('discardNormalizeBtn').addEventListener('click', closeReview);
+    document.getElementById('normOv').addEventListener('click', (e) => { if (e.target.id === 'normOv') closeReview(); });
+    document.getElementById('applyNormalizeBtn').addEventListener('click', () => { onApply(); closeReview(); });
+    document.addEventListener('keydown', reviewEscClose);
   }
 
   // ---- Backend (Supabase edge function) -----------------------------------
