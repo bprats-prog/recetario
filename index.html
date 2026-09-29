@@ -318,6 +318,9 @@
     background: var(--accent-2-soft);
     color: var(--accent-2);
   }
+  button.tag { border: none; cursor: pointer; font-family: inherit; }
+  button.tag:hover { background: var(--accent-2); color: var(--accent-ink); }
+  button.tag:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
 
   .empty {
     text-align: center;
@@ -1025,10 +1028,10 @@
         '<span class="cart-btn' + (inCart?' on':'') + '" data-cart="' + r.id + '" role="button" aria-label="añadir a la lista de la compra">' + (inCart ? '✓' : '🛒') + '</span>' +
         '<span class="fav-btn' + (isFav?' on':'') + '" data-fav="' + r.id + '" role="button" aria-label="favorita">' + (isFav ? '★' : '☆') + '</span>' +
         '</span></div>' +
-        '<span class="tag">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</span>' +
+        '<button type="button" class="tag" data-cat-filter="' + escapeAttr(r.category) + '">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</button>' +
         (rating > 0 ? '<span class="card-rating">' + '★'.repeat(rating) + '</span>' : '');
       card.addEventListener('click', (e) => {
-        if (e.target.closest('[data-fav],[data-cart]')) return;
+        if (e.target.closest('[data-fav],[data-cart],[data-cat-filter]')) return;
         openDetail(r);
       });
       card.querySelector('[data-fav]').addEventListener('click', (e) => {
@@ -1038,6 +1041,10 @@
       card.querySelector('[data-cart]').addEventListener('click', (e) => {
         e.stopPropagation();
         toggleCart(r.id, e.target);
+      });
+      card.querySelector('[data-cat-filter]').addEventListener('click', (e) => {
+        e.stopPropagation();
+        filterByCategory(r.category);
       });
       frag.appendChild(card);
     });
@@ -1144,7 +1151,7 @@
             ? '<select class="cat-select" id="catSelect" aria-label="Cambiar categoría">' +
                 CATEGORY_ORDER.map(c => '<option value="' + escapeAttr(c) + '"' + (c === r.category ? ' selected' : '') + '>' + escapeHtml(catLabel(c)) + '</option>').join('') +
               '</select>'
-            : '<span class="tag">' + escapeHtml(catLabel(r.category)) + '</span>') +
+            : '<button type="button" class="tag" data-cat-filter="' + escapeAttr(r.category) + '">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</button>') +
           '<span style="display:flex; gap:10px; margin-left:auto">' +
             '<span class="cart-btn' + (inCart?' on':'') + '" id="detailCart" role="button" tabindex="0" aria-label="añadir a la lista de la compra" style="font-size:20px">' + (inCart?'✓':'🛒') + '</span>' +
             '<span class="fav-btn' + (isFav?' on':'') + '" id="detailFav" role="button" tabindex="0" aria-label="favorita" style="font-size:20px">' + (isFav?'★':'☆') + '</span>' +
@@ -1189,6 +1196,9 @@
     document.getElementById('detailCart').addEventListener('click', (e) => toggleCart(r.id, e.currentTarget));
     document.querySelectorAll('[data-tag-filter]').forEach(btn => {
       btn.addEventListener('click', () => filterByTag(btn.getAttribute('data-tag-filter')));
+    });
+    pageRoot.querySelectorAll('[data-cat-filter]').forEach(btn => {
+      btn.addEventListener('click', () => filterByCategory(btn.getAttribute('data-cat-filter')));
     });
     document.addEventListener('keydown', pageEscClose);
     if (isInstagramUrl && !editing) processInstagramEmbeds();
@@ -1528,6 +1538,13 @@
     state.visible = PAGE_SIZE;
     render();
     history.back();
+  }
+
+  function filterByCategory(cat) {
+    state.cat = cat;
+    state.visible = PAGE_SIZE;
+    render();
+    if (currentDetailId) history.back();
   }
 
   function upsertManualLocal(id, data) {
