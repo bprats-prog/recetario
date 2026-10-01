@@ -830,6 +830,7 @@
   const API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/store-api";
   const CLEAN_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/clean-recipe";
   const IG_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/fetch-instagram";
+  const URL_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/fetch-url";
   const NORMALIZE_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/normalize-recipe";
   const PASSKEY = "recetario_passcode_v1";
 
@@ -1854,7 +1855,7 @@
   }
 
   function openAddForm(opts) {
-    // opts.igUrl: auto-import from this Instagram URL on open
+    // opts.igUrl: auto-import from this URL on open (Instagram or any other site)
     // opts.prefill: pre-fill the raw textarea with this text
     opts = opts || {};
     overlayRoot.innerHTML =
@@ -1863,11 +1864,11 @@
           '<div class="sheet-top"><h2>Añadir receta</h2>' +
           '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
           '<form class="add-form" id="addForm">' +
-            // Instagram import section
+            // Import-from-link section (Instagram or any other recipe page)
             '<div id="igSection" style="background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:12px 14px 10px;margin-bottom:14px">' +
-              '<p style="margin:0 0 8px;font-size:13.5px;font-weight:700;color:var(--accent)">📥 Importar desde Instagram</p>' +
+              '<p style="margin:0 0 8px;font-size:13.5px;font-weight:700;color:var(--accent)">📥 Importar desde un enlace</p>' +
               '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
-                '<input type="url" id="f_ig_url" placeholder="https://www.instagram.com/p/..." style="flex:1;min-width:160px;font:inherit;font-size:15px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)">' +
+                '<input type="url" id="f_ig_url" placeholder="Pega un enlace: Instagram, un blog de cocina..." style="flex:1;min-width:160px;font:inherit;font-size:15px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)">' +
                 '<button type="button" id="igImportBtn" class="submit-btn" style="flex:none;padding:9px 16px;font-size:13.5px;white-space:nowrap">Importar</button>' +
               '</div>' +
               '<p id="igStatus" class="form-hint" style="margin:6px 0 0"></p>' +
@@ -1932,35 +1933,53 @@
       }
     }
 
+    function isInstagramUrl(u) {
+      try { return /(^|\.)instagram\.com$/i.test(new URL(u).hostname); } catch (e) { return false; }
+    }
+
     async function runIgImport(igUrl) {
       igImportBtn.disabled = true;
-      igStatus.textContent = 'Descargando publicación…';
+      igStatus.textContent = 'Descargando la página…';
       igStatus.style.color = '';
-      // Always pre-fill the URL field with the Instagram link
+      // Always pre-fill the URL field with the pasted link
       const urlEl = document.getElementById('f_url');
       if (urlEl && igUrl) urlEl.value = igUrl;
+      // Instagram sigue usando fetch-instagram (sin tocar); cualquier otro enlace
+      // usa fetch-url, que intenta datos estructurados (JSON-LD) antes de caer al
+      // texto en bruto + limpieza con IA, igual que ya hacía el caption de Instagram.
+      const endpoint = isInstagramUrl(igUrl) ? IG_API_BASE : URL_API_BASE;
       try {
-        const res = await fetch(IG_API_BASE, {
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url: igUrl, passcode: getStoredPasscode() || '' })
         });
         const data = await res.json();
-        if (!res.ok || !data.ok) throw new Error(data.error || 'No se pudo obtener la publicación.');
-        // Fill the raw textarea with the extracted caption
-        const rawEl = document.getElementById('f_raw');
-        rawEl.value = data.caption || '';
+        if (!res.ok || !data.ok) throw new Error(data.error || 'No se pudo obtener la página.');
         if (data.url) urlEl.value = data.url;
-        igStatus.textContent = 'Texto extraído. Limpiando con IA…';
-        igStatus.style.color = '';
-        // Auto-run AI clean
-        await runAiClean(data.caption);
-        igStatus.textContent = 'Importado. Revisa y ajusta antes de guardar.';
+        if (data.mode === 'structured') {
+          // Datos ya estructurados (schema.org/Recipe del propio sitio): se rellenan
+          // los campos directamente, sin pasar por ninguna IA.
+          structuredFields.hidden = false;
+          document.getElementById('f_title').value = data.title || '';
+          document.getElementById('f_ingredients').value = (data.ingredients || []).join('\n');
+          document.getElementById('f_steps').value = (data.steps || []).join('\n');
+          igStatus.textContent = 'Receta estructurada importada de la web. Revisa categoría y tips antes de guardar.';
+          document.getElementById('f_title').focus();
+        } else {
+          // Fill the raw textarea with the extracted caption/description/texto de la página
+          const rawEl = document.getElementById('f_raw');
+          rawEl.value = data.caption || '';
+          igStatus.textContent = 'Texto extraído. Limpiando con IA…';
+          igStatus.style.color = '';
+          await runAiClean(data.caption);
+          igStatus.textContent = 'Importado. Revisa y ajusta antes de guardar.';
+        }
       } catch (err) {
-        // Instagram no sirve el texto del post sin autenticación —
+        // El sitio no sirve el contenido automáticamente (bloqueo, login, etc.) —
         // el enlace ya está guardado en el campo URL, el usuario copia el texto a mano
-        igStatus.innerHTML = '⚠️ Instagram no permite extraer el texto automáticamente. ' +
-          '<strong>Copia el texto del post desde Instagram y pégalo abajo.</strong> ' +
+        igStatus.innerHTML = '⚠️ No se pudo extraer el texto automáticamente de ese enlace. ' +
+          '<strong>Copia el texto de la receta y pégalo abajo.</strong> ' +
           'El enlace ya está guardado para la receta.';
         igStatus.style.color = 'var(--accent-2)';
         // Focus the raw textarea so the user can paste immediately
@@ -1973,7 +1992,8 @@
 
     igImportBtn.addEventListener('click', () => {
       const igUrl = igUrlEl.value.trim();
-      if (!igUrl) { igStatus.textContent = 'Pega primero el enlace de Instagram.'; igStatus.style.color = 'var(--accent-2)'; return; }
+      if (!igUrl) { igStatus.textContent = 'Pega primero un enlace.'; igStatus.style.color = 'var(--accent-2)'; return; }
+      try { new URL(igUrl); } catch (e) { igStatus.textContent = 'Ese enlace no parece válido.'; igStatus.style.color = 'var(--accent-2)'; return; }
       runIgImport(igUrl);
     });
 
@@ -2966,8 +2986,8 @@
       console.error(err);
     });
 
-  // Handle Web Share Target: when the user shares an Instagram post to this PWA,
-  // the OS opens the app with ?url=...&text=...&title=... in the URL.
+  // Handle Web Share Target: when the user shares a link (Instagram or any other
+  // recipe page) to this PWA, the OS opens the app with ?url=...&text=...&title=...
   // We detect those params, open the add form, and clean the URL so Back works.
   function handleShareTarget() {
     const params = new URLSearchParams(location.search);
@@ -2977,10 +2997,11 @@
     // Remove query params from URL so refreshing / using Back doesn't re-trigger
     history.replaceState(null, '', location.pathname);
     if (!canEdit) return; // need edit mode to add recipes
-    const igUrl = sharedUrl && sharedUrl.includes('instagram.com') ? sharedUrl : '';
-    const rawText = (sharedText + (sharedUrl && !igUrl ? ' ' + sharedUrl : '')).trim();
-    if (igUrl) {
-      openAddForm({ igUrl });
+    let importUrl = '';
+    if (sharedUrl) { try { new URL(sharedUrl); importUrl = sharedUrl; } catch (e) {} }
+    const rawText = (sharedText + (sharedUrl && !importUrl ? ' ' + sharedUrl : '')).trim();
+    if (importUrl) {
+      openAddForm({ igUrl: importUrl });
     } else if (rawText) {
       openAddForm({ prefill: rawText });
     } else {
