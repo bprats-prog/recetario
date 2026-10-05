@@ -242,6 +242,19 @@
     border-color: var(--accent);
   }
   .filter-btn.active .n { opacity: .85; }
+  .sort-select {
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .sort-select:hover { border-color: var(--accent); color: var(--ink); }
+  .sort-select:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
   .filter-pick-list { display: flex; flex-direction: column; gap: 6px; max-height: 65vh; overflow-y: auto; }
   .filter-pick-item {
     display: flex;
@@ -318,6 +331,9 @@
     background: var(--accent-2-soft);
     color: var(--accent-2);
   }
+  button.tag { border: none; cursor: pointer; font-family: inherit; }
+  button.tag:hover { background: var(--accent-2); color: var(--accent-ink); }
+  button.tag:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
 
   .empty {
     text-align: center;
@@ -395,7 +411,7 @@
   }
   .recipe-page .page-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
   .recipe-page .page-top h2, .recipe-page .page-top .edit-title-input { flex: 1; }
-  .ig-embed { display: flex; justify-content: center; margin: 4px 0 16px; min-height: 60px; }
+  .ig-embed { display: flex; justify-content: center; margin: 22px 0 16px; padding-top: 20px; border-top: 1px solid var(--line); min-height: 60px; }
   .ig-embed iframe { max-width: 100%; }
   .back-btn {
     flex: none;
@@ -615,6 +631,33 @@
   .tag-pill:hover { background: var(--accent); color: var(--accent-ink); }
   .card-rating { font-size: 12px; color: var(--accent-2); letter-spacing: 1px; }
 
+  .normalize-warning {
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--accent-2-soft);
+    color: var(--accent-2);
+    margin: 4px 0 14px;
+  }
+  .normalize-diff-block { margin-bottom: 16px; }
+  .normalize-diff-block h4 {
+    font-family: 'Karla', ui-sans-serif, system-ui, sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: var(--ink-soft);
+    margin: 0 0 6px;
+  }
+  .normalize-diff-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  .diff-line { font-size: 14px; line-height: 1.5; padding: 5px 9px; border-radius: 6px; }
+  .diff-same { color: var(--ink-soft); }
+  .diff-removed { background: rgba(200,60,60,0.12); color: var(--ink); text-decoration: line-through; text-decoration-color: rgba(200,60,60,0.6); }
+  .diff-added { background: var(--accent-soft); color: var(--ink); }
+  .diff-suspicious { background: var(--accent-2-soft); outline: 1.5px solid var(--accent-2); }
+  .diff-warn-badge { font-size: 11px; font-weight: 700; color: var(--accent-2); }
+
   .add-form { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
   .add-form label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
   .add-form input, .add-form select, .add-form textarea {
@@ -661,6 +704,20 @@
   .sl-add-row { display:flex; gap:8px; margin-top:12px; }
   .sl-add-inp { flex:1; font:inherit; font-size:15px; padding:10px 12px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); }
   .sl-add-inp:focus-visible { outline:2px solid var(--focus); outline-offset:1px; }
+  .sl-clear-row { margin: 10px 0 0; display: flex; gap: 16px; flex-wrap: wrap; }
+  .sl-clear-all-btn { color: var(--accent-2); font-weight: 700; }
+  .confirm-clear-box {
+    margin-top: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--accent-2);
+    background: var(--accent-2-soft);
+  }
+  .confirm-clear-title { margin: 0 0 4px; font-weight: 700; color: var(--ink); }
+  .confirm-clear-text { margin: 0 0 12px; font-size: 13.5px; color: var(--ink-soft); }
+  .confirm-clear-actions { display: flex; gap: 18px; align-items: center; }
+  .confirm-clear-actions .delete-link { padding: 8px 2px; font-size: 14px; }
+  .confirm-clear-actions .sl-clear-all-btn { padding: 8px 2px; }
 
   /* review modal checkboxes */
   .review-item { display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); }
@@ -744,6 +801,12 @@
         <span id="filterLabel">Filtros</span>
         <span class="n" id="filterCount"></span>
       </button>
+      <select class="sort-select" id="sortSelect" aria-label="Ordenar recetas">
+        <option value="recent">Más recientes primero</option>
+        <option value="oldest">Más antiguas primero</option>
+        <option value="az">A–Z</option>
+        <option value="za">Z–A</option>
+      </select>
     </div>
   </div>
 
@@ -767,6 +830,8 @@
   const API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/store-api";
   const CLEAN_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/clean-recipe";
   const IG_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/fetch-instagram";
+  const URL_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/fetch-url";
+  const NORMALIZE_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/normalize-recipe";
   const PASSKEY = "recetario_passcode_v1";
 
   const CATEGORY_ORDER = ["Entrantes y Aperitivos","Sopas y Cremas","Ensaladas","Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y Bocadillos","Salsas","Postres","Desayunos","Bebe","Otras"];
@@ -793,7 +858,16 @@
   const FAVKEY = "recetario_favs_v1";
   const CARTKEY = "recetario_cart_v1";
   const SLKEY = "recetario_sl_v1";
+  const SORTKEY = "recetario_sort_v1";
+  const SORT_OPTIONS = ["recent", "oldest", "az", "za"];
   const PAGE_SIZE = 39;
+
+  function loadSortPref() {
+    try {
+      const v = localStorage.getItem(SORTKEY);
+      return SORT_OPTIONS.indexOf(v) !== -1 ? v : "recent";
+    } catch (e) { return "recent"; }
+  }
 
   let recipes = [];
   // Performance: pre-computed search caches — rebuilt once on load/edit, not on every keystroke
@@ -808,11 +882,19 @@
   let shoppingItems = [];
   try { shoppingItems = JSON.parse(localStorage.getItem(SLKEY) || "[]"); } catch(e) {}
 
-  let state = { q: "", cat: "TODAS", visible: PAGE_SIZE };
+  let state = { q: "", cat: "TODAS", visible: PAGE_SIZE, sort: loadSortPref() };
 
   const grid = document.getElementById('grid');
   const filterBtn = document.getElementById('filterBtn');
   filterBtn.addEventListener('click', () => openFilterPicker());
+  const sortEl = document.getElementById('sortSelect');
+  sortEl.value = state.sort;
+  sortEl.addEventListener('change', () => {
+    state.sort = SORT_OPTIONS.indexOf(sortEl.value) !== -1 ? sortEl.value : "recent";
+    try { localStorage.setItem(SORTKEY, state.sort); } catch (e) {}
+    state.visible = PAGE_SIZE;
+    render();
+  });
   const searchEl = document.getElementById('search');
   const countLine = document.getElementById('countLine');
   const emptyState = document.getElementById('emptyState');
@@ -940,6 +1022,39 @@
 
   function isMix(r) { return !!r.mix; }
 
+  // Fecha de incorporación a la app, derivada del id (sin depender de campos que no existen
+  // en recipes.json ni de la fecha de edición/Instagram):
+  // - recetas importadas en el volcado inicial: "n<numero>", el número refleja el orden de
+  //   importación -> se usa como orden relativo (tier 0), nunca como fecha real.
+  // - recetas añadidas a mano desde la app: "m" + Date.now().toString(36) (8 chars) + sufijo
+  //   aleatorio -> el timestamp real de creación se puede decodificar (tier 1, siempre más
+  //   recientes que el volcado inicial). Editar una receta no cambia su id, así que su orden
+  //   de creación no se ve afectado por ediciones posteriores.
+  const ES_COLLATOR = new Intl.Collator('es', { sensitivity: 'base' });
+  function createdAtRank(r) {
+    const m = /^m([0-9a-z]{8})/.exec(r.id);
+    if (m) {
+      const ts = parseInt(m[1], 36);
+      if (!isNaN(ts)) return { tier: 1, key: ts };
+    }
+    const n = /^n(\d+)$/.exec(r.id);
+    if (n) return { tier: 0, key: parseInt(n[1], 10) };
+    return { tier: 0, key: 0 };
+  }
+  function compareCreatedAsc(a, b) {
+    const ra = createdAtRank(a), rb = createdAtRank(b);
+    if (ra.tier !== rb.tier) return ra.tier - rb.tier;
+    return ra.key - rb.key;
+  }
+  function compareRecipes(a, b) {
+    switch (state.sort) {
+      case 'az': return ES_COLLATOR.compare(a.title, b.title);
+      case 'za': return ES_COLLATOR.compare(b.title, a.title);
+      case 'oldest': return compareCreatedAsc(a, b);
+      case 'recent': default: return compareCreatedAsc(b, a);
+    }
+  }
+
   function matches(r) {
     if (hiddenIds.has(r.id)) return false;
     if (state.cat === "MIX") { if (!isMix(r)) return false; }
@@ -1028,6 +1143,7 @@
 
   function render() {
     const filtered = recipes.filter(matches);
+    filtered.sort(compareRecipes);
     const shown = filtered.slice(0, state.visible);
 
     countLine.textContent = filtered.length + (filtered.length === 1 ? ' receta encontrada' : ' recetas encontradas');
@@ -1051,10 +1167,10 @@
         '<span class="cart-btn' + (inCart?' on':'') + '" data-cart="' + r.id + '" role="button" aria-label="añadir a la lista de la compra">' + (inCart ? '✓' : '🛒') + '</span>' +
         '<span class="fav-btn' + (isFav?' on':'') + '" data-fav="' + r.id + '" role="button" aria-label="favorita">' + (isFav ? '★' : '☆') + '</span>' +
         '</span></div>' +
-        '<span class="tag">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</span>' +
+        '<button type="button" class="tag" data-cat-filter="' + escapeAttr(r.category) + '">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</button>' +
         (rating > 0 ? '<span class="card-rating">' + '★'.repeat(rating) + '</span>' : '');
       card.addEventListener('click', (e) => {
-        if (e.target.closest('[data-fav],[data-cart]')) return;
+        if (e.target.closest('[data-fav],[data-cart],[data-cat-filter]')) return;
         openDetail(r);
       });
       card.querySelector('[data-fav]').addEventListener('click', (e) => {
@@ -1064,6 +1180,10 @@
       card.querySelector('[data-cart]').addEventListener('click', (e) => {
         e.stopPropagation();
         toggleCart(r.id, e.target);
+      });
+      card.querySelector('[data-cat-filter]').addEventListener('click', (e) => {
+        e.stopPropagation();
+        filterByCategory(r.category);
       });
       frag.appendChild(card);
     });
@@ -1130,6 +1250,23 @@
     document.body.appendChild(s);
   }
 
+  // La foto/vídeo va al final de la ficha, así que normalmente queda fuera de la
+  // vista inicial: se difiere la carga del script de Instagram (y la creación de
+  // su iframe) hasta que el hueco del embed entra en el viewport.
+  function lazyLoadInstagramEmbed() {
+    const el = document.querySelector('#detailPage .ig-embed');
+    if (!el) return;
+    if (!('IntersectionObserver' in window)) { processInstagramEmbeds(); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        processInstagramEmbeds();
+        io.disconnect();
+      });
+    }, { rootMargin: '200px' });
+    io.observe(el);
+  }
+
   let currentDetailId = null;
   let currentDetailEditing = false;
 
@@ -1152,6 +1289,7 @@
       ? '<div class="edit-toolbar"><button type="button" id="boldBtn" class="bold-btn" title="Negrita">B</button><span class="form-hint">Selecciona texto y pulsa B para ponerlo en negrita · un elemento por línea</span></div>' +
         '<p style="margin:2px 0 10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap">' +
           '<button type="button" class="delete-link" id="aiCleanExistingBtn">✨ Limpiar con IA</button>' +
+          '<button type="button" class="delete-link" id="normalizeBtn">✨ Ordenar receta</button>' +
           '<span class="form-hint" id="aiExistingStatus"></span>' +
         '</p>' +
         '<label class="edit-section-label" for="editIngredients">Ingredientes</label>' +
@@ -1175,7 +1313,7 @@
             ? '<select class="cat-select" id="catSelect" aria-label="Cambiar categoría">' +
                 CATEGORY_ORDER.map(c => '<option value="' + escapeAttr(c) + '"' + (c === r.category ? ' selected' : '') + '>' + escapeHtml(catLabel(c)) + '</option>').join('') +
               '</select>'
-            : '<span class="tag">' + escapeHtml(catLabel(r.category)) + '</span>') +
+            : '<button type="button" class="tag" data-cat-filter="' + escapeAttr(r.category) + '">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</button>') +
           '<span style="display:flex; gap:10px; margin-left:auto">' +
             '<span class="cart-btn' + (inCart?' on':'') + '" id="detailCart" role="button" tabindex="0" aria-label="añadir a la lista de la compra" style="font-size:20px">' + (inCart?'✓':'🛒') + '</span>' +
             '<span class="fav-btn' + (isFav?' on':'') + '" id="detailFav" role="button" tabindex="0" aria-label="favorita" style="font-size:20px">' + (isFav?'★':'☆') + '</span>' +
@@ -1184,7 +1322,6 @@
         (!editing && r.tags && r.tags.length
           ? '<div class="tag-pills-row">' + r.tags.map(t => '<button type="button" class="tag-pill" data-tag-filter="' + escapeAttr(t) + '">🏷️ ' + escapeHtml(t) + '</button>').join('') + '</div>'
           : '') +
-        photoBlock +
         bodyBlock +
         (editing
           ? '<p style="margin-top:12px; display:flex; gap:10px">' +
@@ -1205,6 +1342,7 @@
               '<datalist id="tagSuggestions">' + getAllTags().map(t => '<option value="' + escapeAttr(t) + '">').join('') + '</datalist>' +
             '</div>'
           : '') +
+        photoBlock +
         (!editing
           ? '<p style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap">' +
               (r.url ? '<a class="ig-link" href="' + escapeAttr(r.url) + '" target="_blank" rel="noopener noreferrer">Ver publicación original en Instagram ↗</a>' : '<span></span>') +
@@ -1221,8 +1359,11 @@
     document.querySelectorAll('[data-tag-filter]').forEach(btn => {
       btn.addEventListener('click', () => filterByTag(btn.getAttribute('data-tag-filter')));
     });
+    pageRoot.querySelectorAll('[data-cat-filter]').forEach(btn => {
+      btn.addEventListener('click', () => filterByCategory(btn.getAttribute('data-cat-filter')));
+    });
     document.addEventListener('keydown', pageEscClose);
-    if (isInstagramUrl && !editing) processInstagramEmbeds();
+    if (isInstagramUrl && !editing) lazyLoadInstagramEmbed();
     const sel = document.getElementById('catSelect');
     if (sel) sel.addEventListener('change', () => changeCategory(r, sel.value));
     const delBtn = document.getElementById('deleteBtn');
@@ -1274,6 +1415,43 @@
         aiExistingStatus.textContent = 'No se pudo limpiar con IA: ' + err.message;
       } finally {
         aiCleanExistingBtn.disabled = false;
+      }
+    });
+    const normalizeBtn = document.getElementById('normalizeBtn');
+    if (normalizeBtn) normalizeBtn.addEventListener('click', async () => {
+      const aiExistingStatus = document.getElementById('aiExistingStatus');
+      const before = {
+        title: document.getElementById('editTitle').value.trim(),
+        ingredients: linesFromTextarea(document.getElementById('editIngredients')),
+        steps: linesFromTextarea(document.getElementById('editSteps')),
+        tips: linesFromTextarea(document.getElementById('editTips')),
+      };
+      if (!before.title && !before.ingredients.length && !before.steps.length) {
+        aiExistingStatus.textContent = 'No hay receta que ordenar.';
+        return;
+      }
+      normalizeBtn.disabled = true;
+      aiExistingStatus.textContent = 'Ordenando receta con IA…';
+      try {
+        const res = await fetch(NORMALIZE_API_BASE, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...before, passcode: getStoredPasscode() || '' })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'error desconocido');
+        aiExistingStatus.textContent = '';
+        openNormalizeReview(before, data.result, () => {
+          document.getElementById('editTitle').value = data.result.title || before.title;
+          document.getElementById('editIngredients').value = (data.result.ingredients || []).join('\n');
+          document.getElementById('editSteps').value = (data.result.steps || []).join('\n');
+          document.getElementById('editTips').value = (data.result.tips || []).join('\n');
+          aiExistingStatus.textContent = 'Cambios aplicados (' + data.provider + '). Revisa y pulsa "Guardar cambios" para confirmar.';
+        });
+      } catch (err) {
+        aiExistingStatus.textContent = 'No se pudo ordenar la receta: ' + err.message;
+      } finally {
+        normalizeBtn.disabled = false;
       }
     });
     const boldBtn = document.getElementById('boldBtn');
@@ -1380,6 +1558,7 @@
     if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
     if (document.getElementById('editTitle')) return; // don't swipe while editing
     const list = recipes.filter(matches);
+    list.sort(compareRecipes);
     const idx = list.findIndex(x => x.id === currentDetailId);
     if (idx === -1) return;
     const nextIdx = dx < 0 ? idx + 1 : idx - 1;
@@ -1420,6 +1599,101 @@
 
   function linesFromTextarea(ta) {
     return ta.value.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  }
+
+  // ---- "Ordenar receta": revision ANTES/DESPUES de la normalizacion con IA -------
+  // EXTRACCION (clean-recipe, fetch-instagram) = que dice la fuente.
+  // NORMALIZACION (esto) = como estructuramos mejor ese contenido, sin cambiarlo.
+  // La IA nunca escribe directamente en la receta: solo rellena este panel de
+  // revision, y unicamente "Aplicar cambios" copia el resultado a los campos de
+  // edicion (que a su vez requieren "Guardar cambios" para persistir).
+
+  // Diff clasico por lineas (LCS) sobre arrays de strings: cada elemento del array
+  // (un ingrediente, un paso) se trata como una linea a comparar.
+  function diffArrays(oldArr, newArr) {
+    const n = oldArr.length, m = newArr.length;
+    const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+    for (let i = n - 1; i >= 0; i--) {
+      for (let j = m - 1; j >= 0; j--) {
+        dp[i][j] = oldArr[i] === newArr[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+      }
+    }
+    const result = [];
+    let i = 0, j = 0;
+    while (i < n && j < m) {
+      if (oldArr[i] === newArr[j]) { result.push({ type: 'same', text: oldArr[i] }); i++; j++; }
+      else if (dp[i + 1][j] >= dp[i][j + 1]) { result.push({ type: 'removed', text: oldArr[i] }); i++; }
+      else { result.push({ type: 'added', text: newArr[j] }); j++; }
+    }
+    while (i < n) { result.push({ type: 'removed', text: oldArr[i] }); i++; }
+    while (j < m) { result.push({ type: 'added', text: newArr[j] }); j++; }
+    return result;
+  }
+
+  function extractNumberTokens(text) {
+    return (text.match(/\d+(?:[.,]\d+)?/g) || []);
+  }
+
+  // Comprobacion automatica anti-invencion: si una linea nueva contiene un numero
+  // que no aparecia en ningun sitio de esa misma seccion en el original, se marca
+  // como sospechosa (posible cantidad, tiempo o temperatura inventada).
+  function renderDiffBlock(sectionLabel, oldArr, newArr) {
+    const entries = diffArrays(oldArr, newArr);
+    const oldNums = new Set(extractNumberTokens(oldArr.join('\n')));
+    let anyInvented = false;
+    const rows = entries.map(entry => {
+      if (entry.type === 'same') return '<li class="diff-line diff-same">' + escapeHtml(entry.text) + '</li>';
+      if (entry.type === 'removed') return '<li class="diff-line diff-removed">' + escapeHtml(entry.text) + '</li>';
+      const invented = extractNumberTokens(entry.text).some(n => !oldNums.has(n));
+      if (invented) anyInvented = true;
+      return '<li class="diff-line diff-added' + (invented ? ' diff-suspicious' : '') + '">' +
+        escapeHtml(entry.text) + (invented ? ' <span class="diff-warn-badge">⚠️ número nuevo</span>' : '') +
+        '</li>';
+    }).join('');
+    const html = '<div class="normalize-diff-block"><h4>' + escapeHtml(sectionLabel) + '</h4>' +
+      '<ul class="normalize-diff-list">' + (rows || '<li class="form-hint">(sin cambios)</li>') + '</ul></div>';
+    return { html, anyInvented };
+  }
+
+  function openNormalizeReview(before, after, onApply) {
+    // Se suspende temporalmente el cierre-con-Escape de la ficha de receta mientras
+    // este panel esta abierto, para que Escape cierre solo el panel y no toda la ficha.
+    document.removeEventListener('keydown', pageEscClose);
+    function closeReview() {
+      overlayRoot.innerHTML = '';
+      document.removeEventListener('keydown', reviewEscClose);
+      document.addEventListener('keydown', pageEscClose);
+    }
+    function reviewEscClose(e) { if (e.key === 'Escape') closeReview(); }
+
+    const blocks = [
+      renderDiffBlock('Título', [before.title || ''], [after.title || '']),
+      renderDiffBlock('Ingredientes', before.ingredients || [], after.ingredients || []),
+      renderDiffBlock('Elaboración', before.steps || [], after.steps || []),
+      renderDiffBlock('Tips', before.tips || [], after.tips || []),
+    ];
+    const anyInvented = blocks.some(b => b.anyInvented);
+    overlayRoot.innerHTML =
+      '<div class="overlay" id="normOv">' +
+        '<div class="sheet" role="dialog" aria-modal="true">' +
+          '<div class="sheet-top"><h2>Revisa los cambios</h2>' +
+          '<button class="close-btn" id="normCloseBtn" aria-label="Cerrar">✕</button></div>' +
+          '<p class="form-hint">En rojo lo anterior, en verde lo nuevo. Solo se aplica si pulsas "Aplicar cambios".</p>' +
+          (anyInvented
+            ? '<p class="normalize-warning">⚠️ Alguna línea añade números que no estaban en el original (posibles cantidades, tiempos o temperaturas inventadas). Revísala con atención antes de aplicar.</p>'
+            : '') +
+          blocks.map(b => b.html).join('') +
+          '<p style="margin-top:16px; display:flex; gap:10px; justify-content:flex-end">' +
+            '<button type="button" class="delete-link" id="discardNormalizeBtn">Descartar</button>' +
+            '<button type="button" class="submit-btn" id="applyNormalizeBtn">Aplicar cambios</button>' +
+          '</p>' +
+        '</div>' +
+      '</div>';
+    document.getElementById('normCloseBtn').addEventListener('click', closeReview);
+    document.getElementById('discardNormalizeBtn').addEventListener('click', closeReview);
+    document.getElementById('normOv').addEventListener('click', (e) => { if (e.target.id === 'normOv') closeReview(); });
+    document.getElementById('applyNormalizeBtn').addEventListener('click', () => { onApply(); closeReview(); });
+    document.addEventListener('keydown', reviewEscClose);
   }
 
   // ---- Backend (Supabase edge function) -----------------------------------
@@ -1563,6 +1837,13 @@
     history.back();
   }
 
+  function filterByCategory(cat) {
+    state.cat = cat;
+    state.visible = PAGE_SIZE;
+    render();
+    if (currentDetailId) history.back();
+  }
+
   function upsertManualLocal(id, data) {
     const obj = {
       id,
@@ -1607,7 +1888,7 @@
   }
 
   function openAddForm(opts) {
-    // opts.igUrl: auto-import from this Instagram URL on open
+    // opts.igUrl: auto-import from this URL on open (Instagram or any other site)
     // opts.prefill: pre-fill the raw textarea with this text
     opts = opts || {};
     overlayRoot.innerHTML =
@@ -1616,11 +1897,11 @@
           '<div class="sheet-top"><h2>Añadir receta</h2>' +
           '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
           '<form class="add-form" id="addForm">' +
-            // Instagram import section
+            // Import-from-link section (Instagram or any other recipe page)
             '<div id="igSection" style="background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:12px 14px 10px;margin-bottom:14px">' +
-              '<p style="margin:0 0 8px;font-size:13.5px;font-weight:700;color:var(--accent)">📥 Importar desde Instagram</p>' +
+              '<p style="margin:0 0 8px;font-size:13.5px;font-weight:700;color:var(--accent)">📥 Importar desde un enlace</p>' +
               '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
-                '<input type="url" id="f_ig_url" placeholder="https://www.instagram.com/p/..." style="flex:1;min-width:160px;font:inherit;font-size:15px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)">' +
+                '<input type="url" id="f_ig_url" placeholder="Pega un enlace: Instagram, un blog de cocina..." style="flex:1;min-width:160px;font:inherit;font-size:15px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)">' +
                 '<button type="button" id="igImportBtn" class="submit-btn" style="flex:none;padding:9px 16px;font-size:13.5px;white-space:nowrap">Importar</button>' +
               '</div>' +
               '<p id="igStatus" class="form-hint" style="margin:6px 0 0"></p>' +
@@ -1685,35 +1966,53 @@
       }
     }
 
+    function isInstagramUrl(u) {
+      try { return /(^|\.)instagram\.com$/i.test(new URL(u).hostname); } catch (e) { return false; }
+    }
+
     async function runIgImport(igUrl) {
       igImportBtn.disabled = true;
-      igStatus.textContent = 'Descargando publicación…';
+      igStatus.textContent = 'Descargando la página…';
       igStatus.style.color = '';
-      // Always pre-fill the URL field with the Instagram link
+      // Always pre-fill the URL field with the pasted link
       const urlEl = document.getElementById('f_url');
       if (urlEl && igUrl) urlEl.value = igUrl;
+      // Instagram sigue usando fetch-instagram (sin tocar); cualquier otro enlace
+      // usa fetch-url, que intenta datos estructurados (JSON-LD) antes de caer al
+      // texto en bruto + limpieza con IA, igual que ya hacía el caption de Instagram.
+      const endpoint = isInstagramUrl(igUrl) ? IG_API_BASE : URL_API_BASE;
       try {
-        const res = await fetch(IG_API_BASE, {
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url: igUrl, passcode: getStoredPasscode() || '' })
         });
         const data = await res.json();
-        if (!res.ok || !data.ok) throw new Error(data.error || 'No se pudo obtener la publicación.');
-        // Fill the raw textarea with the extracted caption
-        const rawEl = document.getElementById('f_raw');
-        rawEl.value = data.caption || '';
+        if (!res.ok || !data.ok) throw new Error(data.error || 'No se pudo obtener la página.');
         if (data.url) urlEl.value = data.url;
-        igStatus.textContent = 'Texto extraído. Limpiando con IA…';
-        igStatus.style.color = '';
-        // Auto-run AI clean
-        await runAiClean(data.caption);
-        igStatus.textContent = 'Importado. Revisa y ajusta antes de guardar.';
+        if (data.mode === 'structured') {
+          // Datos ya estructurados (schema.org/Recipe del propio sitio): se rellenan
+          // los campos directamente, sin pasar por ninguna IA.
+          structuredFields.hidden = false;
+          document.getElementById('f_title').value = data.title || '';
+          document.getElementById('f_ingredients').value = (data.ingredients || []).join('\n');
+          document.getElementById('f_steps').value = (data.steps || []).join('\n');
+          igStatus.textContent = 'Receta estructurada importada de la web. Revisa categoría y tips antes de guardar.';
+          document.getElementById('f_title').focus();
+        } else {
+          // Fill the raw textarea with the extracted caption/description/texto de la página
+          const rawEl = document.getElementById('f_raw');
+          rawEl.value = data.caption || '';
+          igStatus.textContent = 'Texto extraído. Limpiando con IA…';
+          igStatus.style.color = '';
+          await runAiClean(data.caption);
+          igStatus.textContent = 'Importado. Revisa y ajusta antes de guardar.';
+        }
       } catch (err) {
-        // Instagram no sirve el texto del post sin autenticación —
+        // El sitio no sirve el contenido automáticamente (bloqueo, login, etc.) —
         // el enlace ya está guardado en el campo URL, el usuario copia el texto a mano
-        igStatus.innerHTML = '⚠️ Instagram no permite extraer el texto automáticamente. ' +
-          '<strong>Copia el texto del post desde Instagram y pégalo abajo.</strong> ' +
+        igStatus.innerHTML = '⚠️ No se pudo extraer el texto automáticamente de ese enlace. ' +
+          '<strong>Copia el texto de la receta y pégalo abajo.</strong> ' +
           'El enlace ya está guardado para la receta.';
         igStatus.style.color = 'var(--accent-2)';
         // Focus the raw textarea so the user can paste immediately
@@ -1726,7 +2025,8 @@
 
     igImportBtn.addEventListener('click', () => {
       const igUrl = igUrlEl.value.trim();
-      if (!igUrl) { igStatus.textContent = 'Pega primero el enlace de Instagram.'; igStatus.style.color = 'var(--accent-2)'; return; }
+      if (!igUrl) { igStatus.textContent = 'Pega primero un enlace.'; igStatus.style.color = 'var(--accent-2)'; return; }
+      try { new URL(igUrl); } catch (e) { igStatus.textContent = 'Ese enlace no parece válido.'; igStatus.style.color = 'var(--accent-2)'; return; }
       runIgImport(igUrl);
     });
 
@@ -1801,9 +2101,25 @@
     }
   }
 
+  let confirmClearListOpen = false;
+
   function renderCartOverlay() {
     const hasDone = shoppingItems.some(x => x.checked);
+    const hasItems = shoppingItems.length > 0;
     const slHtml = renderShoppingItems();
+    const clearListSection = confirmClearListOpen
+      ? '<div class="confirm-clear-box">' +
+          '<p class="confirm-clear-title">¿Vaciar toda la lista?</p>' +
+          '<p class="confirm-clear-text">Se eliminarán todos los productos de tu lista de la compra.</p>' +
+          '<div class="confirm-clear-actions">' +
+            '<button type="button" class="delete-link" id="cancelClearListBtn">Cancelar</button>' +
+            '<button type="button" class="delete-link sl-clear-all-btn" id="confirmClearListBtn">Vaciar lista</button>' +
+          '</div>' +
+        '</div>'
+      : '<p class="sl-clear-row">' +
+          (hasDone ? '<button type="button" class="delete-link" id="slClearDoneBtn">Eliminar los marcados</button>' : '') +
+          (hasItems ? '<button type="button" class="delete-link sl-clear-all-btn" id="clearListBtn">Vaciar lista</button>' : '') +
+        '</p>';
 
     // Recipe cart section (for Bring!)
     const recipeIds = [...cart];
@@ -1842,7 +2158,7 @@
             '<button type="button" class="submit-btn" id="slAddBtn" style="padding:10px 14px;font-size:13.5px;flex:none;white-space:nowrap">+</button>' +
           '</div>' +
           slHtml +
-          (hasDone ? '<p style="margin:10px 0 0"><button class="delete-link" id="slClearDoneBtn" type="button">Eliminar los marcados</button></p>' : '') +
+          (hasDone || hasItems || confirmClearListOpen ? clearListSection : '') +
           bringSection +
         '</div>' +
       '</div>';
@@ -2226,9 +2542,35 @@
         renderCartOverlay();
       });
     }
+    // "Vaciar lista": borra solo shoppingItems (pendientes + comprados + manuales +
+    // generados desde el plan). No toca `cart` (recetas guardadas para Bring!), ni
+    // `plan`, ni `recipes`, ni `favs` - son estados completamente independientes.
+    const clearListBtn = document.getElementById('clearListBtn');
+    if (clearListBtn) {
+      clearListBtn.addEventListener('click', () => {
+        confirmClearListOpen = true;
+        renderCartOverlay();
+      });
+    }
+    const cancelClearListBtn = document.getElementById('cancelClearListBtn');
+    if (cancelClearListBtn) {
+      cancelClearListBtn.addEventListener('click', () => {
+        confirmClearListOpen = false;
+        renderCartOverlay();
+      });
+    }
+    const confirmClearListBtn = document.getElementById('confirmClearListBtn');
+    if (confirmClearListBtn) {
+      confirmClearListBtn.addEventListener('click', () => {
+        shoppingItems = [];
+        confirmClearListOpen = false;
+        saveShoppingItems();
+        renderCartOverlay();
+      });
+    }
   }
 
-  function openCart() { renderCartOverlay(); }
+  function openCart() { confirmClearListOpen = false; renderCartOverlay(); }
 
   // ---- Edit-mode passcode ---------------------------------------------------
 
@@ -2705,8 +3047,8 @@
       console.error(err);
     });
 
-  // Handle Web Share Target: when the user shares an Instagram post to this PWA,
-  // the OS opens the app with ?url=...&text=...&title=... in the URL.
+  // Handle Web Share Target: when the user shares a link (Instagram or any other
+  // recipe page) to this PWA, the OS opens the app with ?url=...&text=...&title=...
   // We detect those params, open the add form, and clean the URL so Back works.
   function handleShareTarget() {
     const params = new URLSearchParams(location.search);
@@ -2716,10 +3058,11 @@
     // Remove query params from URL so refreshing / using Back doesn't re-trigger
     history.replaceState(null, '', location.pathname);
     if (!canEdit) return; // need edit mode to add recipes
-    const igUrl = sharedUrl && sharedUrl.includes('instagram.com') ? sharedUrl : '';
-    const rawText = (sharedText + (sharedUrl && !igUrl ? ' ' + sharedUrl : '')).trim();
-    if (igUrl) {
-      openAddForm({ igUrl });
+    let importUrl = '';
+    if (sharedUrl) { try { new URL(sharedUrl); importUrl = sharedUrl; } catch (e) {} }
+    const rawText = (sharedText + (sharedUrl && !importUrl ? ' ' + sharedUrl : '')).trim();
+    if (importUrl) {
+      openAddForm({ igUrl: importUrl });
     } else if (rawText) {
       openAddForm({ prefill: rawText });
     } else {
