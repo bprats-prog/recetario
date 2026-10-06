@@ -766,6 +766,73 @@
   }
   .ig-link:hover { text-decoration: underline; }
 
+  /* ── Modo cocina ─────────────────────────────────────── */
+  .cook-start {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: inherit; font-size: 15px; font-weight: 700;
+    padding: 10px 18px; border-radius: 999px;
+    border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+    cursor: pointer; margin: 0 0 16px;
+  }
+  .cook-start:hover { opacity: .92; }
+  .cook {
+    position: fixed; inset: 0; z-index: 50;
+    background: var(--paper); color: var(--ink);
+    display: flex; flex-direction: column;
+    padding-top: env(safe-area-inset-top);
+  }
+  .cook-top { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .cook-title { flex: 1; min-width: 0; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cook-round {
+    flex: none; width: 38px; height: 38px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink);
+    font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cook-timers { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 16px 0; }
+  .cook-timer {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 6px 6px 14px; border-radius: 999px;
+    background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent);
+    font-weight: 700; font-variant-numeric: tabular-nums; font-size: 15px;
+  }
+  .cook-timer span { font-weight: 500; font-size: 12.5px; color: var(--ink-soft); }
+  .cook-timer button { font: inherit; font-size: 13px; font-weight: 700; border: none; border-radius: 999px; padding: 6px 12px; cursor: pointer; background: var(--card); color: var(--ink); }
+  .cook-timer.done { background: var(--accent-2); border-color: var(--accent-2); color: var(--accent-ink); animation: cookPulse 1s ease-in-out infinite; }
+  @keyframes cookPulse { 50% { opacity: .65; } }
+  .cook-tabs { display: flex; gap: 8px; padding: 10px 16px 0; }
+  .cook-tab {
+    flex: 1; font: inherit; font-size: 15px; font-weight: 700; padding: 10px;
+    border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink-soft); cursor: pointer;
+  }
+  .cook-tab.active { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .cook-body { flex: 1; overflow-y: auto; padding: 18px 20px 24px; font-size: var(--cook-size, 24px); line-height: 1.45; }
+  .cook-step-n { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+  .cook-progress { height: 5px; background: var(--line); border-radius: 999px; margin: 8px 0 20px; overflow: hidden; }
+  .cook-progress > div { height: 100%; background: var(--accent); border-radius: 999px; }
+  .cook-step-text { font-weight: 500; }
+  .cook-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .cook-chip {
+    font: inherit; font-size: 17px; font-weight: 700; padding: 12px 18px; border-radius: 999px;
+    border: 1.5px solid var(--accent-2); background: var(--accent-2-soft); color: var(--accent-2); cursor: pointer;
+  }
+  .cook-ing { list-style: none; margin: 0; padding: 0; }
+  .cook-ing li { border-bottom: 1px solid var(--line); }
+  .cook-ing label { display: flex; align-items: flex-start; gap: 14px; padding: 14px 2px; cursor: pointer; }
+  .cook-ing input { flex: none; width: 26px; height: 26px; margin-top: 3px; accent-color: var(--accent); }
+  .cook-ing li.done span { text-decoration: line-through; opacity: .45; }
+  .cook-tips h3 { font-family: 'Fraunces', Georgia, serif; font-size: 1.1em; margin: 0 0 12px; }
+  .cook-tips ul { margin: 0; padding-left: 1.1em; }
+  .cook-tips li { margin-bottom: .6em; }
+  .cook-nav { display: flex; gap: 10px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--paper); }
+  .cook-nav button {
+    flex: 1; font: inherit; font-size: 18px; font-weight: 700; padding: 16px 10px; border-radius: 16px;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer;
+  }
+  .cook-nav button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); flex: 2; }
+  .cook-nav button:disabled { opacity: .35; cursor: default; }
+  .cook button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
   @media (prefers-reduced-motion: no-preference) {
     .card { transition: transform .1s ease; }
     .card:active { transform: scale(0.98); }
@@ -824,6 +891,7 @@
 
 <div id="overlayRoot"></div>
 <div id="pageRoot"></div>
+<div id="cookRoot"></div>
 
 <script>
 (function(){
@@ -901,6 +969,7 @@
   const loadMoreBtn = document.getElementById('loadMore');
   const overlayRoot = document.getElementById('overlayRoot');
   const pageRoot = document.getElementById('pageRoot');
+  const cookRoot = document.getElementById('cookRoot');
   const addRecipeBtn = document.getElementById('addRecipeBtn');
   addRecipeBtn.addEventListener('click', () => openAddForm());
   const cartBtn = document.getElementById('cartBtn');
@@ -1388,6 +1457,251 @@
     }
   }
 
+  // ---- Modo cocina -----------------------------------------------------------
+  // Pantalla completa para cocinar: ingredientes tachables, pasos de uno en uno con
+  // letra grande, temporizadores detectados en el texto de cada paso y pantalla
+  // siempre encendida. No guarda nada: es solo una vista de la receta abierta.
+
+  const COOK_SIZE_KEY = 'recetario_cooksize_v1';
+  let cook = null;
+  let cookTimerSeq = 0;
+
+  // Tiempos de un paso: "20 minutos", "1 h 30 min", "media hora", "10-15 min"...
+  // Un rango arranca con el valor menor (mejor revisar antes que pasarse).
+  function extractTimers(text) {
+    let t = ' ' + String(text).toLowerCase() + ' ';
+    const out = [];
+    const fmtMin = m => m >= 60 ? Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '') : m + ' min';
+    const unitSecs = w => w[0] === 'h' ? 3600 : w[0] === 'm' ? 60 : 1;
+    const unitLabel = s => s === 3600 ? 'h' : s === 60 ? 'min' : 's';
+    // menos de 10 s no merece temporizador ("trocea 3 seg")
+    const add = (label, seconds) => { if (seconds >= 10 && !out.some(o => o.label === label)) out.push({ label, seconds }); };
+    // cada regla "consume" lo que encuentra para que la siguiente no lo cuente dos veces
+    const scan = (re, fn) => { t = t.replace(re, (...m) => { fn(m); return ' '.repeat(m[0].length); }); };
+    scan(/(\d+)\s*(?:h|horas?)\s*(?:y\s*)?(\d+)\s*min(?:utos?)?\b/g, m => add(fmtMin(+m[1] * 60 + +m[2]), (+m[1] * 60 + +m[2]) * 60));
+    scan(/(\d+)\s*h\s*([0-5]\d)(?!\d)/g, m => add(fmtMin(+m[1] * 60 + +m[2]), (+m[1] * 60 + +m[2]) * 60));
+    scan(/\bhora y media\b/g, () => add('1 h 30 min', 5400));
+    scan(/\bmedia hora\b/g, () => add('30 min', 1800));
+    scan(/\bcuarto de hora\b/g, () => add('15 min', 900));
+    scan(/(\d+(?:[.,]\d+)?)\s*(?:-|–|—|a|o)\s*(\d+(?:[.,]\d+)?)\s*(horas?|h|minutos?|min|segundos?|seg)\b/g, m => {
+      const u = unitSecs(m[3]);
+      add(m[1] + '–' + m[2] + ' ' + unitLabel(u), parseFloat(m[1].replace(',', '.')) * u);
+    });
+    scan(/(\d+(?:[.,]\d+)?)\s*(horas?|h|minutos?|min|segundos?|seg)\b/g, m => {
+      const u = unitSecs(m[2]);
+      add(m[1] + ' ' + unitLabel(u), parseFloat(m[1].replace(',', '.')) * u);
+    });
+    scan(/\b(?:un|una)\s+(hora|minuto)\b/g, m => add('1 ' + (m[1] === 'hora' ? 'h' : 'min'), m[1] === 'hora' ? 3600 : 60));
+    return out;
+  }
+
+  function cookFmt(secs) {
+    const s = Math.max(0, Math.ceil(secs));
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), ss = s % 60;
+    return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(ss).padStart(2, '0');
+  }
+
+  function cookSize() {
+    try { const v = parseInt(localStorage.getItem(COOK_SIZE_KEY), 10); if (v >= 18 && v <= 40) return v; } catch (e) {}
+    return 24;
+  }
+
+  // Sonido: hay que crear/reanudar el AudioContext en un toque del usuario (al arrancar un temporizador)
+  function cookAudioInit() {
+    try {
+      if (!cook.audio) cook.audio = new (window.AudioContext || window.webkitAudioContext)();
+      if (cook.audio.state === 'suspended') cook.audio.resume();
+    } catch (e) {}
+  }
+  function cookBeep() {
+    try {
+      const ctx = cook && cook.audio; if (!ctx) return;
+      [0, 0.28, 0.56].forEach(d => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.frequency.value = 880; g.gain.value = 0.3;
+        o.connect(g); g.connect(ctx.destination);
+        o.start(ctx.currentTime + d); o.stop(ctx.currentTime + d + 0.16);
+      });
+    } catch (e) {}
+  }
+  function cookAlarm() {
+    cookBeep();
+    try { if (navigator.vibrate) navigator.vibrate([400, 150, 400, 150, 400]); } catch (e) {}
+    if (cook.alarmTimer) return;
+    cook.alarmTimer = setInterval(() => {
+      if (cook && cook.timers.some(t => t.done)) {
+        cookBeep();
+        try { if (navigator.vibrate) navigator.vibrate([300, 150, 300]); } catch (e) {}
+      } else if (cook) { clearInterval(cook.alarmTimer); cook.alarmTimer = null; }
+    }, 2500);
+  }
+
+  function cookStartTimer(label, seconds, stepNo) {
+    cookAudioInit();
+    if (cook.timers.some(t => !t.done && t.label === label && t.step === stepNo)) return;
+    cook.timers.push({ id: ++cookTimerSeq, label, step: stepNo, endAt: Date.now() + seconds * 1000, done: false });
+    cookRenderTimers();
+  }
+
+  function cookTick() {
+    if (!cook) return;
+    let finished = false;
+    cook.timers.forEach(t => { if (!t.done && Date.now() >= t.endAt) { t.done = true; finished = true; } });
+    if (finished) cookAlarm();
+    cookRenderTimers();
+  }
+
+  function cookRenderTimers() {
+    const el = document.getElementById('cookTimers');
+    if (!el || !cook) return;
+    el.hidden = !cook.timers.length;
+    el.innerHTML = cook.timers.map(t => '<div class="cook-timer' + (t.done ? ' done' : '') + '">' +
+      (t.done
+        ? '⏰ ¡Listo! <span>Paso ' + t.step + ' · ' + escapeHtml(t.label) + '</span>'
+        : '⏱ ' + cookFmt((t.endAt - Date.now()) / 1000) + ' <span>Paso ' + t.step + ' · ' + escapeHtml(t.label) + '</span>') +
+      '<button type="button" data-timer-x="' + t.id + '" aria-label="' + (t.done ? 'Parar aviso' : 'Cancelar temporizador') + '">' + (t.done ? 'Parar' : '✕') + '</button>' +
+    '</div>').join('');
+    el.querySelectorAll('[data-timer-x]').forEach(b => b.addEventListener('click', () => {
+      const id = parseInt(b.getAttribute('data-timer-x'), 10);
+      cook.timers = cook.timers.filter(t => t.id !== id);
+      cookRenderTimers();
+    }));
+  }
+
+  function cookTotalPages() { return cook.r.steps.length + ((cook.r.tips && cook.r.tips.length) ? 1 : 0); }
+
+  function cookRender() {
+    const r = cook.r, steps = r.steps || [], ings = r.ingredients || [];
+    const body = document.getElementById('cookBody'), nav = document.getElementById('cookNav');
+    document.getElementById('cookTabIng').classList.toggle('active', cook.tab === 'ing');
+    document.getElementById('cookTabSteps').classList.toggle('active', cook.tab === 'steps');
+    if (cook.tab === 'ing') {
+      body.innerHTML = '<ul class="cook-ing">' + ings.map((l, i) =>
+        '<li class="' + (cook.checked.has(i) ? 'done' : '') + '"><label><input type="checkbox" data-ing="' + i + '"' + (cook.checked.has(i) ? ' checked' : '') + '><span>' + formatRichText(l) + '</span></label></li>'
+      ).join('') + '</ul>';
+      body.querySelectorAll('[data-ing]').forEach(cb => cb.addEventListener('change', () => {
+        const i = parseInt(cb.getAttribute('data-ing'), 10);
+        if (cb.checked) cook.checked.add(i); else cook.checked.delete(i);
+        cb.closest('li').classList.toggle('done', cb.checked);
+      }));
+      nav.innerHTML = '<button type="button" class="primary" id="cookGo">Empezar a cocinar →</button>';
+      document.getElementById('cookGo').addEventListener('click', () => { cook.tab = 'steps'; cook.step = 0; cookRender(); });
+    } else {
+      const total = cookTotalPages(), i = cook.step;
+      if (i < steps.length) {
+        const timers = extractTimers(steps[i]);
+        body.innerHTML =
+          '<div class="cook-step-n">Paso ' + (i + 1) + ' de ' + steps.length + '</div>' +
+          '<div class="cook-progress"><div style="width:' + Math.round(((i + 1) / total) * 100) + '%"></div></div>' +
+          '<div class="cook-step-text">' + formatRichText(steps[i]) + '</div>' +
+          (timers.length ? '<div class="cook-chips">' + timers.map((t, k) =>
+            '<button type="button" class="cook-chip" data-t="' + k + '">⏱ ' + escapeHtml(t.label) + '</button>').join('') + '</div>' : '');
+        body.querySelectorAll('[data-t]').forEach(b => b.addEventListener('click', () => {
+          const t = timers[parseInt(b.getAttribute('data-t'), 10)];
+          cookStartTimer(t.label, t.seconds, i + 1);
+        }));
+      } else {
+        body.innerHTML = '<div class="cook-tips"><h3>💡 Tips</h3><ul>' + r.tips.map(t => '<li>' + formatRichText(t) + '</li>').join('') + '</ul></div>';
+      }
+      const last = i >= total - 1;
+      nav.innerHTML =
+        '<button type="button" id="cookPrev"' + (i === 0 ? ' disabled' : '') + '>← Anterior</button>' +
+        '<button type="button" class="primary" id="cookNext">' + (last ? '✓ Terminar' : 'Siguiente →') + '</button>';
+      document.getElementById('cookPrev').addEventListener('click', () => cookGo(-1));
+      document.getElementById('cookNext').addEventListener('click', () => { if (last) requestCookClose(); else cookGo(1); });
+    }
+    body.scrollTop = 0;
+    cookRenderTimers();
+  }
+
+  function cookGo(delta) {
+    if (!cook || cook.tab !== 'steps') return;
+    const n = cook.step + delta;
+    if (n < 0 || n >= cookTotalPages()) return;
+    cook.step = n;
+    cookRender();
+  }
+
+  function cookKey(e) {
+    if (e.key === 'Escape') requestCookClose();
+    else if (e.key === 'ArrowRight') cookGo(1);
+    else if (e.key === 'ArrowLeft') cookGo(-1);
+  }
+
+  async function cookWake() {
+    try { if (cook && 'wakeLock' in navigator) cook.wake = await navigator.wakeLock.request('screen'); } catch (e) {}
+  }
+  document.addEventListener('visibilitychange', () => { if (cook && !document.hidden) { cookWake(); cookTick(); } });
+
+  function openCook(r) {
+    if (cook || !r.steps || !r.steps.length) return;
+    cook = { r, tab: (r.ingredients && r.ingredients.length) ? 'ing' : 'steps', step: 0, checked: new Set(), timers: [], audio: null, wake: null, alarmTimer: null };
+    history.pushState({ view: 'cook', id: r.id }, '', '#cocina-' + encodeURIComponent(r.id));
+    // Escape cierra solo el modo cocina, no la ficha que hay debajo
+    document.removeEventListener('keydown', pageEscClose);
+    document.addEventListener('keydown', cookKey);
+    cookRoot.innerHTML =
+      '<div class="cook" id="cookView" role="dialog" aria-modal="true" aria-label="Modo cocina">' +
+        '<div class="cook-top">' +
+          '<button type="button" class="cook-round" id="cookClose" aria-label="Salir del modo cocina">✕</button>' +
+          '<div class="cook-title">' + escapeHtml(r.title) + '</div>' +
+          '<button type="button" class="cook-round" id="cookSmaller" aria-label="Letra más pequeña">A−</button>' +
+          '<button type="button" class="cook-round" id="cookBigger" aria-label="Letra más grande">A+</button>' +
+        '</div>' +
+        '<div class="cook-timers" id="cookTimers" hidden></div>' +
+        '<div class="cook-tabs">' +
+          '<button type="button" class="cook-tab" id="cookTabIng">Ingredientes</button>' +
+          '<button type="button" class="cook-tab" id="cookTabSteps">Pasos</button>' +
+        '</div>' +
+        '<div class="cook-body" id="cookBody"></div>' +
+        '<div class="cook-nav" id="cookNav"></div>' +
+      '</div>';
+    const view = document.getElementById('cookView');
+    view.style.setProperty('--cook-size', cookSize() + 'px');
+    document.getElementById('cookClose').addEventListener('click', requestCookClose);
+    const resize = d => {
+      const n = Math.min(40, Math.max(18, cookSize() + d));
+      try { localStorage.setItem(COOK_SIZE_KEY, String(n)); } catch (e) {}
+      view.style.setProperty('--cook-size', n + 'px');
+    };
+    document.getElementById('cookSmaller').addEventListener('click', () => resize(-2));
+    document.getElementById('cookBigger').addEventListener('click', () => resize(2));
+    document.getElementById('cookTabIng').addEventListener('click', () => { cook.tab = 'ing'; cookRender(); });
+    document.getElementById('cookTabSteps').addEventListener('click', () => { cook.tab = 'steps'; cookRender(); });
+    if (!(r.ingredients && r.ingredients.length)) document.getElementById('cookTabIng').hidden = true;
+    // deslizar a izquierda/derecha para cambiar de paso
+    let sx = null, sy = null;
+    view.addEventListener('touchstart', (e) => { const t = e.changedTouches[0]; sx = t.clientX; sy = t.clientY; }, { passive: true });
+    view.addEventListener('touchend', (e) => {
+      if (sx === null) return;
+      const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+      sx = null;
+      if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      cookGo(dx < 0 ? 1 : -1);
+    }, { passive: true });
+    cook.tick = setInterval(cookTick, 500);
+    cookRender();
+    cookWake();
+  }
+
+  function requestCookClose() {
+    if (!cook) return;
+    if (cook.timers.some(t => !t.done) && !window.confirm('Hay temporizadores en marcha. ¿Salir del modo cocina?')) return;
+    history.back(); // el popstate cierra la vista y deja la ficha como estaba
+  }
+
+  function closeCookUI() {
+    if (!cook) return;
+    clearInterval(cook.tick);
+    clearInterval(cook.alarmTimer);
+    try { if (cook.wake) cook.wake.release(); } catch (e) {}
+    try { if (cook.audio) cook.audio.close(); } catch (e) {}
+    cookRoot.innerHTML = '';
+    document.removeEventListener('keydown', cookKey);
+    if (currentDetailId) document.addEventListener('keydown', pageEscClose);
+    cook = null;
+  }
+
   function starsHtml(rating, interactive) {
     let out = '<span class="rating-stars"' + (interactive ? ' id="ratingStars"' : '') + '>';
     for (let i = 1; i <= 5; i++) {
@@ -1499,6 +1813,9 @@
         (!editing && r.tags && r.tags.length
           ? '<div class="tag-pills-row">' + r.tags.map(t => '<button type="button" class="tag-pill" data-tag-filter="' + escapeAttr(t) + '">🏷️ ' + escapeHtml(t) + '</button>').join('') + '</div>'
           : '') +
+        (!editing && r.steps && r.steps.length
+          ? '<button type="button" class="cook-start" id="cookStartBtn">👩‍🍳 Modo cocina</button>'
+          : '') +
         bodyBlock +
         (editing
           ? '<p style="margin-top:12px; display:flex; gap:10px">' +
@@ -1533,6 +1850,8 @@
     document.getElementById('detailFav').addEventListener('click', (e) => toggleFav(r.id, e.currentTarget));
     const shareBtn = document.getElementById('detailShare');
     if (shareBtn) shareBtn.addEventListener('click', () => shareRecipe(r, shareBtn));
+    const cookStartBtn = document.getElementById('cookStartBtn');
+    if (cookStartBtn) cookStartBtn.addEventListener('click', () => openCook(r));
     document.getElementById('detailCart').addEventListener('click', (e) => toggleCart(r.id, e.currentTarget));
     document.querySelectorAll('[data-tag-filter]').forEach(btn => {
       btn.addEventListener('click', () => filterByTag(btn.getAttribute('data-tag-filter')));
@@ -1540,7 +1859,7 @@
     pageRoot.querySelectorAll('[data-cat-filter]').forEach(btn => {
       btn.addEventListener('click', () => filterByCategory(btn.getAttribute('data-cat-filter')));
     });
-    document.addEventListener('keydown', pageEscClose);
+    if (!cook) document.addEventListener('keydown', pageEscClose);
     if (isInstagramUrl && !editing) lazyLoadInstagramEmbed();
     const sel = document.getElementById('catSelect');
     if (sel) sel.addEventListener('change', () => changeCategory(r, sel.value));
@@ -1708,6 +2027,11 @@
 
   window.addEventListener('popstate', (e) => {
     const st = e.state;
+    if (cook) {
+      // Atrás (botón, gesto o ✕) en modo cocina: se cierra solo esta vista
+      closeCookUI();
+      if (st && st.view === 'detail') return;
+    }
     if (st && st.view === 'detail') {
       const r = recipes.find(x => x.id === st.id);
       if (r) renderDetailPage(r, false);
