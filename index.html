@@ -918,9 +918,149 @@
   }
 
   function saveShoppingItems() {
+    shoppingItems.forEach((it, i) => { if (!it.ts) it.ts = Date.now() + i; });
     try { localStorage.setItem(SLKEY, JSON.stringify(shoppingItems)); } catch(e) {}
     updateCartBtn();
+    slQueueChanges();
   }
+
+  // ---- Lista de la compra sincronizada entre dispositivos --------------------
+  // Solo con el modo edición activo (el servidor pide el código). Un documento por
+  // producto; los cambios locales se comparan con lo último que el servidor conoce
+  // (slSnapshot), se encolan (slOutbox, también offline) y cada 20 s se traen los del
+  // otro dispositivo sin pisar cambios propios pendientes.
+  const SL_SYNC_URL = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/shopping-list";
+  const SL_OUTBOX_KEY = "recetario_sl_outbox_v1";
+  const SL_SNAP_KEY = "recetario_sl_snap_v1";
+  const SL_MERGED_KEY = "recetario_sl_merged_v1";
+  let slSyncOn = false, slFlushing = false, slPollTimer = null, slVersion = 0;
+  let slSnapshot = new Map();
+  let slOutbox = [];
+
+  const slSer = it => JSON.stringify({ text: it.text, checked: !!it.checked, sources: it.sources || [], ts: it.ts });
+  function slPersist() {
+    try {
+      localStorage.setItem(SL_SNAP_KEY, JSON.stringify(Object.fromEntries(slSnapshot)));
+      localStorage.setItem(SL_OUTBOX_KEY, JSON.stringify(slOutbox));
+    } catch (e) {}
+  }
+  function slReady() {
+    try { return slSyncOn && localStorage.getItem(SL_MERGED_KEY) === '1'; } catch (e) { return false; }
+  }
+  async function slCall(payload) {
+    const res = await fetch(SL_SYNC_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...payload, passcode: getStoredPasscode() || '' })
+    });
+    const data = await res.json().catch(() => ({}));
+    return { status: res.status, ok: res.ok && data.ok, data };
+  }
+
+  function slQueueChanges() {
+    if (!slReady()) return;
+    slVersion++;
+    const sets = [], deletes = [], ids = new Set();
+    shoppingItems.forEach(it => {
+      ids.add(it.id);
+      const ser = slSer(it);
+      if (slSnapshot.get(it.id) !== ser) {
+        sets.push({ id: it.id, text: it.text, checked: !!it.checked, sources: it.sources || [], ts: it.ts });
+        slSnapshot.set(it.id, ser);
+      }
+    });
+    for (const id of Array.from(slSnapshot.keys())) {
+      if (!ids.has(id)) { deletes.push(id); slSnapshot.delete(id); }
+    }
+    if (!sets.length && !deletes.length) return;
+    const clear = shoppingItems.length === 0 && deletes.length > 1;
+    slOutbox.push(clear ? { op: 'apply', clear: true } : { op: 'apply', sets, deletes });
+    slPersist();
+    slFlush();
+  }
+
+  async function slFlush() {
+    if (slFlushing || !slSyncOn) return;
+    slFlushing = true;
+    try {
+      while (slOutbox.length) {
+        const r = await slCall(slOutbox[0]);
+        if (!r.ok && r.status !== 400) break; // sin red / error del servidor: se reintenta luego
+        slOutbox.shift(); // enviado (o petición inválida que no se puede reintentar)
+        slPersist();
+      }
+    } catch (e) { /* sin conexión: queda en la cola */ }
+    slFlushing = false;
+  }
+
+  async function slPoll() {
+    if (!slSyncOn || document.hidden) return;
+    await slFlush();
+    if (slOutbox.length || slFlushing) return; // cambios locales pendientes: no se pisan
+    const version = slVersion;
+    let server;
+    try {
+      const r = await slCall({ op: 'list' });
+      if (!r.ok) return;
+      server = r.data.items || [];
+    } catch (e) { return; }
+    if (version !== slVersion || slOutbox.length) return; // el usuario tocó algo mientras tanto
+
+    if (!slReady()) {
+      // Primera vez en este dispositivo: se une lo del servidor con lo local (sin duplicar por texto)
+      const known = new Set(server.map(i => norm(i.text)));
+      const extra = shoppingItems.filter(i => !known.has(norm(i.text)));
+      slSnapshot = new Map(server.map(i => [i.id, slSer(i)]));
+      shoppingItems = server.concat(extra);
+      try { localStorage.setItem(SL_MERGED_KEY, '1'); } catch (e) {}
+      saveShoppingItems(); // sube lo local que el servidor no tenía
+      slRefreshCart();
+      return;
+    }
+
+    const local = new Map(shoppingItems.map(i => [i.id, slSer(i)]));
+    const same = server.length === local.size && server.every(s => local.get(s.id) === slSer(s));
+    if (same) return;
+    shoppingItems = server;
+    slSnapshot = new Map(server.map(i => [i.id, slSer(i)]));
+    slPersist();
+    try { localStorage.setItem(SLKEY, JSON.stringify(shoppingItems)); } catch (e) {}
+    updateCartBtn();
+    slRefreshCart();
+  }
+
+  // Si la lista está abierta, se repinta salvo que estés escribiendo en un campo
+  function slRefreshCart() {
+    if (!document.getElementById('slAddInp')) return;
+    const a = document.activeElement;
+    if (a && a.tagName === 'INPUT' && a.type === 'text' && a.value) return;
+    renderCartOverlay();
+  }
+
+  function slStart() {
+    if (slSyncOn) return;
+    slSyncOn = true;
+    try {
+      slSnapshot = new Map(Object.entries(JSON.parse(localStorage.getItem(SL_SNAP_KEY) || '{}')));
+      slOutbox = JSON.parse(localStorage.getItem(SL_OUTBOX_KEY) || '[]');
+    } catch (e) { slSnapshot = new Map(); slOutbox = []; }
+    slPoll();
+    slPollTimer = setInterval(slPoll, 20000);
+  }
+
+  function slStop() {
+    slSyncOn = false;
+    clearInterval(slPollTimer);
+    slSnapshot = new Map(); slOutbox = [];
+    try {
+      localStorage.removeItem(SL_MERGED_KEY);
+      localStorage.removeItem(SL_SNAP_KEY);
+      localStorage.removeItem(SL_OUTBOX_KEY);
+    } catch (e) {}
+  }
+
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) slPoll(); });
+  window.addEventListener('online', () => { slFlush(); slPoll(); });
 
   function updateCartBtn() {
     const pending = shoppingItems.filter(x => !x.checked).length;
@@ -2115,6 +2255,9 @@
   let confirmClearListOpen = false;
 
   function renderCartOverlay() {
+    // Al repintar (marcar un producto, cambio del otro dispositivo...) no volver arriba del todo
+    const prevSheet = document.getElementById('slAddInp') ? overlayRoot.querySelector('.sheet') : null;
+    const keepScroll = prevSheet ? prevSheet.scrollTop : 0;
     const hasDone = shoppingItems.some(x => x.checked);
     const hasItems = shoppingItems.length > 0;
     const slHtml = renderShoppingItems();
@@ -2174,6 +2317,7 @@
     document.getElementById('closeBtn').addEventListener('click', closeDetail);
     document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
     document.addEventListener('keydown', escClose);
+    if (keepScroll) overlayRoot.querySelector('.sheet').scrollTop = keepScroll;
     bindShoppingListEvents();
 
     const clearCartBtn = document.getElementById('clearCartBtn');
@@ -2752,6 +2896,7 @@
         canEdit = false;
         addRecipeBtn.hidden = true;
         stopPolling('plan');
+        slStop();
         initLocalPlan();
         updateEditModeUI();
         closeDetail();
@@ -2786,6 +2931,7 @@
         addRecipeBtn.hidden = false;
         updateEditModeUI();
         startPolling('plan', applyPlanDocs, 15000);
+        slStart();
         closeDetail();
         render();
       } else {
@@ -3153,6 +3299,7 @@
     startPolling('tags', applyTagsDocs, 25000);
     if (canEdit) {
       startPolling('plan', applyPlanDocs, 15000);
+      slStart();
     } else {
       initLocalPlan();
     }
