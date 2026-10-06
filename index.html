@@ -1347,7 +1347,6 @@
           ? '<p style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap">' +
               (r.url ? '<a class="ig-link" href="' + escapeAttr(r.url) + '" target="_blank" rel="noopener noreferrer">Ver publicación original en Instagram ↗</a>' : '<span></span>') +
               '<span style="display:flex; gap:14px; align-items:center">' +
-                (!r.manual && hasRealRecipeContent(r) ? '<button class="delete-link" id="bringBtn" type="button">🔗 Enlace para Bring!</button>' : '') +
                 (canEdit ? '<button class="delete-link" id="deleteBtn" type="button">Eliminar de mi recetario</button>' : '') +
               '</span>' +
             '</p>'
@@ -1368,8 +1367,6 @@
     if (sel) sel.addEventListener('change', () => changeCategory(r, sel.value));
     const delBtn = document.getElementById('deleteBtn');
     if (delBtn) delBtn.addEventListener('click', () => archiveRecipe(r));
-    const bringBtn = document.getElementById('bringBtn');
-    if (bringBtn) bringBtn.addEventListener('click', () => shareRecipeLink(r.id, r.title, bringBtn));
     const editBtn = document.getElementById('editBtn');
     if (editBtn) editBtn.addEventListener('click', () => renderDetailPage(r, true));
     const cancelEditBtn = document.getElementById('cancelEditBtn');
@@ -2076,31 +2073,6 @@
     }
   }
 
-  // Bring! (and similar apps) import a recipe by fetching a URL and reading its
-  // schema.org/Recipe JSON-LD — it does NOT accept pasted/shared plain text.
-  // Each recipe with real content gets its own static page (webapp/r/<id>.html)
-  // with that markup; sharing/copying that link is what Bring!'s "add recipe
-  // from link" feature actually understands. Manually-added recipes don't have
-  // a generated page (they're not in the static build), so we hide the button
-  // for those to avoid offering a link that 404s.
-  function recipePageUrl(id) {
-    return location.origin + '/r/' + id + '.html';
-  }
-
-  async function shareRecipeLink(id, title, btnEl) {
-    const url = recipePageUrl(id);
-    if (navigator.share) {
-      try { await navigator.share({ url, title: title || 'Receta' }); return; }
-      catch (e) { if (e && e.name === 'AbortError') return; }
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      if (btnEl) { const old = btnEl.textContent; btnEl.textContent = '✓ Enlace copiado'; setTimeout(() => { btnEl.textContent = old; }, 2000); }
-    } catch (e) {
-      window.prompt('Copia este enlace y pégalo en "Anadir receta" de Bring!:', url);
-    }
-  }
-
   let confirmClearListOpen = false;
 
   function renderCartOverlay() {
@@ -2121,7 +2093,7 @@
           (hasItems ? '<button type="button" class="delete-link sl-clear-all-btn" id="clearListBtn">Vaciar lista</button>' : '') +
         '</p>';
 
-    // Recipe cart section (for Bring!)
+    // Saved-recipes section (recipes added with the 🛒 button)
     const recipeIds = [...cart];
     const recipeItems = recipeIds.map(id => recipes.find(r => r.id === id)).filter(Boolean);
     const recipeBody = recipeItems.length
@@ -2130,19 +2102,16 @@
           const ingredientsHtml = lines
             ? lines.map(l => '• ' + escapeHtml(l)).join('\n')
             : '<span class="cart-empty-hint">Sin ingredientes detectados, mira la receta completa.</span>';
-          const bringBtn = r.manual ? '' : '<button class="cart-remove" data-bring="' + r.id + '" data-title="' + escapeAttr(r.title) + '" type="button">🔗 Bring!</button>';
           return '<div class="cart-item">' +
             '<div class="cart-item-top"><h3>' + escapeHtml(r.title) + '</h3>' +
-            '<span style="display:flex; gap:12px; flex:none">' + bringBtn +
-            '<button class="cart-remove" data-remove="' + r.id + '" type="button">Quitar</button></span></div>' +
+            '<button class="cart-remove" data-remove="' + r.id + '" type="button">Quitar</button></div>' +
             '<div class="cart-ingredients">' + ingredientsHtml + '</div>' +
           '</div>';
         }).join('')
       : '';
 
-    const bringSection = recipeItems.length
-      ? '<div class="sl-section-hdr">Recetas guardadas (Bring!)</div>' +
-        '<p class="form-hint" style="margin:0 0 8px">Toca 🔗 en cada receta y pégalo en Bring! como "Añadir receta".</p>' +
+    const savedRecipesSection = recipeItems.length
+      ? '<div class="sl-section-hdr">Recetas guardadas</div>' +
         recipeBody +
         '<p style="margin:10px 0 0"><button class="delete-link" id="clearCartBtn" type="button">Vaciar recetas guardadas</button></p>'
       : '';
@@ -2159,7 +2128,7 @@
           '</div>' +
           slHtml +
           (hasDone || hasItems || confirmClearListOpen ? clearListSection : '') +
-          bringSection +
+          savedRecipesSection +
         '</div>' +
       '</div>';
 
@@ -2172,9 +2141,6 @@
     if (clearCartBtn) clearCartBtn.addEventListener('click', () => { cart.clear(); saveCart(); render(); renderCartOverlay(); });
     overlayRoot.querySelectorAll('[data-remove]').forEach(btn => {
       btn.addEventListener('click', () => { cart.delete(btn.getAttribute('data-remove')); saveCart(); render(); renderCartOverlay(); });
-    });
-    overlayRoot.querySelectorAll('[data-bring]').forEach(btn => {
-      btn.addEventListener('click', () => shareRecipeLink(btn.getAttribute('data-bring'), btn.getAttribute('data-title'), btn));
     });
   }
 
@@ -2543,7 +2509,7 @@
       });
     }
     // "Vaciar lista": borra solo shoppingItems (pendientes + comprados + manuales +
-    // generados desde el plan). No toca `cart` (recetas guardadas para Bring!), ni
+    // generados desde el plan). No toca `cart` (recetas guardadas), ni
     // `plan`, ni `recipes`, ni `favs` - son estados completamente independientes.
     const clearListBtn = document.getElementById('clearListBtn');
     if (clearListBtn) {
