@@ -1212,6 +1212,42 @@
     return escapeHtml(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   }
 
+  // Texto plano de la receta para mandar por WhatsApp/mensajes (negrita estilo WhatsApp: *texto*).
+  function recipeShareText(r) {
+    const plain = s => String(s).replace(/\*\*(.+?)\*\*/g, '*$1*');
+    const parts = ['*' + plain(r.title) + '*'];
+    if (r.ingredients && r.ingredients.length) {
+      parts.push('*Ingredientes*\n' + r.ingredients.map(i => '• ' + plain(i)).join('\n'));
+    }
+    if (r.steps && r.steps.length) {
+      parts.push('*Elaboración*\n' + r.steps.map((s, i) => (i + 1) + '. ' + plain(s)).join('\n'));
+    }
+    if (r.tips && r.tips.length) {
+      parts.push('*Tips*\n' + r.tips.map(t => '• ' + plain(t)).join('\n'));
+    }
+    if (r.url) parts.push('Fuente: ' + r.url);
+    return parts.join('\n\n');
+  }
+
+  // Móvil: abre el menú de compartir del sistema (ahí aparece WhatsApp). Sin menú
+  // (ordenador): copia el texto al portapapeles.
+  async function shareRecipe(r, btnEl) {
+    const text = recipeShareText(r);
+    if (navigator.share) {
+      try { await navigator.share({ title: r.title, text }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      const old = btnEl.textContent;
+      btnEl.textContent = '✓';
+      btnEl.title = 'Receta copiada';
+      setTimeout(() => { btnEl.textContent = old; btnEl.title = 'Compartir receta'; }, 2000);
+    } catch (e) {
+      window.prompt('Copia la receta:', text);
+    }
+  }
+
   function starsHtml(rating, interactive) {
     let out = '<span class="rating-stars"' + (interactive ? ' id="ratingStars"' : '') + '>';
     for (let i = 1; i <= 5; i++) {
@@ -1315,6 +1351,7 @@
               '</select>'
             : '<button type="button" class="tag" data-cat-filter="' + escapeAttr(r.category) + '">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</button>') +
           '<span style="display:flex; gap:10px; margin-left:auto">' +
+            (!editing && hasRealRecipeContent(r) ? '<button type="button" class="cart-btn" id="detailShare" aria-label="Compartir receta" title="Compartir receta" style="font-size:20px">📤</button>' : '') +
             '<span class="cart-btn' + (inCart?' on':'') + '" id="detailCart" role="button" tabindex="0" aria-label="añadir a la lista de la compra" style="font-size:20px">' + (inCart?'✓':'🛒') + '</span>' +
             '<span class="fav-btn' + (isFav?' on':'') + '" id="detailFav" role="button" tabindex="0" aria-label="favorita" style="font-size:20px">' + (isFav?'★':'☆') + '</span>' +
           '</span>' +
@@ -1354,6 +1391,8 @@
       '</div>';
     document.getElementById('backBtn').addEventListener('click', () => history.back());
     document.getElementById('detailFav').addEventListener('click', (e) => toggleFav(r.id, e.currentTarget));
+    const shareBtn = document.getElementById('detailShare');
+    if (shareBtn) shareBtn.addEventListener('click', () => shareRecipe(r, shareBtn));
     document.getElementById('detailCart').addEventListener('click', (e) => toggleCart(r.id, e.currentTarget));
     document.querySelectorAll('[data-tag-filter]').forEach(btn => {
       btn.addEventListener('click', () => filterByTag(btn.getAttribute('data-tag-filter')));
