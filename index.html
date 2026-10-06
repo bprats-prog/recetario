@@ -2194,7 +2194,7 @@
     ml:'ml', cl:'cl', dl:'dl',
     taza:'taza', tazas:'taza',
     vaso:'vaso', vasos:'vaso',
-    cucharada:'cda', cucharadas:'cda', cda:'cda', cdas:'cda',
+    cucharada:'cda', cucharadas:'cda', cda:'cda', cdas:'cda', cs:'cda', cc:'cdta',
     'cucharada sopera':'cda', 'cucharadas soperas':'cda',
     cucharadita:'cdta', cucharaditas:'cdta', cdta:'cdta', cdtas:'cdta',
     lata:'lata', latas:'lata',
@@ -2219,19 +2219,26 @@
 
   function parseIngredient(raw) {
     if (!raw || !raw.trim()) return null;
-    const line = raw.trim();
+    // Viñetas iniciales ("– 1 coliflor", "• 2 huevos")
+    const line = raw.trim().replace(/^[\s\-–—•·*]+/, '');
+    if (!line) return null;
     let rest = line;
     let qty = null;
     let unit = null;
 
-    // Try to extract a number (integer, decimal, or fraction)
-    const numM = rest.match(/^(\d+(?:[.,]\d+)?(?:\s*\/\s*\d+)?)\s*/);
+    // Try to extract a number (integer, decimal, fraction "1/2" or "½", "1 ½")
+    const numM = rest.match(/^(\d+(?:[.,]\d+)?(?:\s*\/\s*\d+)?\s*[½¼¾⅓⅔]?|[½¼¾⅓⅔])\s*/);
     if (numM) {
-      const ns = numM[1].trim();
-      if (ns.includes('/')) { const p = ns.split('/'); qty = parseFloat(p[0]) / parseFloat(p[1]); }
-      else { qty = parseFloat(ns.replace(',', '.')); }
-      if (isNaN(qty)) qty = null;
-      else rest = rest.slice(numM[0].length);
+      qty = parseQtyToken(numM[1]);
+      if (qty != null) {
+        rest = rest.slice(numM[0].length);
+        // Rango "3-4", "3 - 4", "3 a 4", "2 o 3": para comprar se usa el máximo
+        const rangeM = rest.match(/^(?:-|–|—|a|o)\s*(\d+(?:[.,]\d+)?)\s*/i);
+        if (rangeM) {
+          const hi = parseFloat(rangeM[1].replace(',', '.'));
+          if (!isNaN(hi) && hi >= qty) { qty = hi; rest = rest.slice(rangeM[0].length); }
+        }
+      }
     }
 
     // Try to extract a unit (only if we found a number)
@@ -2246,19 +2253,48 @@
           break;
         }
       }
-      // Skip leading "de " after unit
-      rest = rest.replace(/^de\s+/i, '');
+      // Skip leading "de " after unit (y el punto de abreviaturas: "50 g. Mantequilla")
+      rest = rest.replace(/^[.:]\s*/, '').replace(/^de\s+/i, '');
     }
+
+    // "1 chorrito de vinagre", "1 pizca sal": cantidad imprecisa -> solo el producto
+    const loose = rest.match(/^(?:una |un )?(?:pizcas?|chorrito|chorro|poco|puntita|toque)\s+(?:de\s+)?/i);
+    if (loose) { qty = null; unit = null; rest = rest.slice(loose[0].length); }
 
     // Normalize unit to base (kg→g, l→ml, etc.)
     if (unit && CONVERT[unit]) { const c = CONVERT[unit]; qty = qty * c.factor; unit = c.to; }
 
-    const name = normalizeName(rest || line);
+    const name = cleanIngredientName(rest) || normalizeName(rest || line);
     return { qty, unit, name, raw: line };
+  }
+
+  const FRAC_CHARS = { '½': 0.5, '¼': 0.25, '¾': 0.75, '⅓': 1 / 3, '⅔': 2 / 3 };
+
+  function parseQtyToken(s) {
+    s = s.trim();
+    let total = 0;
+    const fm = s.match(/([½¼¾⅓⅔])$/);
+    if (fm) { total += FRAC_CHARS[fm[1]]; s = s.slice(0, -1).trim(); if (!s) return total; }
+    if (s.includes('/')) {
+      const p = s.split('/');
+      const v = parseFloat(p[0]) / parseFloat(p[1]);
+      return isNaN(v) ? null : total + v;
+    }
+    const v = parseFloat(s.replace(',', '.'));
+    return isNaN(v) ? null : total + v;
   }
 
   function normalizeName(s) {
     return (s || '').toLowerCase().trim().replace(/\s+/g, ' ');
+  }
+
+  // Nombre de compra: sin notas entre paréntesis ni indicaciones tras una coma
+  // ("cebolla, picada" -> "cebolla"; "champiñones (laminados finos)" -> "champiñones").
+  function cleanIngredientName(s) {
+    let n = (s || '').replace(/\([^)]*\)/g, ' ');
+    n = n.split(/\s*,\s*|\s+[-–—]\s+/)[0];
+    n = n.replace(/^(?:una |un )?(?:pizca|pizcas|chorrito|chorro|poco|puntita|toque)\s+(?:de\s+)?/i, '');
+    return normalizeName(n);
   }
 
   // Returns true if names a and b are likely the same ingredient (singular/plural)
@@ -2266,32 +2302,104 @@
     if (a === b) return true;
     if (a + 's' === b || b + 's' === a) return true;
     if (a + 'es' === b || b + 'es' === a) return true;
-    return false;
+    // "tomate cherry" = "tomates cherry", "limón" = "limones", "pimiento rojo" = "pimientos rojos"
+    return pluralName(a) === pluralName(b);
   }
 
-  function fmtQty(qty) {
+  // frac=true muestra ½ ¼ ¾ ⅓ ⅔ (recetas); frac=false decimales (pesos y volúmenes)
+  function fmtQty(qty, frac) {
     if (qty == null) return '';
+    if (frac) {
+      const whole = Math.floor(qty + 1e-9);
+      const part = qty - whole;
+      const f = [[0.25, '¼'], [1 / 3, '⅓'], [0.5, '½'], [2 / 3, '⅔'], [0.75, '¾']].find(x => Math.abs(part - x[0]) < 0.02);
+      if (f) return (whole ? whole + ' ' : '') + f[1];
+    }
     if (Number.isInteger(qty)) return String(qty);
     // Show up to 1 decimal, remove trailing .0
     const s = qty.toFixed(1).replace(/\.0$/, '');
     return s.replace('.', ',');
   }
 
+  // Unidades escritas con palabra: en plural cuando hay más de una ("14 dientes de ajo").
+  // Las abreviaturas (g, ml, cda, cdta...) no cambian.
+  const UNIT_PLURAL = {
+    diente: 'dientes', rama: 'ramas', hoja: 'hojas', lata: 'latas', bote: 'botes', bolsa: 'bolsas',
+    paquete: 'paquetes', sobre: 'sobres', cabeza: 'cabezas', rodaja: 'rodajas', filete: 'filetes',
+    pieza: 'piezas', loncha: 'lonchas', rebanada: 'rebanadas', taza: 'tazas', vaso: 'vasos', 'puñado': 'puñados',
+  };
+
+  function pluralWord(w) {
+    if (/s$|y$/.test(w)) return w;
+    if (/[aeiouáéíóú]$/.test(w)) return w + 's';
+    if (/ón$/.test(w)) return w.slice(0, -2) + 'ones';
+    if (/z$/.test(w)) return w.slice(0, -1) + 'ces';
+    if (/[lrdn]$/.test(w)) return w + 'es';
+    return w;
+  }
+
+  // "pimiento rojo" -> "pimientos rojos"; solo las palabras antes de la primera preposición
+  function pluralName(name) {
+    const stop = /^(de|del|en|al|con|para|y|o|sin|a|la|el|los|las)$/;
+    const words = name.split(' ');
+    let past = false;
+    return words.map(w => { if (stop.test(w)) past = true; return past ? w : pluralWord(w); }).join(' ');
+  }
+
+  function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
   function fmtIngredient(qty, unit, name) {
-    if (qty == null) return name;
-    const q = fmtQty(qty);
+    if (qty == null) return capitalize(name);
     if (unit) {
       // Convert g→kg and ml→l for display when large
-      if (unit === 'g' && qty >= 1000) return fmtQty(qty / 1000) + ' kg de ' + name;
-      if (unit === 'ml' && qty >= 1000) return fmtQty(qty / 1000) + ' l de ' + name;
-      return q + ' ' + unit + ' de ' + name;
+      if (unit === 'g' && qty >= 1000) return fmtQty(qty / 1000, false) + ' kg de ' + name;
+      if (unit === 'ml' && qty >= 1000) return fmtQty(qty / 1000, false) + ' l de ' + name;
+      const decimal = unit === 'g' || unit === 'ml' || unit === 'mg';
+      const u = (qty > 1 && UNIT_PLURAL[unit]) ? UNIT_PLURAL[unit] : unit;
+      return fmtQty(qty, !decimal) + ' ' + u + ' de ' + name;
     }
     // Count: try to restore plural
-    if (qty > 1 && !name.endsWith('s')) {
-      const plural = /[aeiouáéíóú]$/i.test(name) ? name + 's' : name + 'es';
-      return q + ' ' + plural;
-    }
-    return q + ' ' + name;
+    return fmtQty(qty, true) + ' ' + (qty > 1 ? pluralName(name) : name);
+  }
+
+  // ── Básicos de despensa y secciones del súper ────────────────────────────
+
+  // Sal, pimienta, aceite y agua se asumen en casa: en la hoja de revisión salen
+  // aparte y desmarcados, para marcar solo los que falten.
+  const STAPLE_RE = /^(sal( (fina|gruesa|marina|en escamas|maldon))?( y pimienta)?|pimienta( (negra|blanca|molida|recien molida))?|aceite( de (oliva|girasol)( virgen extra)?)?|aove|agua( (fria|caliente|tibia|templada|mineral))?)( al gusto| para (freir|cocer|cocinar|sofreir|la fritura))?$/;
+
+  function isStaple(name) { return STAPLE_RE.test(norm(name)); }
+
+  function stapleLabel(name) {
+    const n = name.replace(/\s+(al gusto|para (fre[ií]r|cocer|cocinar|sofre[ií]r|la fritura))$/i, '');
+    if (/^(aove|aceite de oliva( virgen extra)?)$/i.test(n)) return 'Aceite de oliva';
+    return capitalize(n);
+  }
+
+  // Orden de evaluación (lo más específico primero) y orden de pasillos al mostrar.
+  const SHOP_SECTION_RULES = [
+    ['congelados', /congelad|helado|\bhielo/],
+    ['bebidas', /\b(vinos?|cerveza|cava|champan|brandy|conac|ron|whisky|licor|ginebra|vodka|zumos?(?! de (limon|naranja|lima))|refresco|cola|sidra|sake|vermut|jerez|amontillado|oporto|tequila)\b/],
+    ['despensa', /\b(harina|pan rallado|panko|azucar|levadura|maicena|sal|pimienta|aceite|vinagre|especias?|comino|pimenton|oregano|curry|canela|curcuma|nuez moscada|azafran|vainilla|bicarbonato)\b|\b(ajo|cebolla|jengibre|perejil|cilantro|albahaca|romero|tomillo|laurel|eneldo|menta|cebollino)\b.*\b(en polvo|molid[oa]|seco|seca|deshidratad[oa]|granulad[oa])/],
+    ['panaderia', /\bpan\b|\bpanes\b|baguette|hogaza|tortillas? de (trigo|maiz)|\bwraps?\b|\bbollos?\b|brioche|\bpita\b|focaccia|hojaldre|picatostes|\btortillas?\b/],
+    ['conservas', /\b(lata|latas|bote|botes|tarro|conserva|triturad[oa]s?|tomate frito|salsa de tomate|tomate concentrado|concentrado de tomate|tomates? pelados?|garbanzos?|alubias?|lentejas?|judias (blancas|pintas|cocidas)|aceitunas?|olivas|pimientos? (asados?|del piquillo|piquillo)|caldo|maiz|leche (de coco|evaporada|condensada)|crema de coco|anchoas?|atun en|bonito en|alcaparras?|pepinillos?|encurtidos?|palmitos?)\b/],
+    ['lacteos', /\b(leche|huevos?|quesos?|yogur|yogures|yogurt|nata|mantequilla|margarina|mozzarella|parmesano|feta|requeson|cheddar|burrata|kefir|mascarpone|ricotta|cottage|crema fresca|crema de leche|natillas|cuajada|emmental|gouda|gruyere|brie|camembert|provolone|manchego|gorgonzola|grana padano|rulo de cabra|burratas?|yemas?|claras?)\b/],
+    ['carne', /\b(pollo|ternera|cerdo|carnes?|jamon|bacon|beicon|chorizo|lomo|salchichas?|pavo|cordero|costillas?|solomillo|panceta|morcilla|mortadela|pechugas?|muslos?|contramuslos?|albondigas?|hamburguesas?|conejo|pato|fiambre|butifarra|longaniza|entrecot|chuletas?|cecina|salchichon|sobrasada|carrilleras?|jarrete|codillo|buey|vacuno|guanciale|secreto)\b/],
+    ['pescado', /\b(pescados?|salmon|atun|merluza|bacalao|gambas?|gambones|langostinos?|mejillon|mejillones|calamar(es)?|pulpo|sepia|sardinas?|lubina|dorada|trucha|boquerones?|almejas?|marisco|mariscos|rape|cigalas?|surimi|lenguado|rodaballo|bonito|caballa|chipiron(es)?|berberechos?|vieiras?|cangrejo|ostras?)\b/],
+    ['verdura', /\b(cebollas?|cebolletas?|ajos?|tomates?|patatas?|zanahorias?|calabacin(es)?|calabaza|pimientos?|berenjenas?|lechugas?|espinacas?|champinon(es)?|setas?|hongos?|limon(es)?|limas?|naranjas?|manzanas?|platanos?|aguacates?|puerros?|apio|judias verdes|brocoli|coliflor|pepinos?|perejil|cilantro|albahaca|eneldo|cebollino|menta|hierbabuena|esparragos?|remolacha|col|repollo|fresas?|uvas?|melon|sandia|peras?|melocoton(es)?|nectarinas?|tomatitos?|guindillas?|hierbas frescas|hierbas|mango|boniatos?|batatas?|jengibre|alcachofas?|rucula|canonigos?|escarola|acelgas?|rabanos?|nabos?|hinojo|lombarda|cerezas?|kiwis?|pina|granada|arandanos?|frambuesas?|higos?|ciruelas?|mandarinas?|pomelo|chalotas?|romero|tomillo|salvia|verduras?|fruta|frutas|ensalada|brotes|guisantes?|habas?|mazorcas?|yuca|endibias?|berros|diente de ajo)\b/],
+    ['despensa', /\b(pasta|espaguetis?|spaghetti|macarrones|tallarines|fideos?|lasana|canelones|noquis|gnocchi|arroz|quinoa|cuscus|avena|copos|polenta|salsa|soja|mostaza|mayonesa|ketchup|almendras?|nueces|nuez|cacahuetes?|pinones|pistachos?|avellanas?|anacardos?|chocolate|cacao|galletas?|miel|mermelada|sirope|sesamo|coco rallado|semillas|pipas|pasas|datiles|orejones|tahini|hummus|gelatina|esencia|edulcorante|pure|laurel|clavo|pesto|bechamel|mahonesa|alioli|vinagreta|sriracha|endulzante|eritritol|panela|cayenas?|frutos secos|gnocchis|tofu|couscous|hierbas (provenzales|aromaticas))\b/],
+  ];
+
+  const SHOP_SECTION_ORDER = [
+    ['verdura', 'Frutas y verduras'], ['carne', 'Carne y charcutería'], ['pescado', 'Pescadería'],
+    ['lacteos', 'Lácteos y huevos'], ['panaderia', 'Panadería'], ['congelados', 'Congelados'],
+    ['conservas', 'Conservas y legumbres'], ['despensa', 'Despensa'], ['bebidas', 'Bebidas'], ['otros', 'Otros'],
+  ];
+
+  function sectionOf(name) {
+    const n = norm(name);
+    for (const [key, re] of SHOP_SECTION_RULES) { if (re.test(n)) return key; }
+    return 'otros';
   }
 
   // Collect all ingredients from the current plan, grouped by recipe
@@ -2307,6 +2415,8 @@
         const trimmed = (line || '').trim();
         // Skip lines that are clearly cooking steps: end with a period or are very long sentences
         if (trimmed.endsWith('.') || trimmed.length > 80) return;
+        // Skip texto de caption que no es un ingrediente ("¡Y tachán!", "Aliño:", líneas sin letras)
+        if (!/[a-záéíóúñ]/i.test(trimmed) || /[!?:]\s*$/.test(trimmed) || /^[¡¿]/.test(trimmed)) return;
         // Skip section headers / notes with no quantity (e.g. "Para la salsa:", "Al gusto", "Opcional")
         const lc = trimmed.toLowerCase();
         if (!lc.match(/^\d/) && lc.match(/^(para |según |al |a la |a los |opcional|nota:|para:)/)) return;
@@ -2322,8 +2432,17 @@
     // Returns [{ text, sources, qty, unit, name }]
     const groups = [];
     for (const item of items) {
+      if (isStaple(item.name)) {
+        // Básicos (sal, aceite...): una sola línea por producto, sin cantidad
+        const label = stapleLabel(item.name);
+        const ex = groups.find(g => g.staple && g.name === label.toLowerCase());
+        if (ex) { if (!ex.sources.includes(item.source)) ex.sources.push(item.source); }
+        else groups.push({ staple: true, name: label.toLowerCase(), qty: null, unit: null, sources: [item.source] });
+        continue;
+      }
       let merged = false;
       for (const g of groups) {
+        if (g.staple) continue;
         if (sameIngredient(g.name, item.name) && g.unit === item.unit) {
           // Compatible units — sum if both have qty, else keep separate
           if (g.qty != null && item.qty != null) {
@@ -2351,6 +2470,7 @@
       qty: g.qty,
       unit: g.unit,
       name: g.name,
+      staple: !!g.staple,
     }));
   }
 
@@ -2367,6 +2487,14 @@
             && exParsed.qty != null && incParsed.qty != null) {
           const newQty = exParsed.qty + incParsed.qty;
           ex.text = fmtIngredient(newQty, exParsed.unit, exParsed.name);
+          const newSources = [...(ex.sources || [])];
+          (inc.sources || []).forEach(s => { if (!newSources.includes(s)) newSources.push(s); });
+          ex.sources = newSources;
+          merged = true;
+          break;
+        }
+        // Sin cantidad en ambos ("Sal", "Rúcula"): no duplicar, solo sumar las recetas de origen
+        if (sameIngredient(exParsed.name, incParsed.name) && exParsed.qty == null && incParsed.qty == null) {
           const newSources = [...(ex.sources || [])];
           (inc.sources || []).forEach(s => { if (!newSources.includes(s)) newSources.push(s); });
           ex.sources = newSources;
@@ -2391,10 +2519,14 @@
     }
     const grouped = groupIngredients(rawItems);
     // Build review list (each item: { text, sources, selected, id })
-    let reviewList = grouped.map((g, i) => ({ ...g, selected: true, id: 'rv' + i }));
+    // Los básicos de despensa (sal, aceite, agua...) empiezan desmarcados
+    let reviewList = grouped.map((g, i) => ({ ...g, selected: !g.staple, id: 'rv' + i }));
 
     function renderReview() {
-      const listHtml = reviewList.map(item => {
+      const sectionKey = it => it.staple ? 'basicos' : sectionOf(it.name || (parseIngredient(it.text) || {}).name || it.text);
+      const bySection = {};
+      reviewList.forEach(it => { (bySection[sectionKey(it)] = bySection[sectionKey(it)] || []).push(it); });
+      const itemHtml = item => {
         const srcHtml = item.sources.length
           ? '<div class="review-sources">Para: ' + escapeHtml(item.sources.join(', ')) + '</div>'
           : '';
@@ -2406,7 +2538,14 @@
           '</div>' +
           '<button type="button" class="review-del" data-del="' + item.id + '" aria-label="Eliminar">✕</button>' +
         '</div>';
-      }).join('');
+      };
+      const listHtml = SHOP_SECTION_ORDER.concat([['basicos', 'Básicos de despensa']])
+        .filter(([key]) => bySection[key])
+        .map(([key, label]) =>
+          '<div class="sl-section-hdr">' + label + '</div>' +
+          (key === 'basicos' ? '<p class="form-hint" style="margin:0 0 4px">Se suponen en casa. Marca solo los que te falten.</p>' : '') +
+          bySection[key].map(itemHtml).join('')
+        ).join('');
 
       overlayRoot.innerHTML =
         '<div class="overlay" id="ov">' +
@@ -2472,7 +2611,14 @@
 
   function renderShoppingItems() {
     if (!shoppingItems.length) return '<p class="cart-empty-hint" style="margin:0 0 6px">La lista está vacía. Genera una desde el plan semanal o añade productos aquí.</p>';
-    return shoppingItems.map(item => {
+    // Agrupado por secciones del súper (la sección se calcula del texto, sirve también para lo añadido a mano)
+    const bySection = {};
+    shoppingItems.forEach(item => {
+      const p = parseIngredient(item.text);
+      const key = sectionOf(p ? p.name : item.text);
+      (bySection[key] = bySection[key] || []).push(item);
+    });
+    const renderItem = item => {
       const srcHtml = (item.sources && item.sources.length)
         ? '<div class="sl-sources">Para: ' + escapeHtml(item.sources.join(', ')) + '</div>'
         : '';
@@ -2491,7 +2637,11 @@
           '<button type="button" class="sl-btn" data-sldel="' + item.id + '" title="Eliminar">✕</button>' +
         '</div>' +
       '</div>';
-    }).join('');
+    };
+    return SHOP_SECTION_ORDER
+      .filter(([key]) => bySection[key])
+      .map(([key, label]) => '<div class="sl-section-hdr">' + label + '</div>' + bySection[key].map(renderItem).join(''))
+      .join('');
   }
 
   function bindShoppingListEvents() {
