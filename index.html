@@ -617,6 +617,13 @@
   }
   .tag-chip-x:hover { opacity: 1; }
   .tag-pills-row { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 14px; }
+  .tag-pills-row:empty, .tag-suggest:empty { display: none; }
+  .tag-add-row { display: flex; gap: 8px; margin-top: 8px; }
+  .tag-add-row input { flex: 1; min-width: 0; }
+  .tag-suggest { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
+  .tag-suggest-lbl { font-size: 12px; color: var(--ink-soft); }
+  .tag-sug { font: inherit; font-size: 12.5px; font-weight: 600; padding: 5px 11px; border-radius: 999px; border: 1px dashed var(--accent); background: none; color: var(--accent); cursor: pointer; }
+  .tag-sug:hover { background: var(--accent-soft); }
   .tag-pill {
     font: inherit;
     font-size: 12.5px;
@@ -1354,7 +1361,8 @@
 
   function buildChips() {
     const all = computeFilterOptions();
-    const current = all.find(c => c.key === state.cat) || all[0];
+    const current = all.find(c => c.key === state.cat) ||
+      (state.cat.indexOf('TAG:') === 0 ? { label: '🏷️ ' + state.cat.slice(4), n: 0 } : all[0]);
     filterBtn.classList.toggle('active', state.cat !== 'TODAS');
     document.getElementById('filterLabel').textContent = current.label;
     document.getElementById('filterCount').textContent = current.n;
@@ -1853,9 +1861,7 @@
             '<span class="fav-btn' + (isFav?' on':'') + '" id="detailFav" role="button" tabindex="0" aria-label="favorita" style="font-size:20px">' + (isFav?'★':'☆') + '</span>' +
           '</span>' +
         '</div>' +
-        (!editing && r.tags && r.tags.length
-          ? '<div class="tag-pills-row">' + r.tags.map(t => '<button type="button" class="tag-pill" data-tag-filter="' + escapeAttr(t) + '">🏷️ ' + escapeHtml(t) + '</button>').join('') + '</div>'
-          : '') +
+        (!editing ? '<div class="tag-pills-row" id="tagPills">' + tagPillsHtml(r) + '</div>' : '') +
         (!editing && r.steps && r.steps.length
           ? '<button type="button" class="cook-start" id="cookStartBtn">👩‍🍳 Modo cocina</button>'
           : '') +
@@ -1872,11 +1878,12 @@
               '<label class="notes-label" for="noteText">Mis notas</label>' +
               '<textarea id="noteText" placeholder="Ej. le pondría menos sal, muy rica, la hice el 12/3...">' + escapeHtml(note) + '</textarea>' +
               '<label class="notes-label" for="tagInput">Etiquetas</label>' +
-              '<div class="tag-chips" id="tagChips">' +
-                (r.tags || []).map(t => '<span class="tag-chip">' + escapeHtml(t) + '<button type="button" class="tag-chip-x" data-tag="' + escapeAttr(t) + '" aria-label="Quitar etiqueta">×</button></span>').join('') +
+              '<div class="tag-chips" id="tagChips">' + tagChipsHtml(r) + '</div>' +
+              '<div class="tag-add-row">' +
+                '<input type="text" id="tagInput" maxlength="30" placeholder="Escribe una etiqueta…" autocomplete="off" enterkeyhint="done">' +
+                '<button type="button" class="submit-btn" id="tagAddBtn" style="padding:9px 16px;font-size:13.5px;flex:none">Añadir</button>' +
               '</div>' +
-              '<input type="text" id="tagInput" list="tagSuggestions" placeholder="Escribe una etiqueta y pulsa Enter…" autocomplete="off">' +
-              '<datalist id="tagSuggestions">' + getAllTags().map(t => '<option value="' + escapeAttr(t) + '">').join('') + '</datalist>' +
+              '<div class="tag-suggest" id="tagSuggest">' + tagSuggestHtml(r) + '</div>' +
             '</div>'
           : '') +
         photoBlock +
@@ -1896,8 +1903,10 @@
     const cookStartBtn = document.getElementById('cookStartBtn');
     if (cookStartBtn) cookStartBtn.addEventListener('click', () => openCook(r));
     document.getElementById('detailCart').addEventListener('click', (e) => toggleCart(r.id, e.currentTarget));
-    document.querySelectorAll('[data-tag-filter]').forEach(btn => {
-      btn.addEventListener('click', () => filterByTag(btn.getAttribute('data-tag-filter')));
+    const tagPillsEl = document.getElementById('tagPills');
+    if (tagPillsEl) tagPillsEl.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-tag-filter]');
+      if (b) filterByTag(b.getAttribute('data-tag-filter'));
     });
     pageRoot.querySelectorAll('[data-cat-filter]').forEach(btn => {
       btn.addEventListener('click', () => filterByCategory(btn.getAttribute('data-cat-filter')));
@@ -2030,31 +2039,73 @@
     }
     const tagInput = document.getElementById('tagInput');
     if (tagInput) {
+      // Se añade con Enter, coma, el botón "Añadir" o simplemente al salir del campo,
+      // y sin repintar la ficha: el campo conserva el foco para seguir escribiendo.
+      const addTag = () => { const v = tagInput.value; tagInput.value = ''; if (v.trim()) commitTags(r, v); };
       tagInput.addEventListener('keydown', (e) => {
-        if (e.key !== 'Enter') return;
+        if (e.key !== 'Enter' && e.key !== ',') return;
         e.preventDefault();
-        const val = tagInput.value.trim();
-        if (!val) return;
-        const current = r.tags || [];
-        if (!current.some(t => t.toLowerCase() === val.toLowerCase())) {
-          saveTags(r, current.concat([val]));
-        } else {
-          tagInput.value = '';
-        }
+        addTag();
       });
-    }
-    document.querySelectorAll('[data-tag]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tag = btn.getAttribute('data-tag');
+      tagInput.addEventListener('change', addTag);
+      document.getElementById('tagAddBtn').addEventListener('click', () => { addTag(); tagInput.focus(); });
+      document.getElementById('tagChips').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-tag]');
+        if (!b) return;
+        const tag = b.getAttribute('data-tag');
         saveTags(r, (r.tags || []).filter(t => t !== tag));
       });
-    });
+      document.getElementById('tagSuggest').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-tag-add]');
+        if (b) commitTags(r, b.getAttribute('data-tag-add'));
+      });
+    }
   }
 
   function getAllTags() {
     const set = new Set();
     recipes.forEach(r => { (r.tags || []).forEach(t => set.add(t)); });
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'es'));
+  }
+
+  function tagPillsHtml(r) {
+    return (r.tags || []).map(t => '<button type="button" class="tag-pill" data-tag-filter="' + escapeAttr(t) + '">🏷️ ' + escapeHtml(t) + '</button>').join('');
+  }
+  function tagChipsHtml(r) {
+    return (r.tags || []).map(t => '<span class="tag-chip">' + escapeHtml(t) + '<button type="button" class="tag-chip-x" data-tag="' + escapeAttr(t) + '" aria-label="Quitar etiqueta ' + escapeAttr(t) + '">×</button></span>').join('');
+  }
+  // Etiquetas que ya usas en otras recetas y esta aún no tiene (las más usadas primero)
+  function tagSuggestHtml(r) {
+    const have = new Set((r.tags || []).map(norm));
+    const counts = {};
+    recipes.forEach(x => (x.tags || []).forEach(t => { counts[t] = (counts[t] || 0) + 1; }));
+    const list = Object.keys(counts).filter(t => !have.has(norm(t)))
+      .sort((a, b) => counts[b] - counts[a] || a.localeCompare(b, 'es')).slice(0, 12);
+    if (!list.length) return '';
+    return '<span class="tag-suggest-lbl">Usadas:</span>' +
+      list.map(t => '<button type="button" class="tag-sug" data-tag-add="' + escapeAttr(t) + '">+ ' + escapeHtml(t) + '</button>').join('');
+  }
+  // Actualiza solo la zona de etiquetas (sin repintar la ficha, que recargaría el vídeo y quitaría el foco)
+  function refreshTagUI(r) {
+    const pills = document.getElementById('tagPills');
+    if (pills) pills.innerHTML = tagPillsHtml(r);
+    const chips = document.getElementById('tagChips');
+    if (chips) chips.innerHTML = tagChipsHtml(r);
+    const sug = document.getElementById('tagSuggest');
+    if (sug) sug.innerHTML = tagSuggestHtml(r);
+  }
+  // Admite varias separadas por coma. Reutiliza la forma ya existente de una etiqueta
+  // (sin distinguir mayúsculas ni acentos) para no acabar con "Navidad" y "navidad".
+  function commitTags(r, raw) {
+    const all = getAllTags();
+    const current = (r.tags || []).slice();
+    let added = false;
+    String(raw).split(',').map(s => s.trim().replace(/\s+/g, ' ').slice(0, 30)).filter(Boolean).forEach(val => {
+      const canon = all.find(t => norm(t) === norm(val)) || val;
+      if (!current.some(t => norm(t) === norm(canon))) { current.push(canon); added = true; }
+    });
+    if (added) saveTags(r, current);
+    return added;
   }
 
   function escClose(e) { if (e.key === 'Escape') closeDetail(); }
@@ -2362,7 +2413,7 @@
     render();
     if (currentDetailId && !currentDetailEditing) {
       const r = recipes.find(x => x.id === currentDetailId);
-      if (r) renderDetailPage(r, false);
+      if (r) refreshTagUI(r);
     }
   }
   function applyPlanDocs(docs) {
@@ -2392,8 +2443,9 @@
   async function saveTags(r, tags) {
     dbTags[r.id] = tags;
     r.tags = tags;
+    filterOptionsCache = null; // el selector de filtros debe incluir/quitar la etiqueta al momento
     render();
-    if (currentDetailId === r.id) renderDetailPage(r, false);
+    if (currentDetailId === r.id && !currentDetailEditing) refreshTagUI(r);
     if (canEdit) await apiSetDoc('tags', r.id, { tags });
   }
 
