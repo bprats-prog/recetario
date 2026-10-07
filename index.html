@@ -3630,6 +3630,57 @@
     }
   }
 
+  // ---- Copia de seguridad ---------------------------------------------------
+  // Descarga un JSON con todas las colecciones de la nube (incluido el plan, que es
+  // privado) y la lista de la compra. Si alguna lectura falla, NO se genera archivo:
+  // una copia incompleta que parece completa es peor que ninguna.
+  const BACKUP_COLLECTIONS = ['overrides', 'manual_recipes', 'hidden', 'notes', 'edits', 'tags', 'plan'];
+
+  async function downloadBackup() {
+    const btn = document.getElementById('backupBtn');
+    const status = document.getElementById('backupStatus');
+    const say = (t) => { if (status) status.textContent = t; };
+    if (btn) btn.disabled = true;
+    say('Preparando la copia…');
+    try {
+      const colecciones = {};
+      for (const name of BACKUP_COLLECTIONS) {
+        const docs = await apiGetCollection(name);
+        if (docs === null) throw new Error('No se pudo leer «' + name + '».');
+        colecciones[name] = docs.map(d => ({ id: d.id, data: d.data }));
+      }
+      const sl = await slCall({ op: 'list' });
+      if (!sl.ok) throw new Error('No se pudo leer la lista de la compra.');
+      colecciones.shopping = (sl.data.items || []).map(i => ({ id: i.id, data: { text: i.text, checked: i.checked, sources: i.sources, ts: i.ts } }));
+
+      const now = new Date();
+      const backup = {
+        app: 'recetario',
+        version: 1,
+        fecha: now.toISOString(),
+        nota: 'Las recetas base están en recipes.json del repositorio; aquí solo está lo que añades o cambias tú.',
+        colecciones,
+        locales: { favoritas: Array.from(favs) }
+      };
+      const blob = new Blob([JSON.stringify(backup, null, 1)], { type: 'application/json' });
+      const pad = n => String(n).padStart(2, '0');
+      const fname = 'recetario-copia-' + now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + '.json';
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = fname;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      const total = Object.values(colecciones).reduce((s, l) => s + l.length, 0);
+      say('✓ Copia descargada (' + fname + ', ' + total + ' elementos).');
+    } catch (e) {
+      console.error('backup', e);
+      say('No se ha podido hacer la copia: ' + (e && e.message ? e.message : 'error de conexión') + ' Inténtalo de nuevo.');
+    }
+    if (btn) btn.disabled = false;
+  }
+
   // ---- Edit-mode passcode ---------------------------------------------------
 
   function updateEditModeUI() {
@@ -3645,9 +3696,16 @@
             '<div class="sheet-top"><h2>Modo edición</h2>' +
             '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
             '<p class="form-hint">La edición está activa en este dispositivo.</p>' +
+            '<div style="margin-top:14px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card)">' +
+              '<p style="margin:0 0 6px;font-size:14px;font-weight:700">💾 Copia de seguridad</p>' +
+              '<p class="form-hint" style="margin:0 0 10px">Descarga un archivo con todo lo que guardas en la nube: ediciones de texto, categorías, etiquetas, notas y valoraciones, recetas añadidas, recetas ocultas, plan semanal y lista de la compra, más tus favoritas de este dispositivo.</p>' +
+              '<button type="button" class="submit-btn" id="backupBtn" style="padding:9px 18px;font-size:14px">Descargar copia</button>' +
+              '<p class="form-hint" id="backupStatus" style="margin:8px 0 0"></p>' +
+            '</div>' +
             '<p style="margin-top:14px"><button class="delete-link" id="logoutBtn" type="button">Salir del modo edición aquí</button></p>' +
           '</div>' +
         '</div>';
+      document.getElementById('backupBtn').addEventListener('click', downloadBackup);
       document.getElementById('closeBtn').addEventListener('click', closeDetail);
       document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
       document.addEventListener('keydown', escClose);
