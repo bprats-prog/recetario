@@ -1410,14 +1410,20 @@
       card.innerHTML =
         '<div class="card-top"><h3>' + escapeHtml(r.title) + '</h3>' +
         '<span style="display:flex; gap:4px; flex:none">' +
+        (r.steps && r.steps.length ? '<span class="cart-btn" data-cook="' + r.id + '" role="button" aria-label="modo cocina" title="Modo cocina">👩‍🍳</span>' : '') +
         '<span class="cart-btn' + (inCart?' on':'') + '" data-cart="' + r.id + '" role="button" aria-label="añadir a la lista de la compra">' + (inCart ? '✓' : '🛒') + '</span>' +
         '<span class="fav-btn' + (isFav?' on':'') + '" data-fav="' + r.id + '" role="button" aria-label="favorita">' + (isFav ? '★' : '☆') + '</span>' +
         '</span></div>' +
         '<button type="button" class="tag" data-cat-filter="' + escapeAttr(r.category) + '">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</button>' +
         (rating > 0 ? '<span class="card-rating">' + '★'.repeat(rating) + '</span>' : '');
       card.addEventListener('click', (e) => {
-        if (e.target.closest('[data-fav],[data-cart],[data-cat-filter]')) return;
+        if (e.target.closest('[data-fav],[data-cart],[data-cook],[data-cat-filter]')) return;
         openDetail(r);
+      });
+      const cookCardBtn = card.querySelector('[data-cook]');
+      if (cookCardBtn) cookCardBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openCook(r);
       });
       card.querySelector('[data-fav]').addEventListener('click', (e) => {
         e.stopPropagation();
