@@ -27,7 +27,7 @@ self.addEventListener("fetch", (event) => {
   // shows up immediately instead of being stuck behind a stale cache; only
   // fall back to the cached copy when actually offline.
   const isHtmlShell = req.mode === "navigate" || url.pathname === "/" || url.pathname.endsWith("index.html");
-  const isRecipesData = url.pathname.endsWith("recipes.json");
+  const isRecipesData = url.pathname.endsWith("recipes.json") || url.pathname.endsWith("revision-ia.json");
   if (isHtmlShell || isRecipesData) {
     event.respondWith(
       fetch(req).then((res) => {

@@ -701,6 +701,40 @@
   .sl-edit-row { display:flex; gap:8px; margin-top:6px; }
   .sl-edit-inp { flex:1; font:inherit; font-size:14px; padding:6px 10px; border-radius:8px; border:1.5px solid var(--accent); background:var(--card); color:var(--ink); }
   .sl-section-hdr { font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); margin:18px 0 8px; padding-bottom:6px; border-bottom:1px solid var(--line); }
+  /* ── Revisar recetario ───────────────────────────────── */
+  .rv-tabs { display:flex; gap:6px; margin:12px 0 4px; }
+  .rv-tab { flex:1; font:inherit; font-size:14px; font-weight:700; padding:9px 10px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink-soft); cursor:pointer; }
+  .rv-tab.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .rv-msg { min-height:1.2em; margin:6px 0 4px; }
+  .rv-group { border:1px solid var(--line); border-radius:12px; padding:10px 12px; margin:12px 0; background:var(--card); }
+  .rv-group.is-resolved { opacity:.65; }
+  .rv-group-hdr { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
+  .rv-badge { font-size:11.5px; font-weight:700; letter-spacing:.03em; padding:3px 9px; border-radius:999px; background:var(--accent-soft); color:var(--accent); }
+  .rv-card, .rv-row { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; padding:9px 0; border-top:1px solid var(--line); }
+  .rv-group .rv-card:first-of-type { border-top:none; }
+  .rv-row { padding:10px 0; }
+  .rv-row.is-done { opacity:.7; }
+  .rv-card.is-hidden .rv-open { text-decoration:line-through; opacity:.6; }
+  .rv-main { flex:1; min-width:0; }
+  .rv-open { font:inherit; font-size:15px; font-weight:700; text-align:left; background:none; border:none; padding:0; color:var(--ink); cursor:pointer; text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:3px; }
+  .rv-open:hover { color:var(--accent); }
+  .rv-meta { font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+  .rv-meta.rv-ok { color:var(--accent); font-weight:700; }
+  .rv-prev { font-size:12px; color:var(--ink-soft); margin-top:2px; opacity:.85; }
+  .rv-best, .rv-tag { font-size:11px; font-weight:700; padding:2px 7px; border-radius:999px; vertical-align:middle; }
+  .rv-best { background:var(--accent-soft); color:var(--accent); }
+  .rv-tag { background:var(--line); color:var(--ink-soft); }
+  .rv-actions { display:flex; flex-wrap:wrap; gap:6px; justify-content:flex-end; align-items:center; flex:none; max-width:55%; }
+  .rv-btn { font:inherit; font-size:13px; font-weight:700; padding:7px 12px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); cursor:pointer; white-space:nowrap; }
+  .rv-btn:hover { border-color:var(--accent); }
+  .rv-btn-primary { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .rv-btn-warn { color:var(--accent-2); }
+  .rv-sel { font:inherit; font-size:13px; padding:6px 8px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--ink); max-width:100%; }
+  .rv-bulk { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:10px 0 0; padding:10px 12px; border:1px dashed var(--accent); border-radius:12px; background:var(--accent-soft); font-size:13px; }
+  @media (max-width: 520px) {
+    .rv-row { flex-direction:column; }
+    .rv-actions { max-width:none; justify-content:flex-start; }
+  }
   .sl-add-row { display:flex; gap:8px; margin-top:12px; }
   .sl-add-inp { flex:1; font:inherit; font-size:15px; padding:10px 12px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); }
   .sl-add-inp:focus-visible { outline:2px solid var(--focus); outline-offset:1px; }
@@ -861,6 +895,7 @@
       <button class="add-btn cart-toggle-btn" id="planBtn" type="button">📅 Plan semanal</button>
       <button class="add-btn cart-toggle-btn" id="editModeBtn" type="button">🔒 Modo edición</button>
       <button class="add-btn" id="addRecipeBtn" type="button" hidden>+ Añadir receta</button>
+      <button class="add-btn cart-toggle-btn" id="reviewBtn" type="button" hidden>🧹 Revisar recetario</button>
     </div>
     <div class="filter-row">
       <button class="filter-btn" id="filterBtn" type="button">
@@ -972,6 +1007,8 @@
   const cookRoot = document.getElementById('cookRoot');
   const addRecipeBtn = document.getElementById('addRecipeBtn');
   addRecipeBtn.addEventListener('click', () => openAddForm());
+  const reviewBtn = document.getElementById('reviewBtn');
+  reviewBtn.addEventListener('click', () => openReview());
   const cartBtn = document.getElementById('cartBtn');
   cartBtn.addEventListener('click', () => openCart());
   const planBtn = document.getElementById('planBtn');
@@ -3195,10 +3232,379 @@
 
   function openCart() { confirmClearListOpen = false; renderCartOverlay(); }
 
+  // ---- Revisar recetario: duplicados y categorías mal puestas ------------------
+  // Nada se borra ni se cambia solo: este panel solo PROPONE. Cada cambio lo decide
+  // quien edita, y todo es reversible (ocultar/restaurar, cambiar categoría/deshacer).
+  // - Duplicados: se calculan aquí, en el navegador (parecido de título + ingredientes).
+  // - Categorías / "no es receta": sugerencias precalculadas en revision-ia.json.
+
+  const DUP_STOP = new Set('de del la el los las con y en a al un una para por sin o e su sus muy facil faciles rapida rapido casero casera caseros caseras receta tradicional clasico clasica saludable saludables express'.split(' '));
+  const DUP_UNITS = new Set('g kg ml l cl dl cda cdta cucharada cucharadas cucharadita cucharaditas taza tazas vaso lata bote diente dientes pizca gusto opcional'.split(' '));
+  function dupSing(w) { return w.length > 4 ? w.replace(/(es|s)$/, '') : w; }
+  function dupTitleSet(r) {
+    return new Set(norm(r.title).replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(w => w && !DUP_STOP.has(w)).map(dupSing));
+  }
+  function dupIngSet(r) {
+    const s = new Set();
+    (r.ingredients || []).forEach(l => {
+      const words = norm(l).replace(/\([^)]*\)/g, ' ').replace(/[^a-z ]/g, ' ').split(/\s+/)
+        .filter(w => w.length > 2 && !DUP_STOP.has(w) && !DUP_UNITS.has(w)).map(dupSing);
+      if (words[0]) s.add(words.slice(0, 2).join(' '));
+    });
+    return s;
+  }
+  function dupJac(a, b) {
+    if (!a.size || !b.size) return 0;
+    let i = 0; a.forEach(x => { if (b.has(x)) i++; });
+    return i / (a.size + b.size - i);
+  }
+  // Devuelve grupos [{ ids, level: 'alta'|'media'|'versiones', best }]
+  function findDuplicateGroups(recs) {
+    const T = recs.map(dupTitleSet), I = recs.map(dupIngSet);
+    const parent = recs.map((_, i) => i);
+    const find = i => { while (parent[i] !== i) { parent[i] = parent[parent[i]]; i = parent[i]; } return i; };
+    const pairLevel = new Map();
+    const rank = { alta: 3, media: 2, versiones: 1 };
+    const byTok = new Map();
+    T.forEach((s, i) => s.forEach(t => { if (!byTok.has(t)) byTok.set(t, []); byTok.get(t).push(i); }));
+    for (let i = 0; i < recs.length; i++) {
+      if (!T[i].size) continue;
+      const cand = new Set();
+      T[i].forEach(t => (byTok.get(t) || []).forEach(j => { if (j > i) cand.add(j); }));
+      cand.forEach(j => {
+        const ts = dupJac(T[i], T[j]);
+        if (ts < 0.6) return;
+        const comparable = I[i].size >= 3 && I[j].size >= 3;
+        const is = comparable ? dupJac(I[i], I[j]) : -1;
+        let level = null;
+        if (ts >= 0.99) {
+          if (!comparable || is >= 0.5) level = 'alta';
+          else if (is >= 0.25) level = 'media';
+          else level = 'versiones';
+        } else if (comparable && is >= 0.6) level = 'media';
+        if (!level) return;
+        parent[find(i)] = find(j);
+        pairLevel.set(i + ':' + j, level);
+      });
+    }
+    const groups = new Map();
+    recs.forEach((r, i) => { const k = find(i); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(i); });
+    const out = [];
+    groups.forEach(idxs => {
+      if (idxs.length < 2) return;
+      let level = 'versiones';
+      pairLevel.forEach((lv, key) => { const a = Number(key.split(':')[0]); if (find(a) === find(idxs[0]) && rank[lv] > rank[level]) level = lv; });
+      const size = r => (r.ingredients || []).length + (r.steps || []).length * 2 + (r.tips || []).length;
+      const best = idxs.slice().sort((x, y) => size(recs[y]) - size(recs[x]))[0];
+      out.push({ ids: idxs.map(i => recs[i].id), level, best: recs[best].id });
+    });
+    const order = { alta: 0, media: 1, versiones: 2 };
+    out.sort((a, b) => order[a.level] - order[b.level] || b.ids.length - a.ids.length);
+    return out;
+  }
+
+  const REVIEW_KEY = 'recetario_review_dismiss_v1';
+  const RV_LEVEL_LABEL = {
+    alta: 'Casi seguro duplicadas',
+    media: 'Muy parecidas',
+    versiones: 'Mismo nombre, receta distinta: ¿versiones?'
+  };
+  let reviewDismiss = { cat: {}, dup: {} };
+  try {
+    const v = JSON.parse(localStorage.getItem(REVIEW_KEY) || '{}');
+    if (v && typeof v === 'object') reviewDismiss = { cat: v.cat || {}, dup: v.dup || {} };
+  } catch (e) {}
+  function saveReviewDismiss() { try { localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewDismiss)); } catch (e) {} }
+
+  let reviewData = null;          // contenido de revision-ia.json
+  let reviewLoadFailed = false;
+  let reviewTab = 'dup';
+  let reviewGroups = [];          // foto de los grupos al abrir (no desaparecen al ocultar)
+  let reviewDone = {};            // id -> { type: 'cat'|'hide', from, to }
+  let reviewConfirm = null;       // 'cat' | 'hide' | null (confirmación de acción en bloque)
+  let reviewMsg = '';
+
+  function rvHost(u) { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; } }
+  function rvById() { const m = new Map(); recipes.forEach(r => m.set(r.id, r)); return m; }
+  function rvDupKey(g) { return g.ids.slice().sort().join('+'); }
+
+  function rvComputeGroups() {
+    const recs = recipes.filter(r => !hiddenIds.has(r.id) && !isMix(r) && hasRealRecipeContent(r));
+    reviewGroups = findDuplicateGroups(recs);
+  }
+
+  // Sugerencias de categoría / "no es receta" vigentes, ya filtradas
+  function rvCatRows() {
+    if (!reviewData || !reviewData.items) return [];
+    const by = rvById();
+    const rows = [];
+    Object.keys(reviewData.items).forEach(id => {
+      const r = by.get(id); const v = reviewData.items[id];
+      if (!r) return;
+      const done = reviewDone[id];
+      if (!done) {
+        if (hiddenIds.has(id) || reviewDismiss.cat[id]) return;
+        const wantsCat = v.cat && v.cat !== r.category;
+        if (!wantsCat && !v.noReceta) return;
+      }
+      rows.push({ r, v, done });
+    });
+    const ord = c => { const i = CATEGORY_ORDER.indexOf(c); return i < 0 ? 99 : i; };
+    rows.sort((a, b) =>
+      (a.v.noReceta ? 0 : 1) - (b.v.noReceta ? 0 : 1) ||
+      ord(a.r.category) - ord(b.r.category) || a.r.title.localeCompare(b.r.title, 'es'));
+    return rows;
+  }
+
+  async function rvPool(items, worker, n) {
+    let i = 0, fails = 0;
+    await Promise.all(Array.from({ length: Math.min(n, items.length) }, async () => {
+      while (i < items.length) {
+        const it = items[i++];
+        try { if (!(await worker(it))) fails++; } catch (e) { fails++; }
+      }
+    }));
+    return fails;
+  }
+
+  function rvRefreshApp() {
+    applyOverrides();
+    filterOptionsCache = null;
+    updateStats();
+    render();
+  }
+
+  async function rvSetCategory(r, cat) {
+    dbOverrides[r.id] = cat;
+    r.category = cat;
+    return apiSetDoc('overrides', r.id, { category: cat });
+  }
+  async function rvSetHidden(r, hidden) {
+    if (hidden) hiddenIds.add(r.id); else hiddenIds.delete(r.id);
+    return apiSetDoc('hidden', r.id, { hidden });
+  }
+
+  function rvCardHtml(r, g, showBest) {
+    const hidden = hiddenIds.has(r.id);
+    const ing = r.ingredients || [];
+    const host = rvHost(r.url);
+    const meta = [catLabel(r.category), ing.length + ' ingredientes', (r.steps || []).length + ' pasos'].concat(host ? [host] : []).join(' · ');
+    const preview = ing.slice(0, 3).map(x => String(x).slice(0, 40)).join(', ');
+    return '<div class="rv-card' + (hidden ? ' is-hidden' : '') + '">' +
+      '<div class="rv-main">' +
+        '<button type="button" class="rv-open" data-act="open" data-id="' + escapeAttr(r.id) + '">' + escapeHtml(r.title) + '</button>' +
+        (showBest && g.best === r.id ? ' <span class="rv-best">Más completa</span>' : '') +
+        (hidden ? ' <span class="rv-tag">Oculta</span>' : '') +
+        '<div class="rv-meta">' + escapeHtml(meta) + '</div>' +
+        (preview ? '<div class="rv-prev">' + escapeHtml(preview) + '…</div>' : '') +
+      '</div>' +
+      (hidden
+        ? '<button type="button" class="rv-btn" data-act="unhide" data-id="' + escapeAttr(r.id) + '">Restaurar</button>'
+        : '<button type="button" class="rv-btn rv-btn-warn" data-act="hide" data-id="' + escapeAttr(r.id) + '">Ocultar</button>') +
+    '</div>';
+  }
+
+  function rvDupHtml() {
+    const by = rvById();
+    const groups = reviewGroups.filter(g => !reviewDismiss.dup[rvDupKey(g)]);
+    if (!groups.length) return '<p class="form-hint">No hay duplicados pendientes.</p>';
+    return '<p class="form-hint">Compara cada grupo y oculta la que sobre. No se borra nada: las ocultas se pueden restaurar aquí mismo.</p>' +
+      groups.map(g => {
+        const rs = g.ids.map(id => by.get(id)).filter(Boolean);
+        const sz = r => (r.ingredients || []).length + (r.steps || []).length * 2 + (r.tips || []).length;
+        const bestSz = Math.max.apply(null, rs.map(sz));
+        const showBest = rs.filter(r => sz(r) === bestSz).length === 1;
+        const visible = rs.filter(r => !hiddenIds.has(r.id)).length;
+        return '<div class="rv-group' + (visible < 2 ? ' is-resolved' : '') + '">' +
+          '<div class="rv-group-hdr"><span class="rv-badge rv-lv-' + g.level + '">' + (visible < 2 ? '✓ Resuelto' : RV_LEVEL_LABEL[g.level]) + '</span>' +
+          '<button type="button" class="delete-link" data-act="dupok" data-key="' + escapeAttr(rvDupKey(g)) + '">No son duplicadas</button></div>' +
+          rs.map(r => rvCardHtml(r, g, showBest)).join('') +
+        '</div>';
+      }).join('');
+  }
+
+  function rvCatHtml() {
+    if (reviewLoadFailed) return '<p class="form-hint">No se han podido cargar las sugerencias. Recarga la página e inténtalo de nuevo.</p>';
+    if (!reviewData) return '<p class="form-hint">Cargando sugerencias…</p>';
+    const rows = rvCatRows();
+    const pending = rows.filter(x => !x.done);
+    const pendCat = pending.filter(x => !x.v.noReceta && x.v.cat && x.v.cat !== x.r.category);
+    const pendHide = pending.filter(x => x.v.noReceta);
+    if (!rows.length) return '<p class="form-hint">No hay sugerencias pendientes.</p>';
+    let html = '<p class="form-hint">Sugerencias de categoría y de elementos que no parecen recetas (reseñas de restaurantes, guías, listas de ideas…). Revisa cada una: nada cambia sin que lo pulses.</p>';
+    if (pendHide.length || pendCat.length) {
+      html += '<div class="rv-bulk">';
+      if (reviewConfirm) {
+        const n = reviewConfirm === 'cat' ? pendCat.length : pendHide.length;
+        html += '<span>' + (reviewConfirm === 'cat' ? 'Cambiar la categoría de ' + n + ' recetas' : 'Ocultar ' + n + ' elementos') + ' (se puede deshacer una a una)</span>' +
+          '<button type="button" class="rv-btn rv-btn-primary" data-act="bulk' + reviewConfirm + '">Sí, hacerlo</button>' +
+          '<button type="button" class="rv-btn" data-act="cancel">Cancelar</button>';
+      } else {
+        if (pendHide.length) html += '<button type="button" class="rv-btn" data-act="confirm" data-what="hide">Ocultar los ' + pendHide.length + ' que no son recetas</button>';
+        if (pendCat.length) html += '<button type="button" class="rv-btn" data-act="confirm" data-what="cat">Aplicar las ' + pendCat.length + ' categorías sugeridas</button>';
+      }
+      html += '</div>';
+    }
+    const catOptions = (sel) => CATEGORY_ORDER.map(c => '<option value="' + escapeAttr(c) + '"' + (c === sel ? ' selected' : '') + '>' + escapeHtml(catLabel(c)) + '</option>').join('');
+    let lastKind = null;
+    rows.forEach(({ r, v, done }) => {
+      const kind = v.noReceta ? 'hide' : 'cat';
+      if (kind !== lastKind) {
+        html += '<div class="sl-section-hdr">' + (kind === 'hide' ? 'No parecen recetas' : 'Categoría mal puesta') + '</div>';
+        lastKind = kind;
+      }
+      const id = escapeAttr(r.id);
+      let main = '<button type="button" class="rv-open" data-act="open" data-id="' + id + '">' + escapeHtml(r.title) + '</button>';
+      let act;
+      if (done) {
+        main += '<div class="rv-meta rv-ok">✓ ' + (done.type === 'hide' ? 'Oculta' : 'Movida a ' + escapeHtml(catLabel(done.to))) + '</div>';
+        act = '<button type="button" class="rv-btn" data-act="undo" data-id="' + id + '">Deshacer</button>';
+      } else if (v.noReceta) {
+        main += '<div class="rv-meta">' + escapeHtml(v.motivo || 'No parece una receta') + ' · ahora en ' + escapeHtml(catLabel(r.category)) + '</div>';
+        act = '<button type="button" class="rv-btn rv-btn-warn" data-act="hidenr" data-id="' + id + '">Ocultar</button>' +
+              '<button type="button" class="rv-btn" data-act="catskip" data-id="' + id + '">Es una receta</button>';
+      } else {
+        main += '<div class="rv-meta">' + escapeHtml(catLabel(r.category)) + ' → <b>' + escapeHtml(catLabel(v.cat)) + '</b></div>';
+        act = '<select class="rv-sel" data-sel="' + id + '" aria-label="Categoría">' + catOptions(v.cat) + '</select>' +
+              '<button type="button" class="rv-btn rv-btn-primary" data-act="catapply" data-id="' + id + '">Cambiar</button>' +
+              '<button type="button" class="rv-btn" data-act="catskip" data-id="' + id + '">Dejar así</button>';
+      }
+      html += '<div class="rv-row' + (done ? ' is-done' : '') + '"><div class="rv-main">' + main + '</div><div class="rv-actions">' + act + '</div></div>';
+    });
+    return html;
+  }
+
+  function renderReview(keepScroll) {
+    const nDup = reviewGroups.filter(g => !reviewDismiss.dup[rvDupKey(g)] && g.ids.filter(id => !hiddenIds.has(id)).length >= 2).length;
+    const nCat = reviewData ? rvCatRows().filter(x => !x.done).length : 0;
+    overlayRoot.innerHTML =
+      '<div class="overlay" id="ov">' +
+        '<div class="sheet rv-sheet" id="rvSheet" role="dialog" aria-modal="true">' +
+          '<div class="sheet-top"><h2>Revisar recetario</h2>' +
+          '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
+          '<div class="rv-tabs">' +
+            '<button type="button" class="rv-tab' + (reviewTab === 'dup' ? ' on' : '') + '" data-act="tab" data-tab="dup">Duplicados' + (nDup ? ' (' + nDup + ')' : '') + '</button>' +
+            '<button type="button" class="rv-tab' + (reviewTab === 'cat' ? ' on' : '') + '" data-act="tab" data-tab="cat">Categorías' + (nCat ? ' (' + nCat + ')' : '') + '</button>' +
+          '</div>' +
+          '<p class="form-hint rv-msg" id="rvMsg">' + escapeHtml(reviewMsg) + '</p>' +
+          (reviewTab === 'dup' ? rvDupHtml() : rvCatHtml()) +
+          '<p style="margin:16px 0 0"><button type="button" class="delete-link" data-act="resetdismiss">Volver a mostrar lo descartado en este dispositivo</button></p>' +
+        '</div>' +
+      '</div>';
+    const sheet = document.getElementById('rvSheet');
+    if (keepScroll) sheet.scrollTop = keepScroll;
+    document.getElementById('closeBtn').addEventListener('click', closeReview);
+    document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeReview(); });
+    sheet.addEventListener('click', onReviewClick);
+  }
+
+  function closeReview() {
+    document.removeEventListener('keydown', reviewEsc);
+    closeDetail();
+  }
+  function reviewEsc(e) {
+    if (!document.getElementById('rvSheet')) { document.removeEventListener('keydown', reviewEsc); return; }
+    if (e.key === 'Escape' && !currentDetailId) closeReview();
+  }
+
+  async function onReviewClick(e) {
+    const el = e.target.closest('[data-act]');
+    if (!el) return;
+    const sheet = document.getElementById('rvSheet');
+    const act = el.getAttribute('data-act');
+    const id = el.getAttribute('data-id');
+    const by = rvById();
+    const r = id ? by.get(id) : null;
+    const redraw = () => renderReview(sheet ? sheet.scrollTop : 0);
+    let failed = false;
+
+    if (act === 'open') { if (r) openDetail(r); return; }
+    if (act === 'tab') { reviewTab = el.getAttribute('data-tab'); reviewConfirm = null; reviewMsg = ''; renderReview(0); return; }
+    if (act === 'confirm') { reviewConfirm = el.getAttribute('data-what'); redraw(); return; }
+    if (act === 'cancel') { reviewConfirm = null; redraw(); return; }
+    if (act === 'resetdismiss') {
+      if (reviewTab === 'dup') reviewDismiss.dup = {}; else reviewDismiss.cat = {};
+      saveReviewDismiss(); reviewMsg = ''; redraw(); return;
+    }
+    if (act === 'dupok') { reviewDismiss.dup[el.getAttribute('data-key')] = 1; saveReviewDismiss(); redraw(); return; }
+    if (act === 'catskip' && r) { reviewDismiss.cat[id] = 1; saveReviewDismiss(); redraw(); return; }
+
+    if (act === 'hide' && r) {
+      failed = !(await rvSetHidden(r, true));
+      if (failed) await rvSetHidden(r, false);
+      rvRefreshApp();
+    } else if (act === 'unhide' && r) {
+      failed = !(await rvSetHidden(r, false));
+      if (failed) await rvSetHidden(r, true);
+      rvRefreshApp();
+    } else if (act === 'hidenr' && r) {
+      reviewDone[id] = { type: 'hide' };
+      failed = !(await rvSetHidden(r, true));
+      if (failed) { delete reviewDone[id]; hiddenIds.delete(id); }
+      rvRefreshApp();
+    } else if (act === 'catapply' && r) {
+      const sel = sheet.querySelector('[data-sel="' + (window.CSS && CSS.escape ? CSS.escape(id) : id) + '"]');
+      const to = sel ? sel.value : (reviewData.items[id] || {}).cat;
+      const from = r.category;
+      if (!to || to === from) { redraw(); return; }
+      reviewDone[id] = { type: 'cat', from, to };
+      failed = !(await rvSetCategory(r, to));
+      if (failed) { delete reviewDone[id]; dbOverrides[id] = from; }
+      rvRefreshApp();
+    } else if (act === 'undo' && r) {
+      const d = reviewDone[id];
+      if (d && d.type === 'hide') { failed = !(await rvSetHidden(r, false)); if (failed) hiddenIds.add(id); }
+      else if (d && d.type === 'cat') failed = !(await rvSetCategory(r, d.from));
+      if (!failed) delete reviewDone[id];
+      rvRefreshApp();
+    } else if (act === 'bulkcat' || act === 'bulkhide') {
+      const rows = rvCatRows().filter(x => !x.done);
+      const isHide = act === 'bulkhide';
+      const todo = rows.filter(x => isHide ? x.v.noReceta : (!x.v.noReceta && x.v.cat && x.v.cat !== x.r.category));
+      reviewConfirm = null;
+      let n = 0;
+      const msgEl = document.getElementById('rvMsg');
+      const fails = await rvPool(todo, async ({ r: rr, v }) => {
+        const from = rr.category;
+        const ok = isHide ? await rvSetHidden(rr, true) : await rvSetCategory(rr, v.cat);
+        if (ok) reviewDone[rr.id] = isHide ? { type: 'hide' } : { type: 'cat', from, to: v.cat };
+        else if (isHide) hiddenIds.delete(rr.id); else dbOverrides[rr.id] = from;
+        n++;
+        if (msgEl) msgEl.textContent = 'Aplicando… ' + n + ' de ' + todo.length;
+        return ok;
+      }, 5);
+      reviewMsg = fails ? ('Hecho, pero ' + fails + ' no se han podido guardar. Inténtalo de nuevo con esas.') : ('Hecho: ' + (todo.length - fails) + '. Puedes deshacer cada una.');
+      rvRefreshApp();
+      redraw();
+      return;
+    }
+    reviewMsg = failed ? 'No se ha podido guardar el cambio. Revisa la conexión e inténtalo de nuevo.' : '';
+    redraw();
+  }
+
+  async function openReview() {
+    if (!canEdit) return;
+    reviewDone = {}; reviewConfirm = null; reviewMsg = '';
+    rvComputeGroups();
+    renderReview(0);
+    document.removeEventListener('keydown', reviewEsc);
+    document.addEventListener('keydown', reviewEsc);
+    if (!reviewData && !reviewLoadFailed) {
+      try {
+        const res = await fetch('revision-ia.json');
+        if (!res.ok) throw new Error('http ' + res.status);
+        reviewData = await res.json();
+      } catch (e) { reviewLoadFailed = true; console.error('revision-ia.json', e); }
+      const sheet = document.getElementById('rvSheet');
+      if (sheet) renderReview(sheet.scrollTop);
+    }
+  }
+
   // ---- Edit-mode passcode ---------------------------------------------------
 
   function updateEditModeUI() {
     editModeBtn.textContent = canEdit ? '🔓 Edición activa' : '🔒 Modo edición';
+    reviewBtn.hidden = !canEdit;
   }
 
   function openPasscodeForm() {
