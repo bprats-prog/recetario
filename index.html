@@ -2990,14 +2990,26 @@
   }
 
   // Collect all ingredients from the current plan, grouped by recipe
+  // Lo que queda fuera de la lista (platos libres, recetas sin ingredientes): se avisa en la revisión
+  let planSkipped = { custom: [], noIngredients: [] };
   function collectPlanIngredients() {
     const items = []; // { raw, qty, unit, name, source }
+    planSkipped = { custom: [], noIngredients: [] };
     const allSlotKeys = Object.keys(plan);
     allSlotKeys.forEach(key => {
       const rid = plan[key];
-      if (!rid || rid.startsWith('custom:')) return; // skip empty or free-text slots
+      if (!rid) return;
+      if (rid.startsWith('custom:')) { // plato libre: no tiene ingredientes que leer
+        const name = rid.slice(7).trim();
+        if (name && planSkipped.custom.indexOf(name) === -1) planSkipped.custom.push(name);
+        return;
+      }
       const r = recipes.find(x => x.id === rid);
-      if (!r || !r.ingredients || !r.ingredients.length) return;
+      if (!r) return;
+      if (!r.ingredients || !r.ingredients.length) {
+        if (planSkipped.noIngredients.indexOf(r.title) === -1) planSkipped.noIngredients.push(r.title);
+        return;
+      }
       r.ingredients.forEach(line => {
         const trimmed = (line || '').trim();
         // Skip lines that are clearly cooking steps: end with a period or are very long sentences
@@ -3108,6 +3120,12 @@
     // Build review list (each item: { text, sources, selected, id })
     // Los básicos de despensa (sal, aceite, agua...) empiezan desmarcados
     let reviewList = grouped.map((g, i) => ({ ...g, selected: !g.staple, id: 'rv' + i }));
+    const skippedParts = [];
+    if (planSkipped.custom.length) skippedParts.push('platos escritos a mano (' + planSkipped.custom.map(escapeHtml).join(', ') + ')');
+    if (planSkipped.noIngredients.length) skippedParts.push('recetas sin ingredientes guardados (' + planSkipped.noIngredients.map(escapeHtml).join(', ') + ')');
+    const skippedHtml = skippedParts.length
+      ? '<p class="form-hint" style="margin:-6px 0 14px;padding:8px 10px;border-radius:8px;background:var(--accent-soft)">⚠️ No están en esta lista: ' + skippedParts.join(' y ') + '. Añádelos a mano abajo si los necesitas.</p>'
+      : '';
 
     function renderReview() {
       const sectionKey = it => it.staple ? 'basicos' : sectionOf(it.name || (parseIngredient(it.text) || {}).name || it.text);
@@ -3140,6 +3158,7 @@
             '<div class="sheet-top"><h2>Tu lista para esta semana</h2>' +
             '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
             '<p class="form-hint" style="margin:-4px 0 14px">Desmarca lo que ya tengas en casa.</p>' +
+            skippedHtml +
             '<div id="reviewList">' + listHtml + '</div>' +
             '<div class="sl-add-row" style="margin-top:14px">' +
               '<input type="text" class="sl-add-inp" id="reviewAddInp" placeholder="Añadir otro ingrediente…">' +
