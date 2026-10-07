@@ -816,6 +816,9 @@
     cursor: pointer; margin: 0 0 16px;
   }
   .cook-start:hover { opacity: .92; }
+  .cook-resume { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; padding: 12px 14px; border: 1px solid var(--accent); border-radius: 12px; background: var(--accent-soft); font-size: 14px; line-height: 1.4; }
+  .cook-resume[hidden] { display: none; }
+  .cook-resume-btns { display: flex; align-items: center; gap: 12px; }
   .cook {
     position: fixed; inset: 0; z-index: 50;
     background: var(--paper); color: var(--ink);
@@ -891,6 +894,8 @@
       <span class="stat"><b id="statFav">0</b> favoritas</span>
     </div>
   </header>
+
+  <div class="cook-resume" id="cookResume" hidden></div>
 
   <div class="controls">
     <div class="search-row">
@@ -1261,12 +1266,53 @@
     return titleCatCache.get(r.id) || (norm(r.title) + ' ' + norm(catLabel(r.category)));
   }
 
+  // Distintas formas de escribir lo mismo (sin acentos, ya normalizadas). Se comprueban
+  // ANTES que los grupos amplios de arriba y buscan en todo el texto de la receta:
+  // "ñoquis" encuentra gnocchi, no cualquier pasta.
+  const VARIANT_GROUPS = [
+    ["mahonesa","mayonesa"],
+    ["noqui","gnocchi","nyoqui"],
+    ["sandwich","sandwitch","sanduche","emparedado"],
+    ["yogur","yogurt","yoghurt"],
+    ["calabacin","zucchini","courgette"],
+    ["aguacate","palta"],
+    ["cacahuete","cacahuate"],
+    ["batata","boniato","camote"],
+    ["guisante","chicharo"],
+    ["brocoli","brecol","broccoli"],
+    ["fresa","frutilla"],
+    ["tahin","tahini"],
+    ["hummus","humus"],
+    ["falafel","felafel"],
+    ["quiche","kiche"],
+    ["kebab","kebap","kebap"],
+    ["tzatziki","tzaziki","tsatsiki"],
+    ["bechamel","besamel"],
+    ["ceviche","cebiche"],
+    ["risotto","rissoto"],
+    ["mozzarella","mozarela","mozzarela"],
+    ["parmesano","parmigiano"],
+    ["pistacho","pistachio"],
+    ["airfryer","freidora"],
+    ["tortita","pancake","panqueque"],
+    ["croissant","cruasan"],
+    ["berenjena","aubergine"]
+  ];
+  function variantGroupFor(word) {
+    for (const group of VARIANT_GROUPS) {
+      if (group.some(m => word === m || (word.length >= 4 && (m.indexOf(word) === 0 || word.indexOf(m) === 0)))) return group;
+    }
+    return null;
+  }
+
   function queryMatchesRecipe(normalizedQuery, r) {
     const words = normalizedQuery.split(/\s+/).filter(Boolean);
     if (!words.length) return true;
     const fullHay = searchHaystack(r);
     const titleHay = titleCatHaystack(r);
     return words.every(w => {
+      const variants = variantGroupFor(w);
+      if (variants) return variants.some(v => fullHay.includes(v));
       const group = expandTerm(w);
       if (group) return group.some(v => titleHay.includes(v));
       return fullHay.includes(w);
@@ -1592,13 +1638,60 @@
     if (cook.timers.some(t => !t.done && t.label === label && t.step === stepNo)) return;
     cook.timers.push({ id: ++cookTimerSeq, label, step: stepNo, endAt: Date.now() + seconds * 1000, done: false });
     cookRenderTimers();
+    cookPersist();
+  }
+
+  // Estado del modo cocina en el dispositivo: si el móvil cierra la pestaña o recargas,
+  // la portada ofrece "Continuar cocinando" en el mismo paso y con los temporizadores
+  // (se guarda la hora de fin, así que siguen contando aunque la app estuviera cerrada).
+  const COOK_STATE_KEY = 'recetario_cookstate_v1';
+  const COOK_STATE_MAX_AGE = 8 * 3600 * 1000;
+  function cookPersist() {
+    if (!cook) return;
+    try {
+      localStorage.setItem(COOK_STATE_KEY, JSON.stringify({
+        id: cook.r.id, tab: cook.tab, step: cook.step, checked: Array.from(cook.checked),
+        timers: cook.timers.map(t => ({ id: t.id, label: t.label, step: t.step, endAt: t.endAt, done: t.done })),
+        at: Date.now()
+      }));
+    } catch (e) {}
+  }
+  function cookClearSaved() { try { localStorage.removeItem(COOK_STATE_KEY); } catch (e) {} }
+  function cookLoadSaved() {
+    try {
+      const s = JSON.parse(localStorage.getItem(COOK_STATE_KEY) || 'null');
+      if (!s || !s.id || Date.now() - (s.at || 0) > COOK_STATE_MAX_AGE) { cookClearSaved(); return null; }
+      return s;
+    } catch (e) { return null; }
+  }
+  function showCookResume() {
+    const box = document.getElementById('cookResume');
+    if (!box) return;
+    const s = cook ? null : cookLoadSaved();
+    const r = s && recipes.find(x => x.id === s.id);
+    // Si la receta aún no está (las añadidas a mano llegan unos instantes después), no se borra nada:
+    // se vuelve a intentar al cargarlas. Lo guardado caduca solo a las 8 h.
+    if (!r || !r.steps || !r.steps.length) { box.hidden = true; box.innerHTML = ''; return; }
+    const running = (s.timers || []).filter(t => !t.done && t.endAt > Date.now()).length;
+    const rang = (s.timers || []).filter(t => t.done || t.endAt <= Date.now()).length;
+    box.hidden = false;
+    box.innerHTML =
+      '<span>👩‍🍳 Estabas cocinando <b>' + escapeHtml(r.title) + '</b>' +
+        (s.tab === 'steps' ? ' · paso ' + (Math.min(s.step, r.steps.length - 1) + 1) + ' de ' + r.steps.length : '') +
+        (running ? ' · ' + running + (running === 1 ? ' temporizador en marcha' : ' temporizadores en marcha') : '') +
+        (rang ? ' · ' + rang + (rang === 1 ? ' temporizador ya terminado' : ' temporizadores ya terminados') : '') +
+      '</span>' +
+      '<span class="cook-resume-btns"><button type="button" class="submit-btn" id="cookResumeGo" style="padding:7px 14px;font-size:13px">Continuar</button>' +
+      '<button type="button" class="delete-link" id="cookResumeX">Descartar</button></span>';
+    document.getElementById('cookResumeGo').addEventListener('click', () => openCook(r, s));
+    document.getElementById('cookResumeX').addEventListener('click', () => { cookClearSaved(); showCookResume(); });
   }
 
   function cookTick() {
     if (!cook) return;
     let finished = false;
     cook.timers.forEach(t => { if (!t.done && Date.now() >= t.endAt) { t.done = true; finished = true; } });
-    if (finished) cookAlarm();
+    if (finished) { cookAlarm(); cookPersist(); }
     cookRenderTimers();
   }
 
@@ -1616,6 +1709,7 @@
       const id = parseInt(b.getAttribute('data-timer-x'), 10);
       cook.timers = cook.timers.filter(t => t.id !== id);
       cookRenderTimers();
+      cookPersist();
     }));
   }
 
@@ -1634,6 +1728,7 @@
         const i = parseInt(cb.getAttribute('data-ing'), 10);
         if (cb.checked) cook.checked.add(i); else cook.checked.delete(i);
         cb.closest('li').classList.toggle('done', cb.checked);
+        cookPersist();
       }));
       nav.innerHTML = '<button type="button" class="primary" id="cookGo">Empezar a cocinar →</button>';
       document.getElementById('cookGo').addEventListener('click', () => { cook.tab = 'steps'; cook.step = 0; cookRender(); });
@@ -1663,6 +1758,7 @@
     }
     body.scrollTop = 0;
     cookRenderTimers();
+    cookPersist();
   }
 
   function cookGo(delta) {
@@ -1684,9 +1780,20 @@
   }
   document.addEventListener('visibilitychange', () => { if (cook && !document.hidden) { cookWake(); cookTick(); } });
 
-  function openCook(r) {
+  function openCook(r, saved) {
     if (cook || !r.steps || !r.steps.length) return;
     cook = { r, tab: (r.ingredients && r.ingredients.length) ? 'ing' : 'steps', step: 0, checked: new Set(), timers: [], audio: null, wake: null, alarmTimer: null };
+    if (saved && saved.id === r.id) {
+      // Reanuda donde lo dejaste: mismo paso, ingredientes tachados y temporizadores
+      if (saved.tab === 'steps' || !(r.ingredients && r.ingredients.length)) cook.tab = 'steps';
+      cook.step = Math.max(0, Math.min(parseInt(saved.step, 10) || 0, cookTotalPages() - 1));
+      cook.checked = new Set((saved.checked || []).filter(i => Number.isInteger(i) && i >= 0 && i < (r.ingredients || []).length));
+      cook.timers = (saved.timers || []).filter(t => t && typeof t.endAt === 'number').map(t => ({ id: t.id, label: String(t.label || ''), step: t.step, endAt: t.endAt, done: !!t.done }));
+      cookTimerSeq = Math.max(cookTimerSeq, ...cook.timers.map(t => t.id || 0));
+      cookAudioInit();
+    }
+    const cookBox = document.getElementById('cookResume');
+    if (cookBox) { cookBox.hidden = true; cookBox.innerHTML = ''; }
     history.pushState({ view: 'cook', id: r.id }, '', '#cocina-' + encodeURIComponent(r.id));
     // Escape cierra solo el modo cocina, no la ficha que hay debajo
     document.removeEventListener('keydown', pageEscClose);
@@ -1751,6 +1858,7 @@
     document.removeEventListener('keydown', cookKey);
     if (currentDetailId) document.addEventListener('keydown', pageEscClose);
     cook = null;
+    cookClearSaved(); // salida deliberada: no hay nada que reanudar
   }
 
   function starsHtml(rating, interactive) {
@@ -2382,6 +2490,7 @@
     applyOverrides();
     updateStats();
     render();
+    showCookResume();
   }
   function applyHiddenDocs(docs) {
     hiddenIds.clear();
@@ -4232,6 +4341,7 @@
       updateStats();
       document.getElementById('statFav').textContent = favs.size;
       render();
+      showCookResume();
     })
     .catch(err => {
       countLine.textContent = "No se pudieron cargar las recetas.";
