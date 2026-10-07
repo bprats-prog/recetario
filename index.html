@@ -2265,10 +2265,10 @@
     if (code) headers['X-Passcode'] = code;
     try {
       const res = await fetch(API_BASE + '?collection=' + encodeURIComponent(collection), { headers });
-      if (!res.ok) return [];
+      if (!res.ok) return null;
       const j = await res.json();
       return j.docs || [];
-    } catch (e) { console.error('fetch error', collection, e); return []; }
+    } catch (e) { console.error('fetch error', collection, e); return null; }
   }
 
   async function apiSetDoc(collection, docId, data) {
@@ -2284,15 +2284,39 @@
     } catch (e) { console.error('write error', collection, docId, e); return false; }
   }
 
+  // Sondeo de colecciones compartidas. Para gastar poca red y batería:
+  // - no consulta con la pestaña oculta ni sin conexión (al volver, se pone al día al instante);
+  // - si falla la petición no toca nada (antes una caída de red vaciaba ocultas/categorías);
+  // - si los datos son idénticos a la consulta anterior, no repinta la lista.
+  const pollers = {};
+  function pollTick(name) {
+    const p = pollers[name];
+    if (!p || p.busy || document.hidden || navigator.onLine === false) return Promise.resolve();
+    p.busy = true;
+    return apiGetCollection(name).then(docs => {
+      p.last = Date.now();
+      if (docs === null) return;
+      const sig = JSON.stringify(docs);
+      if (sig === p.sig) return;
+      p.sig = sig;
+      p.applyFn(docs);
+    }).catch(e => console.error('poll error', name, e)).then(() => { p.busy = false; });
+  }
   function startPolling(name, applyFn, intervalMs) {
     if (pollTimers[name]) clearInterval(pollTimers[name]);
-    const tick = () => apiGetCollection(name).then(applyFn).catch(e => console.error('poll error', name, e));
-    tick();
-    pollTimers[name] = setInterval(tick, intervalMs);
+    pollers[name] = { applyFn, intervalMs, last: 0, sig: null, busy: false };
+    pollTick(name);
+    pollTimers[name] = setInterval(() => pollTick(name), intervalMs);
   }
   function stopPolling(name) {
     if (pollTimers[name]) { clearInterval(pollTimers[name]); delete pollTimers[name]; }
+    delete pollers[name];
   }
+  function pollCatchUp() {
+    Object.keys(pollers).forEach(name => { if (Date.now() - pollers[name].last >= pollers[name].intervalMs) pollTick(name); });
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) pollCatchUp(); });
+  window.addEventListener('online', pollCatchUp);
 
   function applyOverridesDocs(docs) {
     for (const k of Object.keys(dbOverrides)) delete dbOverrides[k];
@@ -4027,12 +4051,12 @@
     if (canEdit) addRecipeBtn.hidden = false;
     updateEditModeUI();
 
-    startPolling('overrides', applyOverridesDocs, 25000);
-    startPolling('manual_recipes', applyManualDocs, 25000);
-    startPolling('hidden', applyHiddenDocs, 25000);
-    startPolling('notes', applyNotesDocs, 25000);
-    startPolling('edits', applyEditsDocs, 25000);
-    startPolling('tags', applyTagsDocs, 25000);
+    startPolling('overrides', applyOverridesDocs, 45000);
+    startPolling('manual_recipes', applyManualDocs, 45000);
+    startPolling('hidden', applyHiddenDocs, 45000);
+    startPolling('notes', applyNotesDocs, 45000);
+    startPolling('edits', applyEditsDocs, 45000);
+    startPolling('tags', applyTagsDocs, 45000);
     if (canEdit) {
       startPolling('plan', applyPlanDocs, 15000);
       slStart();
