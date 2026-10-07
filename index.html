@@ -2176,6 +2176,16 @@
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'es'));
   }
 
+  // Forma "oficial" de una etiqueta: la variante ya existente (sin distinguir mayúsculas
+  // ni acentos) que más recetas usa; si no existe ninguna, el texto tal cual.
+  function tagCanonical(val, exclude) {
+    const counts = {};
+    recipes.forEach(x => (x.tags || []).forEach(t => { counts[t] = (counts[t] || 0) + 1; }));
+    const matches = Object.keys(counts).filter(t => t !== exclude && norm(t) === norm(val));
+    if (!matches.length) return val;
+    return matches.sort((a, b) => counts[b] - counts[a] || a.localeCompare(b, 'es'))[0];
+  }
+
   function tagPillsHtml(r) {
     return (r.tags || []).map(t => '<button type="button" class="tag-pill" data-tag-filter="' + escapeAttr(t) + '">🏷️ ' + escapeHtml(t) + '</button>').join('');
   }
@@ -2209,7 +2219,7 @@
     const current = (r.tags || []).slice();
     let added = false;
     String(raw).split(',').map(s => s.trim().replace(/\s+/g, ' ').slice(0, 30)).filter(Boolean).forEach(val => {
-      const canon = all.find(t => norm(t) === norm(val)) || val;
+      const canon = tagCanonical(val);
       if (!current.some(t => norm(t) === norm(canon))) { current.push(canon); added = true; }
     });
     if (added) saveTags(r, current);
@@ -3684,8 +3694,119 @@
     return html;
   }
 
+  // ---- Gestor de etiquetas (pestaña de Revisar recetario) --------------------
+  // Renombrar, unir y borrar una etiqueta en TODAS las recetas a la vez. Todo con
+  // confirmación cuando es destructivo y con "Deshacer" de la última acción.
+  let tagEdit = null;      // nombre de la etiqueta que se está renombrando
+  let tagDel = null;       // nombre pendiente de confirmar borrado
+  let tagLastOp = null;    // { label, before: { recipeId: [tags] } }
+
+  function rvTagCounts() {
+    const c = {};
+    recipes.forEach(r => (r.tags || []).forEach(t => { c[t] = (c[t] || 0) + 1; }));
+    return c;
+  }
+
+  function rvTagHtml() {
+    const counts = rvTagCounts();
+    const names = Object.keys(counts).sort((a, b) => counts[b] - counts[a] || a.localeCompare(b, 'es'));
+    let html = '<p class="form-hint">Cambia el nombre de una etiqueta, únela con otra o bórrala en todas las recetas a la vez. Las recetas no se tocan, solo sus etiquetas.</p>';
+    if (tagLastOp) {
+      html += '<div class="rv-bulk"><span>' + escapeHtml(tagLastOp.label) + '</span>' +
+        '<button type="button" class="rv-btn" data-act="tagundo">Deshacer</button></div>';
+    }
+    if (!names.length) return html + '<p class="form-hint">Todavía no has creado ninguna etiqueta. Se añaden desde cada receta, en el modo edición.</p>';
+    const byNorm = {};
+    names.forEach(n => { (byNorm[norm(n)] = byNorm[norm(n)] || []).push(n); });
+    names.forEach(n => {
+      const nm = escapeAttr(n);
+      const twins = byNorm[norm(n)].filter(x => x !== n);
+      const n1 = counts[n];
+      const cnt = n1 + (n1 === 1 ? ' receta' : ' recetas');
+      let main, act;
+      if (tagEdit === n) {
+        main = '<input type="text" class="rv-sel" id="rvTagInp" maxlength="30" value="' + nm + '" style="width:100%;font-size:15px;padding:8px 10px" aria-label="Nuevo nombre">' +
+          '<div class="rv-meta">Si el nombre ya existe, las dos etiquetas se unen.</div>';
+        act = '<button type="button" class="rv-btn rv-btn-primary" data-act="tagsave" data-tag-name="' + nm + '">Guardar</button>' +
+              '<button type="button" class="rv-btn" data-act="tagcancel">Cancelar</button>';
+      } else if (tagDel === n) {
+        main = '<b>🏷️ ' + escapeHtml(n) + '</b><div class="rv-meta">¿Quitar esta etiqueta de ' + cnt + '?</div>';
+        act = '<button type="button" class="rv-btn rv-btn-warn" data-act="tagdelyes" data-tag-name="' + nm + '">Sí, borrar</button>' +
+              '<button type="button" class="rv-btn" data-act="tagcancel">No</button>';
+      } else {
+        main = '<button type="button" class="rv-open" data-act="tagview" data-tag-name="' + nm + '">🏷️ ' + escapeHtml(n) + '</button>' +
+          '<div class="rv-meta">' + cnt + (twins.length ? ' · <b>igual que «' + escapeHtml(twins[0]) + '»</b>' : '') + '</div>';
+        act = (twins.length && (counts[n] < counts[twins[0]] || (counts[n] === counts[twins[0]] && n > twins[0]))
+            ? '<button type="button" class="rv-btn rv-btn-primary" data-act="tagmerge" data-tag-name="' + nm + '" data-into="' + escapeAttr(twins[0]) + '">Unir con «' + escapeHtml(twins[0]) + '»</button>'
+            : '') +
+          '<button type="button" class="rv-btn" data-act="tagrename" data-tag-name="' + nm + '">Renombrar</button>' +
+          '<button type="button" class="rv-btn rv-btn-warn" data-act="tagdel" data-tag-name="' + nm + '">Borrar</button>';
+      }
+      html += '<div class="rv-row"><div class="rv-main">' + main + '</div><div class="rv-actions">' + act + '</div></div>';
+    });
+    return html;
+  }
+
+  // Aplica un cambio de etiquetas a varias recetas, guarda y permite deshacer
+  async function rvTagApply(mutate, affected, label) {
+    const before = {};
+    const todo = [];
+    affected.forEach(r => {
+      const prev = (r.tags || []).slice();
+      const seen = new Set();
+      const next = mutate(prev).filter(t => { const k = norm(t); if (seen.has(k)) return false; seen.add(k); return true; });
+      before[r.id] = prev;
+      todo.push({ r, next, prev });
+    });
+    const fails = await rvPool(todo, async ({ r, next, prev }) => {
+      dbTags[r.id] = next; r.tags = next;
+      const ok = await apiSetDoc('tags', r.id, { tags: next });
+      if (!ok) { dbTags[r.id] = prev; r.tags = prev; delete before[r.id]; }
+      return ok;
+    }, 5);
+    filterOptionsCache = null;
+    render();
+    const nDone = Object.keys(before).length;
+    tagLastOp = nDone ? { label: label + ' (' + nDone + (nDone === 1 ? ' receta)' : ' recetas)'), before } : null;
+    reviewMsg = fails ? (fails + ' recetas no se han podido guardar; las demás sí. Inténtalo de nuevo.') : '';
+  }
+
+  async function rvTagUndo() {
+    if (!tagLastOp) return;
+    const by = rvById();
+    const todo = Object.keys(tagLastOp.before).map(id => ({ r: by.get(id), tags: tagLastOp.before[id] })).filter(x => x.r);
+    const fails = await rvPool(todo, async ({ r, tags }) => {
+      dbTags[r.id] = tags; r.tags = tags;
+      return apiSetDoc('tags', r.id, { tags });
+    }, 5);
+    tagLastOp = null;
+    filterOptionsCache = null;
+    render();
+    reviewMsg = fails ? (fails + ' recetas no se han podido restaurar. Inténtalo de nuevo.') : 'Deshecho.';
+  }
+
+  async function rvTagRename(oldName, newRaw) {
+    const nn = String(newRaw).trim().replace(/\s+/g, ' ').slice(0, 30);
+    if (!nn) { reviewMsg = 'La etiqueta no puede estar vacía.'; return; }
+    const others = getAllTags().filter(t => t !== oldName);
+    const canon = tagCanonical(nn, oldName);
+    if (canon === oldName) return;
+    const affected = recipes.filter(r => (r.tags || []).indexOf(oldName) !== -1);
+    const merged = others.indexOf(canon) !== -1;
+    await rvTagApply(tags => tags.map(t => t === oldName ? canon : t), affected,
+      (merged ? 'Unida «' + oldName + '» con «' + canon + '»' : 'Renombrada «' + oldName + '» → «' + canon + '»'));
+    if (state.cat === 'TAG:' + oldName) { state.cat = 'TAG:' + canon; render(); }
+  }
+
+  async function rvTagDelete(name) {
+    const affected = recipes.filter(r => (r.tags || []).indexOf(name) !== -1);
+    await rvTagApply(tags => tags.filter(t => t !== name), affected, 'Borrada «' + name + '»');
+    if (state.cat === 'TAG:' + name) { state.cat = 'TODAS'; state.visible = PAGE_SIZE; render(); }
+  }
+
   function renderReview(keepScroll) {
-    const nDup = reviewGroups.filter(g => !reviewDismiss.dup[rvDupKey(g)] && g.ids.filter(id => !hiddenIds.has(id)).length >= 2).length;
+    const nTags = Object.keys(rvTagCounts()).length;
+    const nDup =reviewGroups.filter(g => !reviewDismiss.dup[rvDupKey(g)] && g.ids.filter(id => !hiddenIds.has(id)).length >= 2).length;
     const nCat = reviewData ? rvCatRows().filter(x => !x.done).length : 0;
     overlayRoot.innerHTML =
       '<div class="overlay" id="ov">' +
@@ -3695,10 +3816,11 @@
           '<div class="rv-tabs">' +
             '<button type="button" class="rv-tab' + (reviewTab === 'dup' ? ' on' : '') + '" data-act="tab" data-tab="dup">Duplicados' + (nDup ? ' (' + nDup + ')' : '') + '</button>' +
             '<button type="button" class="rv-tab' + (reviewTab === 'cat' ? ' on' : '') + '" data-act="tab" data-tab="cat">Categorías' + (nCat ? ' (' + nCat + ')' : '') + '</button>' +
+            '<button type="button" class="rv-tab' + (reviewTab === 'tag' ? ' on' : '') + '" data-act="tab" data-tab="tag">Etiquetas' + (nTags ? ' (' + nTags + ')' : '') + '</button>' +
           '</div>' +
           '<p class="form-hint rv-msg" id="rvMsg">' + escapeHtml(reviewMsg) + '</p>' +
-          (reviewTab === 'dup' ? rvDupHtml() : rvCatHtml()) +
-          '<p style="margin:16px 0 0"><button type="button" class="delete-link" data-act="resetdismiss">Volver a mostrar lo descartado en este dispositivo</button></p>' +
+          (reviewTab === 'dup' ? rvDupHtml() : reviewTab === 'tag' ? rvTagHtml() : rvCatHtml()) +
+          (reviewTab === 'tag' ? '' : '<p style="margin:16px 0 0"><button type="button" class="delete-link" data-act="resetdismiss">Volver a mostrar lo descartado en este dispositivo</button></p>') +
         '</div>' +
       '</div>';
     const sheet = document.getElementById('rvSheet');
@@ -3706,6 +3828,13 @@
     document.getElementById('closeBtn').addEventListener('click', closeReview);
     document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeReview(); });
     sheet.addEventListener('click', onReviewClick);
+    sheet.addEventListener('keydown', (e) => {
+      if (e.target.id !== 'rvTagInp') return;
+      if (e.key === 'Enter') { e.preventDefault(); const b = sheet.querySelector('[data-act=tagsave]'); if (b) b.click(); }
+      else if (e.key === 'Escape') { e.stopPropagation(); tagEdit = null; renderReview(sheet.scrollTop); }
+    });
+    const ti = document.getElementById('rvTagInp');
+    if (ti) { ti.focus(); ti.select(); }
   }
 
   function closeReview() {
@@ -3729,7 +3858,29 @@
     let failed = false;
 
     if (act === 'open') { if (r) openDetail(r); return; }
-    if (act === 'tab') { reviewTab = el.getAttribute('data-tab'); reviewConfirm = null; reviewMsg = ''; renderReview(0); return; }
+    if (act === 'tab') { reviewTab = el.getAttribute('data-tab'); reviewConfirm = null; reviewMsg = ''; tagEdit = null; tagDel = null; renderReview(0); return; }
+
+    // Gestor de etiquetas
+    const tname = el.getAttribute('data-tag-name');
+    if (act === 'tagview') {
+      state.cat = 'TAG:' + tname; state.visible = PAGE_SIZE; render(); closeReview(); return;
+    }
+    if (act === 'tagrename') { tagEdit = tname; tagDel = null; reviewMsg = ''; redraw(); return; }
+    if (act === 'tagdel') { tagDel = tname; tagEdit = null; reviewMsg = ''; redraw(); return; }
+    if (act === 'tagcancel') { tagEdit = null; tagDel = null; redraw(); return; }
+    if (act === 'tagsave' || act === 'tagdelyes' || act === 'tagmerge' || act === 'tagundo') {
+      const inp = document.getElementById('rvTagInp');
+      const newName = act === 'tagsave' ? (inp ? inp.value : '') : el.getAttribute('data-into');
+      tagEdit = null; tagDel = null; reviewMsg = 'Guardando…';
+      document.getElementById('rvMsg').textContent = reviewMsg;
+      el.disabled = true;
+      if (act === 'tagsave' || act === 'tagmerge') await rvTagRename(tname, newName);
+      else if (act === 'tagdelyes') await rvTagDelete(tname);
+      else await rvTagUndo();
+      if (reviewMsg === 'Guardando…') reviewMsg = '';
+      redraw();
+      return;
+    }
     if (act === 'confirm') { reviewConfirm = el.getAttribute('data-what'); redraw(); return; }
     if (act === 'cancel') { reviewConfirm = null; redraw(); return; }
     if (act === 'resetdismiss') {
@@ -3795,6 +3946,7 @@
   async function openReview() {
     if (!canEdit) return;
     reviewDone = {}; reviewConfirm = null; reviewMsg = '';
+    tagEdit = null; tagDel = null; tagLastOp = null;
     rvComputeGroups();
     renderReview(0);
     document.removeEventListener('keydown', reviewEsc);
