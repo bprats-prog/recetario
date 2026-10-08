@@ -70,6 +70,49 @@
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   [hidden] { display: none !important; }
   .ig-embed a { color: var(--accent); }
+  .pantry-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; margin: 0 0 14px; padding: 13px 16px; border-radius: 14px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font: inherit; text-align: left; cursor: pointer; }
+  .pantry-cta:hover { opacity: .93; }
+  .pantry-cta:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .pantry-cta-t { font-size: 17px; font-weight: 700; }
+  .pantry-cta-s { font-size: 13px; opacity: .92; }
+  .pt-search { width: 100%; font: inherit; font-size: 16px; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+  .pt-search:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .pt-suggest { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .pt-suggest:empty { display: none; }
+  .pt-sug, .pt-chip { font: inherit; font-size: 13.5px; font-weight: 600; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; min-height: 36px; }
+  .pt-sug { border-style: dashed; border-color: var(--accent); color: var(--accent); }
+  .pt-chip:hover, .pt-sug:hover { border-color: var(--accent); }
+  .pt-chip.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .pt-sug:focus-visible, .pt-chip:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .pt-havewrap { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .pt-have { display: inline-flex; align-items: center; gap: 4px; font-size: 13.5px; font-weight: 600; padding: 5px 6px 5px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+  .pt-have-x { font: inherit; background: none; border: none; color: var(--accent); cursor: pointer; font-size: 17px; line-height: 1; min-width: 28px; min-height: 28px; border-radius: 50%; }
+  .pt-have-x:focus-visible { outline: 2px solid var(--focus); }
+  .pt-sec { border: 1px solid var(--line); border-radius: 12px; margin-top: 8px; background: var(--card); }
+  .pt-sec summary { cursor: pointer; padding: 11px 14px; font-weight: 700; font-size: 14px; list-style-position: inside; }
+  .pt-sec summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; border-radius: 10px; }
+  .pt-count { font-size: 12px; background: var(--accent); color: var(--accent-ink); border-radius: 999px; padding: 1px 8px; margin-left: 4px; }
+  .pt-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 12px 12px; }
+  .pt-opts { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; }
+  .pt-opt { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .pt-opt select { font: inherit; font-size: 13.5px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+  .pt-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+  .pt-list { list-style: none; margin: 0; padding: 0; }
+  .pt-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+  .pt-main { flex: 1; min-width: 0; }
+  .pt-title { font: inherit; font-size: 16px; font-weight: 700; text-align: left; background: none; border: none; padding: 0; color: var(--ink); cursor: pointer; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+  .pt-title:hover { color: var(--accent); }
+  .pt-title:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+  .pt-cat { display: block; font-size: 11.5px; color: var(--ink-soft); margin: 2px 0 4px; }
+  .pt-line { font-size: 13px; line-height: 1.45; }
+  .pt-sub { color: var(--accent); font-weight: 600; }
+  .pt-miss { color: var(--accent-2-text); font-weight: 600; }
+  .pt-opt-line, .pt-line.pt-opt { color: var(--ink-soft); }
+  .pt-pick { margin-top: 14px; padding: 10px 14px 12px; border: 2px solid var(--accent); border-radius: 14px; background: var(--accent-soft); }
+  .pt-pick .pt-item { border-bottom: none; }
+  .pt-sticky { position: sticky; bottom: -30px; margin: 14px -22px -30px; padding: 10px 22px calc(14px + env(safe-area-inset-bottom)); background: linear-gradient(to top, var(--paper) 75%, transparent); text-align: center; z-index: 2; }
+  .pt-sticky .submit-btn { width: 100%; box-shadow: var(--shadow); }
+  .pt-pick-lbl { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
   .skip-link { position: absolute; left: 8px; top: -60px; z-index: 100; background: var(--accent); color: var(--accent-ink); padding: 10px 16px; border-radius: 10px; font-weight: 700; text-decoration: none; }
   .skip-link:focus { top: 8px; outline: 3px solid var(--focus); outline-offset: 2px; }
   main:focus { outline: none; }
@@ -920,6 +963,7 @@
 
   <main id="main" tabindex="-1">
   <div class="cook-resume" id="cookResume" hidden></div>
+  <button type="button" class="pantry-cta" id="pantryBtn"><span class="pantry-cta-t">🥘 ¿Qué cocino hoy?</span><span class="pantry-cta-s">Dime qué tienes en casa y te propongo recetas</span></button>
 
   <div class="controls">
     <div class="search-row" role="search">
@@ -4725,6 +4769,583 @@
       });
     });
   }
+
+  // ---- Motor de ingredientes de "¿Qué cocino hoy?" (diccionario, sustituciones y puntuación)
+  // [id, etiqueta, sección, palabras clave (sin acentos), opciones]
+  // Una línea de ingrediente puede activar varios conceptos. El concepto más específico (clave más larga)
+  // "consume" su texto, y los genéricos (g:1) solo cuentan si no salió otro de su familia.
+  const PANTRY_CONCEPTS = [
+    // ── Lácteos y huevos
+    ['huevo', 'Huevos', 'lacteos', ['huevo', 'yema', 'clara']],
+    ['leche', 'Leche', 'lacteos', ['leche', 'leche entera', 'leche semidesnatada']],
+    ['leche_evaporada', 'Leche evaporada', 'lacteos', ['leche evaporada', 'leche condensada']],
+    ['bebida_vegetal', 'Bebida vegetal', 'lacteos', ['bebida vegetal', 'leche de avena', 'leche de almendras', 'leche de soja', 'bebida de avena', 'bebida de almendra', 'bebida de soja', 'leche vegetal']],
+    ['nata', 'Nata / crema de leche', 'lacteos', ['nata', 'crema de leche', 'crema para cocinar', 'crema fresca', 'nata para cocinar', 'nata para montar']],
+    ['yogur', 'Yogur', 'lacteos', ['yogur', 'yogurt', 'yogures', 'skyr']],
+    ['kefir', 'Kéfir', 'lacteos', ['kefir']],
+    ['mantequilla', 'Mantequilla', 'lacteos', ['mantequilla', 'margarina', 'ghee']],
+    ['queso', 'Queso (cualquiera)', 'lacteos', ['queso', 'quesos'], { g: 'queso' }],
+    ['mozzarella', 'Mozzarella', 'lacteos', ['mozzarella', 'mozarela', 'mozzarela']],
+    ['burrata', 'Burrata', 'lacteos', ['burrata', 'stracciatella']],
+    ['parmesano', 'Parmesano', 'lacteos', ['parmesano', 'grana padano', 'parmigiano', 'grana', 'pecorino']],
+    ['feta', 'Feta', 'lacteos', ['feta']],
+    ['queso_cabra', 'Queso de cabra', 'lacteos', ['queso de cabra', 'rulo de cabra', 'cabra', 'queso cabra']],
+    ['queso_crema', 'Queso crema', 'lacteos', ['queso crema', 'queso para untar', 'queso de untar', 'philadelphia', 'queso cremoso']],
+    ['mascarpone', 'Mascarpone', 'lacteos', ['mascarpone']],
+    ['ricotta', 'Ricotta / requesón', 'lacteos', ['ricotta', 'requeson', 'queso cottage', 'cottage', 'queso fresco batido', 'brossat']],
+    ['queso_fresco', 'Queso fresco', 'lacteos', ['queso fresco', 'queso de burgos', 'burgos', 'queso blanco', 'quark', 'queso tierno']],
+    ['cheddar', 'Cheddar', 'lacteos', ['cheddar', 'queso en lonchas', 'lonchas de queso', 'queso de hebra', 'queso para fundir', 'cheddar rallado']],
+    ['emmental', 'Emmental / gruyère', 'lacteos', ['emmental', 'gruyere', 'comte', 'queso rallado', 'queso para gratinar', 'tres quesos', 'cuatro quesos', 'mezcla de quesos', 'queso fundido', 'queso curado', 'edam', 'gouda', 'provolone', 'manchego']],
+    ['queso_azul', 'Queso azul', 'lacteos', ['gorgonzola', 'roquefort', 'queso azul', 'cabrales', 'stilton']],
+    ['brie', 'Brie / camembert', 'lacteos', ['brie', 'camembert']],
+    ['halloumi', 'Halloumi', 'lacteos', ['halloumi', 'paneer']],
+    // ── Carnes
+    ['pollo', 'Pollo', 'carne', ['pollo', 'pechuga', 'muslo', 'contramuslo', 'alitas', 'pularda']],
+    ['pavo', 'Pavo', 'carne', ['pavo']],
+    ['ternera', 'Ternera', 'carne', ['ternera', 'vacuno', 'buey', 'entrecot', 'filete de ternera', 'carrillera', 'osobuco', 'rabo de toro', 'cecina']],
+    ['cerdo', 'Cerdo', 'carne', ['cerdo', 'lomo', 'solomillo', 'secreto', 'costilla', 'costillas', 'cinta de lomo', 'presa', 'carrilleras', 'paletilla', 'lacon']],
+    ['carne_picada', 'Carne picada', 'carne', ['carne picada', 'picada de ternera', 'carne molida', 'carne mixta', 'hamburguesa', 'hamburguesas', 'burger']],
+    ['cordero', 'Cordero', 'carne', ['cordero']],
+    ['carne', 'Carne (cualquiera)', 'carne', ['carne'], { g: 'carne' }],
+    ['jamon', 'Jamón', 'carne', ['jamon', 'jamon york', 'jamon serrano', 'jamon iberico', 'paleta iberica', 'jamon cocido', 'fiambre']],
+    ['bacon', 'Bacon / panceta', 'carne', ['bacon', 'beicon', 'panceta', 'tocino', 'guanciale']],
+    ['chorizo', 'Chorizo y embutidos', 'carne', ['chorizo', 'sobrasada', 'salchichon', 'fuet', 'morcilla', 'longaniza', 'butifarra', 'chistorra', 'mortadela', 'lomo embuchado']],
+    ['salchichas', 'Salchichas', 'carne', ['salchicha', 'salchichas', 'frankfurt']],
+    ['higado', 'Hígado / paté', 'carne', ['higado', 'higaditos', 'pate', 'foie']],
+    // ── Pescado y marisco
+    ['salmon', 'Salmón', 'pescado', ['salmon']],
+    ['atun', 'Atún', 'pescado', ['atun', 'ventresca', 'bonito']],
+    ['merluza', 'Merluza', 'pescado', ['merluza']],
+    ['bacalao', 'Bacalao', 'pescado', ['bacalao']],
+    ['pescado_blanco', 'Pescado blanco', 'pescado', ['lubina', 'dorada', 'rape', 'lenguado', 'rodaballo', 'pescadilla', 'abadejo', 'pescado blanco', 'gallo', 'tilapia', 'panga', 'mero', 'corvina', 'urta']],
+    ['pescado', 'Pescado (cualquiera)', 'pescado', ['pescado', 'pescados', 'filete de pescado', 'filetes de pescado'], { g: 'pescado' }],
+    ['gambas', 'Gambas / langostinos', 'pescado', ['gamba', 'gambas', 'gambon', 'gambones', 'langostino', 'langostinos', 'camaron', 'camarones', 'cigala', 'bogavante', 'cangrejo', 'surimi', 'palitos de cangrejo']],
+    ['calamar', 'Calamar / sepia / pulpo', 'pescado', ['calamar', 'calamares', 'sepia', 'pulpo', 'chipiron', 'chipirones', 'potas']],
+    ['mejillones', 'Mejillones / almejas', 'pescado', ['mejillon', 'mejillones', 'almeja', 'almejas', 'berberecho', 'berberechos', 'navajas', 'vieira', 'vieiras']],
+    ['anchoas', 'Anchoas / sardinas', 'pescado', ['anchoa', 'anchoas', 'boqueron', 'boquerones', 'sardina', 'sardinas', 'caballa', 'arenque']],
+    // ── Verduras
+    ['cebolla', 'Cebolla', 'verdura', ['cebolla', 'cebollas']],
+    ['cebolleta', 'Cebolleta / cebollino', 'verdura', ['cebolleta', 'cebolletas', 'cebollino', 'chalota', 'chalotas', 'cebolla tierna']],
+    ['puerro', 'Puerro', 'verdura', ['puerro', 'puerros']],
+    ['ajo', 'Ajo', 'verdura', ['ajo', 'ajos', 'diente de ajo', 'dientes de ajo', 'ajo en polvo']],
+    ['tomate', 'Tomate', 'verdura', ['tomate', 'tomates', 'tomate cherry', 'tomates cherry', 'tomate rama', 'tomate pera', 'tomate maduro', 'tomates secos', 'tomate seco', 'tomate rallado', 'tomatitos', 'tomatito']],
+    ['tomate_conserva', 'Tomate triturado / frito', 'conservas', ['tomate triturado', 'tomate frito', 'salsa de tomate', 'tomate natural triturado', 'tomates pelados', 'tomate pelado', 'tomate concentrado', 'concentrado de tomate', 'pure de tomate', 'passata', 'ketchup', 'tomate en conserva', 'tomates en conserva', 'triturado de tomate', 'tomate natural']],
+    ['patata', 'Patata', 'verdura', ['patata', 'patatas']],
+    ['boniato', 'Boniato / batata', 'verdura', ['boniato', 'boniatos', 'batata', 'batatas']],
+    ['zanahoria', 'Zanahoria', 'verdura', ['zanahoria', 'zanahorias']],
+    ['calabacin', 'Calabacín', 'verdura', ['calabacin', 'calabacines']],
+    ['calabaza', 'Calabaza', 'verdura', ['calabaza', 'calabazas']],
+    ['berenjena', 'Berenjena', 'verdura', ['berenjena', 'berenjenas']],
+    ['pimiento', 'Pimiento', 'verdura', ['pimiento', 'pimientos', 'pimiento rojo', 'pimiento verde', 'pimiento asado', 'pimientos asados', 'pimiento del piquillo', 'pimientos del piquillo', 'piquillo', 'piquillos', 'pimiento amarillo', 'guindilla', 'pimientos de padron', 'padron']],
+    ['espinacas', 'Espinacas', 'verdura', ['espinaca', 'espinacas']],
+    ['acelgas', 'Acelgas / kale', 'verdura', ['acelga', 'acelgas', 'kale', 'col rizada', 'bimi', 'grelos', 'berza']],
+    ['lechuga', 'Lechuga / rúcula', 'verdura', ['lechuga', 'rucula', 'canonigos', 'canonigo', 'cogollos', 'cogollo', 'escarola', 'endibia', 'endibias', 'mezclum', 'brotes', 'ensalada', 'berros', 'lechugas', 'lollo', 'romana', 'iceberg']],
+    ['brocoli', 'Brócoli', 'verdura', ['brocoli', 'brecol']],
+    ['coliflor', 'Coliflor', 'verdura', ['coliflor', 'romanesco']],
+    ['col', 'Col / repollo', 'verdura', ['col', 'repollo', 'lombarda', 'coles de bruselas', 'col lombarda', 'col blanca']],
+    ['champinones', 'Champiñones / setas', 'verdura', ['champinon', 'champinones', 'seta', 'setas', 'portobello', 'boletus', 'shiitake', 'hongos', 'rovellones', 'níscalos', 'niscalos', 'gírgolas', 'girgolas']],
+    ['esparragos', 'Espárragos', 'verdura', ['esparrago', 'esparragos', 'esparragos verdes', 'esparragos blancos', 'esparragos trigueros']],
+    ['judias_verdes', 'Judías verdes', 'verdura', ['judias verdes', 'judia verde', 'judias verde', 'ejotes', 'vainas']],
+    ['guisantes', 'Guisantes / habas', 'verdura', ['guisante', 'guisantes', 'habas', 'haba', 'edamame']],
+    ['maiz', 'Maíz', 'conservas', ['maiz', 'maiz dulce', 'mazorca']],
+    ['pepino', 'Pepino', 'verdura', ['pepino', 'pepinos', 'pepinillo', 'pepinillos', 'encurtidos']],
+    ['aguacate', 'Aguacate', 'verdura', ['aguacate', 'aguacates', 'guacamole']],
+    ['apio', 'Apio', 'verdura', ['apio']],
+    ['remolacha', 'Remolacha', 'verdura', ['remolacha', 'remolachas']],
+    ['alcachofa', 'Alcachofas', 'verdura', ['alcachofa', 'alcachofas']],
+    ['rabano', 'Rábano / nabo', 'verdura', ['rabano', 'rabanos', 'nabo', 'nabos', 'chirivia']],
+    ['jengibre', 'Jengibre', 'verdura', ['jengibre']],
+    ['verduras', 'Verduras (cualquiera)', 'verdura', ['verdura', 'verduras', 'hortalizas', 'verduritas', 'vegetales', 'sofrito', 'mezcla de verduras', 'menestra'], { g: 'verdura' }],
+    ['aceitunas', 'Aceitunas / alcaparras', 'conservas', ['aceituna', 'aceitunas', 'alcaparra', 'alcaparras', 'olivas negras']],
+    // ── Frutas
+    ['limon', 'Limón / lima', 'verdura', ['limon', 'limones', 'lima', 'limas', 'zumo de limon', 'ralladura de limon', 'ralladura de lima', 'zumo de lima', 'ralladura']],
+    ['naranja', 'Naranja / mandarina', 'verdura', ['naranja', 'naranjas', 'mandarina', 'mandarinas', 'zumo de naranja', 'pomelo', 'clementina']],
+    ['manzana', 'Manzana', 'verdura', ['manzana', 'manzanas']],
+    ['pera', 'Pera', 'verdura', ['pera', 'peras']],
+    ['platano', 'Plátano', 'verdura', ['platano', 'platanos', 'banana', 'bananas']],
+    ['frutos_rojos', 'Fresas / frutos rojos', 'verdura', ['fresa', 'fresas', 'frutos rojos', 'arandano', 'arandanos', 'frambuesa', 'frambuesas', 'moras', 'mora', 'cerezas', 'cereza', 'grosellas']],
+    ['mango', 'Mango / piña', 'verdura', ['mango', 'pina', 'papaya', 'kiwi', 'kiwis']],
+    ['fruta_hueso', 'Melocotón / nectarina', 'verdura', ['melocoton', 'melocotones', 'nectarina', 'nectarinas', 'paraguayo', 'paraguayos', 'albaricoque', 'albaricoques', 'ciruela', 'ciruelas', 'higo', 'higos', 'brevas', 'nisperos']],
+    ['uvas', 'Uvas / melón / sandía', 'verdura', ['uva', 'uvas', 'melon', 'sandia', 'granada']],
+    ['datiles', 'Dátiles / pasas', 'despensa', ['datil', 'datiles', 'pasas', 'ciruelas pasas', 'orejones', 'frutas secas']],
+    ['coco', 'Coco', 'despensa', ['coco', 'leche de coco', 'coco rallado', 'crema de coco', 'harina de coco']],
+    // ── Legumbres y conservas
+    ['garbanzos', 'Garbanzos', 'conservas', ['garbanzo', 'garbanzos']],
+    ['lentejas', 'Lentejas', 'conservas', ['lenteja', 'lentejas']],
+    ['alubias', 'Alubias / judías blancas', 'conservas', ['alubia', 'alubias', 'judias blancas', 'judias', 'frijoles', 'frijol', 'judias pintas', 'judias rojas']],
+    ['tofu', 'Tofu / tempeh', 'conservas', ['tofu', 'tempeh', 'seitan', 'soja texturizada', 'proteina de soja']],
+    ['hummus', 'Hummus', 'conservas', ['hummus', 'humus']],
+    // ── Pasta, arroz, pan
+    ['pasta', 'Pasta', 'despensa', ['pasta', 'espagueti', 'espaguetis', 'spaghetti', 'macarron', 'macarrones', 'tallarines', 'tallarin', 'tagliatelle', 'penne', 'fusilli', 'fusillone', 'rigatoni', 'fideos', 'fideo', 'orzo', 'linguine', 'fettuccine', 'farfalle', 'conchas', 'conchiglie', 'cavatelli', 'tortiglioni', 'noodles', 'udon', 'ramen', 'pasta fresca', 'pasta filo', 'raviolis', 'ravioli', 'tortellini']],
+    ['lasana', 'Placas de lasaña / canelones', 'despensa', ['lasana', 'placas de lasana', 'placas', 'canelones', 'canelon', 'obleas de lasana']],
+    ['noquis', 'Ñoquis', 'despensa', ['noquis', 'gnocchi', 'noqui', 'gnocchis']],
+    ['arroz', 'Arroz', 'despensa', ['arroz', 'arroz redondo', 'arroz basmati', 'arroz integral', 'arroz bomba', 'arroz arborio', 'arroz para risotto', 'sushi arroz']],
+    ['papel_arroz', 'Papel de arroz / obleas', 'despensa', ['papel de arroz', 'obleas de arroz', 'oblea de arroz', 'obleas', 'oblea', 'tortitas de arroz', 'galletas de arroz']],
+    ['cuscus', 'Cuscús / quinoa', 'despensa', ['cuscus', 'couscous', 'quinoa', 'bulgur', 'mijo', 'trigo sarraceno', 'sorgo']],
+    ['avena', 'Avena', 'despensa', ['avena', 'copos de avena', 'copos', 'granola', 'muesli', 'cereales', 'harina de avena']],
+    ['pan', 'Pan', 'panaderia', ['pan', 'panes', 'pan de molde', 'pan de sandwich', 'baguette', 'barra de pan', 'pan de hamburguesa', 'pan tostado', 'tostadas', 'tostada', 'picatostes', 'pan pita', 'pan de pita', 'pan naan', 'naan', 'bocadillo', 'bollos', 'brioche', 'focaccia', 'pan integral', 'pan de cereales', 'pan rustico', 'rebanadas de pan', 'rebanadas']],
+    ['tortillas', 'Tortillas de trigo / wraps', 'panaderia', ['tortillas de trigo', 'tortilla de trigo', 'tortillas de maiz', 'wrap', 'wraps', 'tortilla mexicana', 'tortillas mexicanas', 'tortillas fajita', 'tortilla de harina', 'tortillas de harina', 'tortillas']],
+    ['hojaldre', 'Hojaldre / masa', 'panaderia', ['hojaldre', 'masa de hojaldre', 'masa quebrada', 'masa de pizza', 'base de pizza', 'masa brisa', 'masa filo', 'masa de empanada', 'masa de empanadillas', 'obleas de empanadilla', 'empanadillas', 'masa']],
+    ['pan_rallado', 'Pan rallado / panko', 'despensa', ['pan rallado', 'panko', 'rebozador', 'galleta triturada', 'cornflakes', 'corn flakes', 'copos de maiz']],
+    ['harina', 'Harina', 'despensa', ['harina', 'harina de trigo', 'harina integral', 'harina de garbanzo', 'harina de almendra', 'harina de arroz', 'harina de fuerza', 'maicena', 'fecula', 'maizena', 'harina de espelta', 'harina de coco']],
+    ['levadura', 'Levadura / bicarbonato', 'despensa', ['levadura', 'polvo de hornear', 'bicarbonato', 'gasificante', 'levadura quimica', 'levadura de panadero']],
+    // ── Despensa
+    ['caldo', 'Caldo', 'despensa', ['caldo', 'pastilla de caldo', 'fumet', 'caldo de pollo', 'caldo de verduras', 'caldo de carne', 'avecrem', 'caldo de pescado']],
+    ['vino', 'Vino / cerveza', 'bebidas', ['vino', 'vino blanco', 'vino tinto', 'cerveza', 'cava', 'brandy', 'jerez', 'whisky', 'ron', 'sidra', 'vermut', 'sake', 'mirin', 'licor', 'amontillado']],
+    ['soja', 'Salsa de soja', 'despensa', ['salsa de soja', 'soja', 'tamari', 'salsa teriyaki', 'teriyaki', 'salsa worcestershire', 'worcestershire', 'salsa de ostras', 'salsa de pescado', 'miso']],
+    ['mostaza', 'Mostaza', 'despensa', ['mostaza', 'mostaza antigua', 'mostaza dijon', 'mostaza de dijon']],
+    ['mayonesa', 'Mayonesa', 'despensa', ['mayonesa', 'mahonesa', 'alioli', 'ajonesa', 'salsa burger', 'salsa barbacoa', 'bbq', 'salsa tartara', 'salsa rosa', 'salsa cesar']],
+    ['bechamel', 'Bechamel', 'despensa', ['bechamel', 'besamel']],
+    ['trufa', 'Trufa', 'despensa', ['trufa', 'aceite de trufa', 'salsa de trufa', 'crema de trufa']],
+    ['cafe', 'Café', 'despensa', ['cafe', 'espresso', 'cafe soluble']],
+    ['pesto', 'Pesto', 'despensa', ['pesto', 'albahaca en pesto', 'salsa pesto']],
+    ['miel', 'Miel / sirope', 'despensa', ['miel', 'sirope', 'sirope de agave', 'sirope de arce', 'agave', 'melaza', 'jarabe', 'sirope de dátil', 'panela']],
+    ['chocolate', 'Chocolate / cacao', 'despensa', ['chocolate', 'cacao', 'cacao en polvo', 'pepitas de chocolate', 'chocolate negro', 'chocolate con leche', 'chocolate blanco', 'nutella', 'crema de cacao', 'cacao puro']],
+    ['frutos_secos', 'Frutos secos', 'despensa', ['almendra', 'almendras', 'nuez', 'nueces', 'pinones', 'pinon', 'pistacho', 'pistachos', 'avellana', 'avellanas', 'anacardos', 'anacardo', 'cacahuete', 'cacahuetes', 'frutos secos', 'macadamia', 'pacanas', 'crema de cacahuete', 'mantequilla de cacahuete', 'cacahuetes tostados', 'almendra molida', 'almendras laminadas']],
+    ['semillas', 'Semillas / sésamo', 'despensa', ['sesamo', 'semillas', 'semillas de sesamo', 'chia', 'lino', 'girasol', 'pipas', 'calabaza semillas', 'semillas de chia', 'semillas de lino', 'amapola', 'tahini', 'tahin', 'tahina']],
+    ['mermelada', 'Mermelada', 'despensa', ['mermelada', 'dulce de membrillo', 'membrillo', 'compota', 'confitura']],
+    ['vinagre', 'Vinagre', 'despensa', ['vinagre', 'vinagre balsamico', 'balsamico', 'crema de vinagre', 'vinagre de manzana', 'vinagre de vino', 'vinagre de arroz']],
+    ['azucar', 'Azúcar / edulcorante', 'despensa', ['azucar', 'azucar moreno', 'azucar glas', 'edulcorante', 'stevia', 'eritritol', 'azucar de coco', 'xilitol', 'azucar glass', 'endulzante']],
+    ['vainilla', 'Vainilla', 'despensa', ['vainilla', 'extracto de vainilla', 'esencia de vainilla', 'azucar vainillado']],
+    ['gelatina', 'Gelatina / flan', 'despensa', ['gelatina', 'cola de pescado', 'agar agar', 'agar', 'flan', 'natillas', 'cuajada', 'polvo de flan', 'flan en polvo']],
+    ['curry', 'Curry / especias exóticas', 'despensa', ['curry', 'curcuma', 'garam masala', 'cardamomo', 'ras el hanout', 'chile', 'chili', 'harissa', 'sriracha', 'tabasco', 'chipotle', 'cayena', 'jalapeno', 'jalapenos', 'wasabi', 'shichimi', 'zaatar', 'za atar', 'sumac', 'paprika', 'pimenton picante', 'chiles']],
+    ['kimchi', 'Kimchi / gochujang', 'despensa', ['kimchi', 'gochujang', 'gochugaru', 'nori', 'alga', 'algas', 'wakame', 'kombu', 'furikake']],
+    ['galletas', 'Galletas / bizcocho', 'despensa', ['galleta', 'galletas', 'bizcocho', 'bizcochos', 'lenguas de gato', 'savoiardi', 'bizcochos de soletilla', 'soletillas', 'maria', 'galletas maria', 'oreo', 'lotus', 'plum cake', 'magdalenas', 'barquillos', 'cookie', 'cookies']],
+    ['proteina', 'Proteína en polvo', 'despensa', ['proteina', 'proteina en polvo', 'whey', 'scoop', 'caseina']],
+    ['patatas_fritas', 'Patatas fritas / snacks', 'despensa', ['patatas fritas', 'patatas chips', 'snacks', 'doritos', 'nachos', 'pipas de girasol', 'palomitas', 'cheetos', 'ruffles', 'pringles', 'galletas saladas', 'crackers', 'tortitas de maiz', 'grissini', 'bastones']],
+    ['hierbas', 'Hierbas frescas', 'verdura', ['albahaca', 'perejil', 'cilantro', 'menta', 'hierbabuena', 'eneldo', 'romero', 'tomillo', 'salvia', 'estragon', 'cebollino', 'laurel', 'hierbas', 'hierbas frescas', 'oregano fresco', 'ciboulette', 'melisa', 'citronella', 'hierbas provenzales', 'hierbas aromaticas', 'mejorana', 'cerifolio', 'hierba luisa']],
+    ['especias', 'Especias secas', 'despensa', ['oregano', 'pimenton', 'comino', 'canela', 'nuez moscada', 'especias', 'pimentón dulce', 'pimenton dulce', 'pimenton ahumado', 'pimenton de la vera', 'clavo', 'anis', 'azafran', 'colorante', 'sazonador', 'sazonadores', 'pimienta de cayena', 'mezcla de especias', 'sal de ajo', 'ajo en polvo', 'cebolla en polvo', 'cebolla deshidratada', 'hierbas secas', 'condimento', 'adobo', 'sofrito de ajo', 'jengibre en polvo', 'jengibre molido', 'canela en polvo', 'canela molida', 'cardamomo molido']],
+    // ── Básicos
+    ['sal', 'Sal', 'despensa', ['sal', 'sal fina', 'sal gruesa', 'sal marina', 'sal en escamas', 'flor de sal', 'sal maldon', 'sal rosa']],
+    ['pimienta', 'Pimienta', 'despensa', ['pimienta', 'pimienta negra', 'pimienta blanca', 'pimienta molida', 'pimienta rosa', 'pimienta de colores']],
+    ['aceite', 'Aceite', 'despensa', ['aceite', 'aove', 'aceite de oliva', 'aceite de girasol', 'aceite de coco', 'aceite de sesamo', 'aceite en spray', 'aceite virgen extra', 'spray de aceite', 'aceite en aerosol', 'oliva', 'aceite vegetal', 'aceite de aguacate', 'aceite de oliva virgen extra']],
+    ['agua', 'Agua', 'despensa', ['agua', 'agua con gas', 'agua fria', 'agua caliente', 'agua mineral', 'hielo', 'agua de coccion', 'cubitos de hielo', 'agua tibia']],
+  ];
+
+  // Se suponen en casa (se pueden desactivar). El resto de conceptos hay que marcarlos.
+  const PANTRY_STAPLES = ['sal', 'pimienta', 'aceite', 'agua', 'azucar', 'vinagre', 'especias', 'harina'];
+
+  // Sustituciones: dentro de cada grupo, cualquiera vale por otro con ese peso (1 = idéntico).
+  const subs = [
+    [0.95, ['bacon', 'jamon']],
+    [0.9, ['mozzarella', 'burrata']],
+    [0.9, ['pollo', 'pavo']],
+    [0.9, ['merluza', 'bacalao', 'pescado_blanco']],
+    [0.85, ['parmesano', 'emmental']],
+    [0.85, ['yogur', 'kefir']],
+    [0.85, ['leche', 'bebida_vegetal']],
+    [0.8, ['nata', 'leche_evaporada', 'queso_crema', 'mascarpone']],
+    [0.85, ['ricotta', 'queso_fresco', 'queso_crema', 'mascarpone']],
+    [0.8, ['mozzarella', 'queso_fresco', 'ricotta', 'burrata']],
+    [0.7, ['mozzarella', 'cheddar', 'emmental']],
+    [0.85, ['feta', 'queso_cabra', 'halloumi', 'queso_fresco']],
+    [0.75, ['queso_azul', 'feta', 'queso_cabra', 'brie', 'parmesano', 'emmental', 'cheddar']],
+    [0.9, ['cebolla', 'cebolleta']],
+    [0.7, ['cebolla', 'puerro', 'cebolleta']],
+    [0.8, ['espinacas', 'acelgas']],
+    [0.75, ['lechuga', 'espinacas', 'acelgas']],
+    [0.85, ['champinones']],
+    [0.75, ['brocoli', 'coliflor']],
+    [0.7, ['calabacin', 'berenjena']],
+    [0.75, ['calabaza', 'boniato', 'zanahoria']],
+    [0.85, ['patata', 'boniato']],
+    [0.75, ['tomate', 'tomate_conserva']],
+    [0.85, ['limon', 'naranja']],
+    [0.7, ['manzana', 'pera']],
+    [0.65, ['garbanzos', 'lentejas', 'alubias']],
+    [0.8, ['pasta', 'noquis']],
+    [0.7, ['arroz', 'cuscus']],
+    [0.5, ['pasta', 'lasana', 'arroz']],
+    [0.9, ['pan_rallado', 'avena']],
+    [0.7, ['pan', 'tortillas', 'papel_arroz']],
+    [0.85, ['pan_rallado']],
+    [0.8, ['gambas', 'calamar', 'mejillones']],
+    [0.5, ['salmon', 'atun', 'merluza', 'bacalao', 'pescado_blanco', 'anchoas', 'pescado']],
+    [0.65, ['ternera', 'cerdo', 'cordero']],
+    [0.8, ['ternera', 'carne_picada']],
+    [0.8, ['cerdo', 'carne_picada']],
+    [0.55, ['pollo', 'ternera', 'cerdo', 'pavo', 'carne_picada']],
+    [0.6, ['chorizo', 'jamon', 'bacon', 'salchichas']],
+    [0.85, ['frutos_secos', 'semillas']],
+    [0.8, ['miel', 'mermelada', 'azucar']],
+    [0.85, ['mayonesa', 'yogur']],
+    [0.7, ['coco', 'nata']],
+    [0.8, ['hierbas', 'especias']],
+    [0.7, ['vino', 'caldo', 'vinagre']],
+    [0.85, ['soja']],
+    [0.8, ['mantequilla', 'aceite']],
+    [0.85, ['guisantes', 'judias_verdes']],
+    [0.7, ['maiz', 'guisantes']],
+    [0.8, ['frutos_rojos', 'fruta_hueso', 'mango', 'manzana', 'pera', 'platano']],
+  ];
+  // 'g' (genérico): una receta que pide "queso" lo cubre cualquier queso; "carne" cualquier carne, etc.
+  const PANTRY_GENERIC_FAMILY = {
+    queso: ['mozzarella', 'burrata', 'parmesano', 'feta', 'queso_cabra', 'queso_crema', 'mascarpone', 'ricotta', 'queso_fresco', 'cheddar', 'emmental', 'queso_azul', 'brie', 'halloumi'],
+    carne: ['pollo', 'pavo', 'ternera', 'cerdo', 'carne_picada', 'cordero', 'jamon', 'bacon', 'chorizo', 'salchichas'],
+    pescado: ['salmon', 'atun', 'merluza', 'bacalao', 'pescado_blanco', 'gambas', 'calamar', 'mejillones', 'anchoas'],
+    verdura: ['cebolla', 'zanahoria', 'calabacin', 'pimiento', 'berenjena', 'brocoli', 'coliflor', 'champinones', 'espinacas', 'acelgas', 'puerro', 'calabaza', 'judias_verdes', 'col', 'apio', 'guisantes'],
+  };
+
+  const PANTRY_BY_ID = {};
+  PANTRY_CONCEPTS.forEach(c => { PANTRY_BY_ID[c[0]] = { id: c[0], label: c[1], section: c[2], kws: c[3], opts: c[4] || {} }; });
+
+  const PANTRY_SUB_W = {}; // 'a|b' -> peso
+  subs.forEach(([w, ids]) => {
+    for (let i = 0; i < ids.length; i++) for (let j = 0; j < ids.length; j++) {
+      if (i === j) continue;
+      const k = ids[i] + '|' + ids[j];
+      if (!PANTRY_SUB_W[k] || PANTRY_SUB_W[k] < w) PANTRY_SUB_W[k] = w;
+    }
+  });
+
+  // Compilación: una regex por palabra clave; se prueban de más larga a más corta, pero solo las que
+  // pueden aparecer en la línea (índice por primera palabra)
+  const PANTRY_MATCHERS = [];
+  const PANTRY_INDEX = {};
+  (function () {
+    const entries = [];
+    PANTRY_CONCEPTS.forEach(c => c[3].forEach(k => entries.push({ id: c[0], k: norm(k), gen: !!(c[4] && c[4].g) })));
+    entries.sort((a, b) => b.k.length - a.k.length);
+    entries.forEach(e => {
+      const re = new RegExp('(?<![a-z])' + e.k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '\\s+') + '(?:s|es)?(?![a-z])', 'g');
+      const m = { id: e.id, re, gen: e.gen, ord: PANTRY_MATCHERS.length };
+      PANTRY_MATCHERS.push(m);
+      const first = e.k.split(' ')[0];
+      (PANTRY_INDEX[first] = PANTRY_INDEX[first] || []).push(m);
+    });
+  })();
+
+  // Conceptos que aparecen en una línea de ingrediente
+  function pantryConceptsOf(line) {
+    let t = ' ' + norm(line).replace(/\([^)]*\)/g, ' ').replace(/[^a-z0-9ñ ]/g, ' ') + ' ';
+    const found = new Set(), generic = new Set();
+    const cand = [];
+    t.split(' ').forEach(w => {
+      if (!w) return;
+      [w, w.replace(/es$/, ''), w.replace(/s$/, '')].forEach(v => { if (PANTRY_INDEX[v]) PANTRY_INDEX[v].forEach(m => { if (cand.indexOf(m) === -1) cand.push(m); }); });
+    });
+    cand.sort((a, b) => a.ord - b.ord);
+    cand.forEach(m => {
+      m.re.lastIndex = 0;
+      if (m.re.test(t)) {
+        (m.gen ? generic : found).add(m.id);
+        m.re.lastIndex = 0;
+        t = t.replace(m.re, ' ');
+      }
+    });
+    generic.forEach(g => { const fam = PANTRY_GENERIC_FAMILY[g] || []; if (!fam.some(x => found.has(x))) found.add(g); });
+    return Array.from(found);
+  }
+
+  // Cuánto cubre el concepto u (lo que tienes) al concepto r (lo que pide la receta): 0..1
+  function pantryCover(u, r) {
+    if (u === r) return 1;
+    const w = PANTRY_SUB_W[u + '|' + r];
+    if (w) return w;
+    const gu = PANTRY_BY_ID[r] && PANTRY_BY_ID[r].opts.g;
+    if (gu && (PANTRY_GENERIC_FAMILY[gu] || []).indexOf(u) !== -1) return 0.9;   // la receta pide "queso", tienes feta
+    const gr = PANTRY_BY_ID[u] && PANTRY_BY_ID[u].opts.g;
+    if (gr && (PANTRY_GENERIC_FAMILY[gr] || []).indexOf(r) !== -1) return 0.6;    // tienes "queso" sin más y la receta pide mozzarella
+    return 0;
+  }
+
+  // Conceptos "menores" (adorno, aliño): faltar uno no impide cocinar la receta y pesan la mitad
+  const PANTRY_MINOR = new Set(['hierbas', 'especias', 'semillas', 'miel', 'vinagre', 'vino', 'caldo', 'mermelada', 'vainilla', 'levadura', 'limon', 'curry', 'kimchi', 'aceitunas', 'frutos_secos', 'datiles', 'azucar', 'cafe', 'trufa']);
+
+  // Conceptos que pide una receta, con su línea de origen (se calcula una vez por receta y se guarda)
+  function pantryRequired(r) {
+    const key = (r.ingredients || []).join('|');
+    if (r._pantry && r._pantryKey === key) return r._pantry;
+    const req = {};   // id -> línea de ejemplo
+    (r.ingredients || []).forEach(l => {
+      const t = String(l || '').trim();
+      if (!t || t.length > 90) return;                                  // texto largo: no es un ingrediente
+      if (/[.!?]\s*$/.test(t) && t.split(/\s+/).length > 7) return;   // frase de un paso
+      if (/opcional/i.test(t)) return;
+      pantryConceptsOf(t).forEach(id => { if (!(id in req)) req[id] = t; });
+    });
+    r._pantry = req;
+    r._pantryKey = key;
+    return req;
+  }
+
+  // Evalúa una receta contra lo que tienes (have: Set de ids). staples: ids que se dan por supuestos.
+  function pantryEvaluate(r, have, staples) {
+    const req = pantryRequired(r);
+    const ids = Object.keys(req).filter(id => !staples.has(id));
+    if (!ids.length) return null;
+    let wTot = 0, wGot = 0, missing = [], subs = [], exact = [], used = new Set();
+    ids.forEach(id => {
+      const w = PANTRY_MINOR.has(id) ? 0.5 : 1;
+      let best = 0, by = null;
+      have.forEach(u => { const c = pantryCover(u, id); if (c > best) { best = c; by = u; } });
+      wTot += w;
+      if (best >= 0.6) {
+        wGot += w * best; used.add(by);
+        if (best >= 0.99) exact.push(id); else subs.push({ need: id, have: by, w: best });
+      } else {
+        missing.push({ id, minor: PANTRY_MINOR.has(id), line: req[id] });
+      }
+    });
+    const missMain = missing.filter(m => !m.minor).length;
+    const missMinor = missing.length - missMain;
+  const miss = missMain + Math.floor(missMinor / 2);   // dos adornos que faltan cuentan como un ingrediente
+    const coverage = wTot ? wGot / wTot : 0;
+    const usedRatio = have.size ? used.size / have.size : 0;
+    return { r, ids, exact, subs, missing, missMain, missMinor, miss, coverage, used: used.size, usedRatio, score: 0.55 * coverage + 0.45 * usedRatio };
+  }
+
+  function pantryRank(recipes, have, staples, opts) {
+    opts = opts || {};
+    const maxMissing = opts.maxMissing == null ? 3 : opts.maxMissing;
+    const out = [];
+    recipes.forEach(r => {
+      const e = pantryEvaluate(r, have, staples);
+      if (!e || !e.used) return;
+      if (have.size >= 3 && e.used < 2) return;
+      if (e.miss > maxMissing) return;
+      out.push(e);
+    });
+    out.sort((a, b) => (a.miss - b.miss) || (b.used - a.used) || (b.score - a.score) || (a.ids.length - b.ids.length));
+    return out;
+  }
+
+  // ---- ¿Qué cocino hoy? ------------------------------------------------------------
+  // Marcas lo que tienes y la app propone recetas. Cada ingrediente de una receta se compara
+  // con lo que tienes: igual (1), sustituto parecido (burrata por mozzarella, pavo por pollo...)
+  // o falta. Todo se calcula en este dispositivo, sin IA ni servidor.
+  const PANTRY_KEY = 'recetario_pantry_v1';
+  const PANTRY_SECTIONS = [
+    ['verdura', 'Frutas y verduras'], ['carne', 'Carne y charcutería'], ['pescado', 'Pescado y marisco'],
+    ['lacteos', 'Lácteos y huevos'], ['panaderia', 'Pan y masas'], ['conservas', 'Conservas y legumbres'],
+    ['despensa', 'Despensa'], ['bebidas', 'Vino y bebidas']
+  ];
+  let pantryState = { have: [], staples: true, maxMissing: 1 };
+  try {
+    const v = JSON.parse(localStorage.getItem(PANTRY_KEY) || '{}');
+    if (v && typeof v === 'object') {
+      if (Array.isArray(v.have)) pantryState.have = v.have.filter(id => PANTRY_BY_ID[id]);
+      if (typeof v.staples === 'boolean') pantryState.staples = v.staples;
+      if ([0, 1, 2, 3].indexOf(v.maxMissing) !== -1) pantryState.maxMissing = v.maxMissing;
+    }
+  } catch (e) {}
+  function pantrySave() { try { localStorage.setItem(PANTRY_KEY, JSON.stringify(pantryState)); } catch (e) {} }
+
+  let pantryFreq = null;          // id -> nº de recetas que lo usan (para ordenar las opciones)
+  let pantryFreqN = -1;
+  let pantryOpenSec = {};         // secciones desplegadas
+  let pantryShown = 20;           // resultados visibles
+  let pantryPick = null;          // receta propuesta por "Proponme una"
+  let pantrySuggestions = [];
+  function pantryEligible() { return recipes.filter(r => !hiddenIds.has(r.id) && !isMix(r) && r.ingredients && r.ingredients.length); }
+  function pantryStaplesSet() { return new Set(pantryState.staples ? PANTRY_STAPLES : []); }
+  function pantryLbl(id) { return PANTRY_BY_ID[id] ? PANTRY_BY_ID[id].label : id; }
+  function pantryLow(id) { return pantryLbl(id).replace(/\s*\(cualquiera\)/, '').toLowerCase(); }
+  function pantryComputeFreq() {
+    pantryFreq = {}; pantryFreqN = recipes.length;
+    pantryEligible().forEach(r => Object.keys(pantryRequired(r)).forEach(id => { pantryFreq[id] = (pantryFreq[id] || 0) + 1; }));
+  }
+
+  function pantryChipsHtml() {
+    const staples = pantryStaplesSet();
+    const have = new Set(pantryState.have);
+    return PANTRY_SECTIONS.map(([sec, title]) => {
+      const ids = PANTRY_CONCEPTS.map(c => c[0]).filter(id => PANTRY_BY_ID[id].section === sec && !staples.has(id) && (pantryFreq[id] || 0) > 0)
+        .sort((a, b) => (pantryFreq[b] || 0) - (pantryFreq[a] || 0));
+      if (!ids.length) return '';
+      const nSel = ids.filter(id => have.has(id)).length;
+      return '<details class="pt-sec" data-sec="' + sec + '"' + (pantryOpenSec[sec] ? ' open' : '') + '>' +
+        '<summary>' + escapeHtml(title) + (nSel ? ' <span class="pt-count">' + nSel + '</span>' : '') + '</summary>' +
+        '<div class="pt-chips">' + ids.map(id => '<button type="button" class="pt-chip' + (have.has(id) ? ' on' : '') + '" data-pt="toggle" data-id="' + id + '" aria-pressed="' + have.has(id) + '">' + (have.has(id) ? '✓ ' : '') + escapeHtml(pantryLbl(id)) + '</button>').join('') + '</div>' +
+      '</details>';
+    }).join('');
+  }
+
+  function pantryHaveHtml() {
+    if (!pantryState.have.length) return '<p class="form-hint" style="margin:0">Todavía no has marcado nada. Busca arriba o elige de las listas.</p>';
+    return pantryState.have.map(id => '<span class="pt-have">' + escapeHtml(pantryLbl(id)) + '<button type="button" class="pt-have-x" data-pt="toggle" data-id="' + id + '" aria-label="Quitar ' + escapeAttr(pantryLbl(id)) + '">×</button></span>').join('') +
+      '<button type="button" class="delete-link" data-pt="clear">Vaciar</button>';
+  }
+
+  function pantryItemHtml(e) {
+    const r = e.r;
+    const bits = [];
+    if (e.exact.length) bits.push('<div class="pt-line">✅ Con lo que tienes: ' + e.exact.map(id => escapeHtml(pantryLow(id))).join(', ') + '</div>');
+    if (e.subs.length) bits.push('<div class="pt-line pt-sub">🔁 Cambias: ' + e.subs.map(s => escapeHtml(pantryLow(s.need)) + ' por ' + escapeHtml(pantryLow(s.have))).join(' · ') + '</div>');
+    const miss = e.missing.filter(m => !m.minor), opt = e.missing.filter(m => m.minor);
+    if (miss.length) bits.push('<div class="pt-line pt-miss">🛒 Te falta: ' + miss.map(m => escapeHtml(pantryLow(m.id))).join(', ') + '</div>');
+    if (opt.length) bits.push('<div class="pt-line pt-opt">Adornos o extras: ' + opt.map(m => escapeHtml(pantryLow(m.id))).join(', ') + '</div>');
+    return '<li class="pt-item"><div class="pt-main">' +
+      '<button type="button" class="pt-title" data-pt="open" data-id="' + escapeAttr(r.id) + '">' + escapeHtml(r.title) + '</button>' +
+      '<span class="pt-cat">' + escapeHtml(catIcon(r.category) + ' ' + catLabel(r.category)) + '</span>' + bits.join('') +
+      '</div>' +
+      (r.steps && r.steps.length ? '<button type="button" class="cart-btn" data-pt="cook" data-id="' + escapeAttr(r.id) + '" aria-label="Modo cocina: ' + escapeAttr(r.title) + '" title="Modo cocina">👩‍🍳</button>' : '') +
+    '</li>';
+  }
+
+  function pantryResultsHtml(ranked) {
+    if (!pantryState.have.length) return '';
+    if (!ranked.length) {
+      return '<p class="form-hint">No encuentro recetas con eso' + (pantryState.maxMissing < 3 ? '. Prueba a permitir que te falten más ingredientes o a marcar algo más.' : '. Prueba a marcar otros ingredientes.') + '</p>';
+    }
+    const titles = ['Puedes cocinarlas ya', 'Te falta 1 ingrediente', 'Te faltan 2 ingredientes', 'Te faltan 3 ingredientes'];
+    let html = '', last = -1, count = 0;
+    for (const e of ranked) {
+      if (count >= pantryShown) break;
+      if (e.miss !== last) { if (last !== -1) html += '</ul>'; html += '<h3 class="sl-section-hdr">' + titles[e.miss] + '</h3><ul class="pt-list">'; last = e.miss; }
+      html += pantryItemHtml(e);
+      count++;
+    }
+    html += '</ul>';
+    if (ranked.length > count) html += '<button type="button" class="loadmore" data-pt="more" style="margin-top:12px">Ver más (' + (ranked.length - count) + ')</button>';
+    return html;
+  }
+
+  function pantryPickHtml(e) {
+    if (!e) return '';
+    return '<div class="pt-pick" role="region" aria-label="Receta propuesta"><div class="pt-pick-lbl">Te propongo</div><ul class="pt-list">' + pantryItemHtml(e) + '</ul>' +
+      '<button type="button" class="rv-btn" data-pt="another">🎲 Otra</button></div>';
+  }
+
+  let pantryRanked = [];
+  function pantryRecompute() {
+    pantryRanked = pantryState.have.length
+      ? pantryRank(pantryEligible(), new Set(pantryState.have), pantryStaplesSet(), { maxMissing: pantryState.maxMissing })
+      : [];
+  }
+
+  function pantryRefreshParts() {
+    pantryRecompute();
+    const q = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+    q('ptHave', pantryHaveHtml());
+    q('ptGroups', pantryChipsHtml());
+    q('ptResults', pantryResultsHtml(pantryRanked));
+    q('ptPick', pantryPickHtml(pantryPick));
+    const n = document.getElementById('ptCount');
+    if (n) n.textContent = pantryState.have.length ? (pantryRanked.length + (pantryRanked.length === 1 ? ' receta posible' : ' recetas posibles')) : '';
+    const st = document.getElementById('ptSticky'), sb = document.getElementById('ptToResults');
+    if (st && sb) { st.hidden = !pantryState.have.length; sb.textContent = 'Ver ' + pantryRanked.length + (pantryRanked.length === 1 ? ' receta' : ' recetas') + ' ↓'; }
+  }
+
+  function renderPantry(keepScroll) {
+    if (!pantryFreq || pantryFreqN !== recipes.length) pantryComputeFreq();
+    overlayRoot.innerHTML =
+      '<div class="overlay" id="ov">' +
+        '<div class="sheet pantry-sheet" id="ptSheet" role="dialog" aria-modal="true">' +
+          '<div class="sheet-top"><h2>¿Qué cocino hoy?</h2><button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
+          '<p class="form-hint" style="margin:-2px 0 10px">Marca lo que tienes en casa y te propongo recetas. Si te falta algo parecido (burrata por mozzarella, pavo por pollo…) también te la propongo y te digo qué cambiar.</p>' +
+          '<label class="notes-label" for="ptSearch">Añade ingredientes</label>' +
+          '<input type="text" id="ptSearch" class="pt-search" placeholder="Escribe: pollo, tomate, burrata…" autocomplete="off" enterkeyhint="done" aria-controls="ptSuggest">' +
+          '<div id="ptSuggest" class="pt-suggest" role="listbox" aria-label="Sugerencias"></div>' +
+          '<div class="notes-label" style="margin-top:12px">Lo que tengo</div><div id="ptHave" class="pt-havewrap"></div>' +
+          '<div class="notes-label" style="margin-top:12px">O elige de la lista</div><div id="ptGroups"></div>' +
+          '<div class="pt-opts">' +
+            '<label class="pt-opt"><input type="checkbox" id="ptStaples"' + (pantryState.staples ? ' checked' : '') + '> Doy por hecho lo básico (sal, pimienta, aceite, agua, azúcar, vinagre, especias y harina)</label>' +
+            '<label class="pt-opt">Me puede faltar <select id="ptMax" aria-label="Ingredientes que me pueden faltar">' +
+              [[0, 'nada'], [1, 'hasta 1 ingrediente'], [2, 'hasta 2 ingredientes'], [3, 'hasta 3 ingredientes']].map(([v, t]) => '<option value="' + v + '"' + (pantryState.maxMissing === v ? ' selected' : '') + '>' + t + '</option>').join('') +
+            '</select></label>' +
+          '</div>' +
+          '<div class="pt-bar"><button type="button" class="submit-btn" id="ptSurprise" style="padding:9px 18px;font-size:14px">🎲 Proponme una</button><span id="ptCount" class="form-hint" role="status" aria-live="polite"></span></div>' +
+          '<div id="ptPick"></div>' +
+          '<div id="ptResults"></div>' +
+          '<div class="pt-sticky" id="ptSticky" hidden><button type="button" class="submit-btn" data-pt="toresults" id="ptToResults"></button></div>' +
+        '</div>' +
+      '</div>';
+    const sheet = document.getElementById('ptSheet');
+    document.getElementById('closeBtn').addEventListener('click', closePantry);
+    document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closePantry(); });
+    sheet.addEventListener('click', onPantryClick);
+    sheet.addEventListener('toggle', (e) => { const d = e.target; if (d.classList && d.classList.contains('pt-sec')) pantryOpenSec[d.getAttribute('data-sec')] = d.open; }, true);
+    document.getElementById('ptStaples').addEventListener('change', (e) => { pantryState.staples = e.target.checked; pantrySave(); pantryShown = 20; pantryPick = null; pantryRefreshParts(); });
+    document.getElementById('ptMax').addEventListener('change', (e) => { pantryState.maxMissing = parseInt(e.target.value, 10); pantrySave(); pantryShown = 20; pantryPick = null; pantryRefreshParts(); });
+    document.getElementById('ptSurprise').addEventListener('click', () => pantryPropose(false));
+    const inp = document.getElementById('ptSearch');
+    inp.addEventListener('input', () => pantryShowSuggestions(inp.value));
+    inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); if (pantrySuggestions.length) pantryAdd(pantrySuggestions[0]); }
+      else if (e.key === 'Escape' && inp.value) { e.stopPropagation(); inp.value = ''; pantryShowSuggestions(''); }
+    });
+    pantryRefreshParts();
+    if (keepScroll) sheet.scrollTop = keepScroll;
+  }
+
+  function pantryShowSuggestions(text) {
+    const box = document.getElementById('ptSuggest');
+    if (!box) return;
+    const q = norm(text).trim();
+    pantrySuggestions = [];
+    if (q.length < 2) { box.innerHTML = ''; return; }
+    const staples = pantryStaplesSet(), have = new Set(pantryState.have);
+    PANTRY_CONCEPTS.forEach(c => {
+      const id = c[0];
+      if (have.has(id) || staples.has(id)) return;
+      const lbl = norm(c[1]);
+      const hit = lbl.indexOf(q) !== -1 || c[3].some(k => norm(k).indexOf(q) === 0 || norm(k).split(' ').some(w => w.indexOf(q) === 0));
+      if (hit) pantrySuggestions.push({ id, rank: (lbl.indexOf(q) === 0 ? 0 : 1) - Math.min(0.9, (pantryFreq[id] || 0) / 1000) });
+    });
+    pantrySuggestions.sort((a, b) => a.rank - b.rank);
+    pantrySuggestions = pantrySuggestions.slice(0, 8).map(x => x.id);
+    box.innerHTML = pantrySuggestions.length
+      ? pantrySuggestions.map(id => '<button type="button" class="pt-sug" role="option" data-pt="add" data-id="' + id + '">+ ' + escapeHtml(pantryLbl(id)) + '</button>').join('')
+      : '<span class="form-hint">No conozco «' + escapeHtml(text.trim()) + '». Prueba con otro nombre (p. ej. «gambas», «calabacín»).</span>';
+  }
+
+  function pantryAdd(id) {
+    if (pantryState.have.indexOf(id) === -1) pantryState.have.push(id);
+    pantrySave(); pantryPick = null; pantryShown = 20;
+    const inp = document.getElementById('ptSearch');
+    if (inp) { inp.value = ''; inp.focus(); }
+    pantryShowSuggestions('');
+    pantryRefreshParts();
+  }
+
+  function pantryPropose(another) {
+    if (!pantryState.have.length) { const m = document.getElementById('ptCount'); if (m) m.textContent = 'Marca antes algún ingrediente.'; return; }
+    if (!pantryRanked.length) { pantryPick = null; pantryRefreshParts(); const m = document.getElementById('ptCount'); if (m) m.textContent = 'No encuentro nada con eso: marca más ingredientes o permite que te falten.'; return; }
+    // entre las mejores del grupo con menos faltas (varias, para que no salga siempre la misma)
+    const best = pantryRanked[0].miss;
+    const group = pantryRanked.filter(e => e.miss === best);
+    const maxUsed = Math.max.apply(null, group.map(e => e.used));
+    let pool = group.filter(e => e.used >= maxUsed - (maxUsed > 2 ? 1 : 0)).slice(0, 8);
+    const others = pool.filter(e => !pantryPick || e.r.id !== pantryPick.r.id);
+    if (others.length) pool = others;
+    pantryPick = pool[Math.floor(Math.random() * pool.length)];
+    pantryRefreshParts();
+    const el = document.getElementById('ptPick');
+    if (el) el.scrollIntoView({ block: 'nearest' });
+  }
+
+  function onPantryClick(e) {
+    const b = e.target.closest('[data-pt]');
+    if (!b) return;
+    const act = b.getAttribute('data-pt'), id = b.getAttribute('data-id');
+    const sheet = document.getElementById('ptSheet');
+    if (act === 'toggle') {
+      const i = pantryState.have.indexOf(id);
+      if (i === -1) pantryState.have.push(id); else pantryState.have.splice(i, 1);
+      pantrySave(); pantryPick = null; pantryShown = 20; pantryRefreshParts();
+    } else if (act === 'add') pantryAdd(id);
+    else if (act === 'clear') { pantryState.have = []; pantrySave(); pantryPick = null; pantryRefreshParts(); }
+    else if (act === 'more') { pantryShown += 20; pantryRefreshParts(); }
+    else if (act === 'another') pantryPropose(true);
+    else if (act === 'toresults') { const t = document.getElementById('ptPick').childElementCount ? document.getElementById('ptPick') : document.getElementById('ptResults'); t.scrollIntoView({ block: 'start', behavior: 'smooth' }); }
+    else if (act === 'open') { const r = recipes.find(x => x.id === id); if (r) openDetail(r); }
+    else if (act === 'cook') { const r = recipes.find(x => x.id === id); if (r) openCook(r); }
+  }
+
+  function closePantry() { document.removeEventListener('keydown', pantryEsc); closeDetail(); }
+  function pantryEsc(e) {
+    if (!document.getElementById('ptSheet')) { document.removeEventListener('keydown', pantryEsc); return; }
+    if (e.key === 'Escape' && !currentDetailId && !cook) closePantry();
+  }
+  function openPantry() {
+    pantryPick = null; pantryShown = 20;
+    renderPantry(0);
+    document.removeEventListener('keydown', pantryEsc);
+    document.addEventListener('keydown', pantryEsc);
+    if (!pantryState.have.length) { const i = document.getElementById('ptSearch'); if (i) i.focus(); }
+  }
+  document.getElementById('pantryBtn').addEventListener('click', openPantry);
 
   // ---- Accesibilidad de las ventanas (hojas, ficha y modo cocina) ----------------
   // Al abrir una ventana el foco pasa a ella, el fondo queda inerte (ni teclado ni lector de
