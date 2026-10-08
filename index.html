@@ -113,6 +113,13 @@
   .pt-sticky { position: sticky; bottom: -30px; margin: 14px -22px -30px; padding: 10px 22px calc(14px + env(safe-area-inset-bottom)); background: linear-gradient(to top, var(--paper) 75%, transparent); text-align: center; z-index: 2; }
   .pt-sticky .submit-btn { width: 100%; box-shadow: var(--shadow); }
   .pt-pick-lbl { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
+  .rs-row { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .rs-head { display: flex; align-items: center; gap: 8px; font-size: 14.5px; cursor: pointer; }
+  .rs-head input { width: 20px; height: 20px; accent-color: var(--accent); }
+  .rs-sum { margin: 2px 0 0 28px; }
+  .rs-det { margin: 4px 0 0 28px; font-size: 13px; }
+  .rs-det summary { cursor: pointer; color: var(--accent); }
+  .rs-det ul { margin: 6px 0 0; padding-left: 18px; }
   .skip-link { position: absolute; left: 8px; top: -60px; z-index: 100; background: var(--accent); color: var(--accent-ink); padding: 10px 16px; border-radius: 10px; font-weight: 700; text-decoration: none; }
   .skip-link:focus { top: 8px; outline: 3px solid var(--focus); outline-offset: 2px; }
   main:focus { outline: none; }
@@ -4302,6 +4309,40 @@
     el.style.color = stale ? 'var(--accent-2-text)' : '';
   }
 
+  // Lee TODO lo que hay ahora en la nube (y la lista de la compra) y lo devuelve como objeto de copia
+  async function buildBackup() {
+    const colecciones = {};
+    for (const name of BACKUP_COLLECTIONS) {
+      const docs = await apiGetCollection(name);
+      if (docs === null) throw new Error('No se pudo leer «' + name + '».');
+      colecciones[name] = docs.map(d => ({ id: d.id, data: d.data }));
+    }
+    const sl = await slCall({ op: 'list' });
+    if (!sl.ok) throw new Error('No se pudo leer la lista de la compra.');
+    colecciones.shopping = (sl.data.items || []).map(i => ({ id: i.id, data: { text: i.text, checked: i.checked, sources: i.sources, ts: i.ts } }));
+    return {
+      app: 'recetario',
+      version: 1,
+      fecha: new Date().toISOString(),
+      nota: 'Las recetas base están en recipes.json del repositorio; aquí solo está lo que añades o cambias tú.',
+      colecciones,
+      locales: { favoritas: Array.from(favs) }
+    };
+  }
+
+  function triggerDownload(backup, fname) {
+    const blob = new Blob([JSON.stringify(backup, null, 1)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = fname;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+  const bkPad = n => String(n).padStart(2, '0');
+  function bkStamp(d) { return d.getFullYear() + '-' + bkPad(d.getMonth() + 1) + '-' + bkPad(d.getDate()); }
+
   async function downloadBackup() {
     const btn = document.getElementById('backupBtn');
     const status = document.getElementById('backupStatus');
@@ -4309,36 +4350,11 @@
     if (btn) btn.disabled = true;
     say('Preparando la copia…');
     try {
-      const colecciones = {};
-      for (const name of BACKUP_COLLECTIONS) {
-        const docs = await apiGetCollection(name);
-        if (docs === null) throw new Error('No se pudo leer «' + name + '».');
-        colecciones[name] = docs.map(d => ({ id: d.id, data: d.data }));
-      }
-      const sl = await slCall({ op: 'list' });
-      if (!sl.ok) throw new Error('No se pudo leer la lista de la compra.');
-      colecciones.shopping = (sl.data.items || []).map(i => ({ id: i.id, data: { text: i.text, checked: i.checked, sources: i.sources, ts: i.ts } }));
-
-      const now = new Date();
-      const backup = {
-        app: 'recetario',
-        version: 1,
-        fecha: now.toISOString(),
-        nota: 'Las recetas base están en recipes.json del repositorio; aquí solo está lo que añades o cambias tú.',
-        colecciones,
-        locales: { favoritas: Array.from(favs) }
-      };
-      const blob = new Blob([JSON.stringify(backup, null, 1)], { type: 'application/json' });
-      const pad = n => String(n).padStart(2, '0');
-      const fname = 'recetario-copia-' + now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + '.json';
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = fname;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-      const total = Object.values(colecciones).reduce((s, l) => s + l.length, 0);
+      const backup = await buildBackup();
+      const now = new Date(backup.fecha);
+      const fname = 'recetario-copia-' + bkStamp(now) + '.json';
+      triggerDownload(backup, fname);
+      const total = Object.values(backup.colecciones).reduce((s, l) => s + l.length, 0);
       try { localStorage.setItem(BACKUP_AT_KEY, now.toISOString()); } catch (e) {}
       say('✓ Copia descargada (' + fname + ', ' + total + ' elementos).');
       showBackupAge();
@@ -4347,6 +4363,218 @@
       say('No se ha podido hacer la copia: ' + (e && e.message ? e.message : 'error de conexión') + ' Inténtalo de nuevo.');
     }
     if (btn) btn.disabled = false;
+  }
+
+  // ---- Restaurar una copia ------------------------------------------------------
+  // Solo RECUPERA: escribe en la nube lo que hay en el archivo (nuevo o distinto). No borra nada de lo
+  // creado después de la copia, porque el servidor no permite borrar (salvo la lista de la compra, que
+  // se reemplaza entera). Antes de escribir descarga una copia de cómo está ahora, y una vista previa
+  // permite decidir qué colecciones se recuperan.
+  const RESTORE_LABELS = {
+    overrides: 'Categorías cambiadas', manual_recipes: 'Recetas añadidas a mano', hidden: 'Recetas ocultas / restauradas',
+    notes: 'Notas, valoraciones y raciones', edits: 'Textos de recetas editados', tags: 'Etiquetas',
+    plan: 'Plan semanal', shopping: 'Lista de la compra'
+  };
+  const RESTORE_MAX_DOCS = 6000;
+  let restoreState = null;
+
+  function bkEqual(a, b) {
+    if (a === b) return true;
+    if (a === null || b === null || typeof a !== 'object' || typeof b !== 'object') return false;
+    if (Array.isArray(a) !== Array.isArray(b)) return false;
+    const ka = Object.keys(a), kb = Object.keys(b);
+    if (ka.length !== kb.length) return false;
+    return ka.every(k => Object.prototype.hasOwnProperty.call(b, k) && bkEqual(a[k], b[k]));
+  }
+
+  // Comprueba que el archivo es una copia de este recetario y devuelve solo lo válido
+  function restoreValidate(obj) {
+    if (!obj || typeof obj !== 'object' || obj.app !== 'recetario') return { error: 'Este archivo no es una copia del recetario.' };
+    if (obj.version !== 1) return { error: 'Esta copia es de una versión que no sé leer (versión ' + obj.version + ').' };
+    if (!obj.colecciones || typeof obj.colecciones !== 'object') return { error: 'La copia no contiene datos.' };
+    const colecciones = {};
+    let total = 0;
+    for (const name of Object.keys(RESTORE_LABELS)) {
+      const list = obj.colecciones[name];
+      if (list === undefined) continue;
+      if (!Array.isArray(list)) return { error: 'La parte «' + name + '» de la copia está dañada.' };
+      const seen = new Set(), docs = [];
+      for (const d of list) {
+        if (!d || typeof d.id !== 'string' || !d.id || d.id.length > 200) continue;
+        if (!d.data || typeof d.data !== 'object' || Array.isArray(d.data)) continue;
+        if (JSON.stringify(d.data).length > 300000) continue;
+        if (seen.has(d.id)) continue;
+        seen.add(d.id); docs.push({ id: d.id, data: d.data });
+      }
+      total += docs.length;
+      colecciones[name] = docs;
+    }
+    if (total > RESTORE_MAX_DOCS) return { error: 'La copia tiene demasiados elementos (' + total + ').' };
+    if (!total) return { error: 'La copia está vacía.' };
+    const fav = obj.locales && Array.isArray(obj.locales.favoritas) ? obj.locales.favoritas.filter(x => typeof x === 'string').slice(0, 5000) : [];
+    return { colecciones, favoritas: fav, fecha: typeof obj.fecha === 'string' ? obj.fecha : '' };
+  }
+
+  async function restoreFromFile(file) {
+    const status = document.getElementById('restoreStatus');
+    const say = (t) => { if (status) status.textContent = t; };
+    if (!file) return;
+    if (file.size > 25 * 1024 * 1024) { say('El archivo es demasiado grande para ser una copia.'); return; }
+    say('Leyendo el archivo…');
+    let parsed;
+    try { parsed = JSON.parse(await file.text()); } catch (e) { say('No he podido leer el archivo: no es un JSON válido.'); return; }
+    const v = restoreValidate(parsed);
+    if (v.error) { say(v.error); return; }
+    say('Comparando con lo que hay ahora en la nube…');
+    let cloud;
+    try { cloud = await buildBackup(); } catch (e) { say('No he podido leer la nube para comparar: ' + (e.message || 'error de conexión') + ' No se ha cambiado nada.'); return; }
+    const rows = [];
+    for (const name of Object.keys(RESTORE_LABELS)) {
+      if (!v.colecciones[name]) continue;
+      const cur = new Map((cloud.colecciones[name] || []).map(d => [d.id, d.data]));
+      const fileIds = new Set(v.colecciones[name].map(d => d.id));
+      const newDocs = [], changedDocs = [];
+      let same = 0;
+      v.colecciones[name].forEach(d => {
+        if (!cur.has(d.id)) newDocs.push(d);
+        else if (!bkEqual(cur.get(d.id), d.data)) changedDocs.push(d);
+        else same++;
+      });
+      const extra = Array.from(cur.keys()).filter(id => !fileIds.has(id)).length;
+      // la lista de la compra se reemplaza entera: también cuenta como cambio lo que sobra en la nube
+      const todo = newDocs.length + changedDocs.length + (name === 'shopping' ? extra : 0);
+      rows.push({ name, label: RESTORE_LABELS[name], allDocs: v.colecciones[name], newDocs, changedDocs, same, extra, cur, todo,
+        selected: todo > 0 && name !== 'shopping' });
+    }
+    const curFavs = new Set(favs);
+    const newFavs = v.favoritas.filter(id => !curFavs.has(id));
+    restoreState = { fecha: v.fecha, rows, favNew: newFavs, favSelected: newFavs.length > 0, phase: 'preview', msg: '', cloud };
+    renderRestore();
+  }
+
+  function restoreTitleOf(name, id, data) {
+    if (name === 'shopping') return (data && data.text) || id;
+    const r = recipes.find(x => x.id === id);
+    if (r) return r.title;
+    if (name === 'manual_recipes' && data && data.title) return data.title;
+    if (name === 'plan') return id.replace(/_/g, ' ');
+    return id;
+  }
+  function restoreDescribe(name, d, cur) {
+    const old = cur.get(d.id);
+    if (name === 'hidden') return d.data.hidden ? 'quedará oculta' : 'quedará visible';
+    if (name === 'overrides') return 'categoría: ' + catLabel(d.data.category || '?');
+    if (name === 'tags') return 'etiquetas: ' + ((d.data.tags || []).join(', ') || 'ninguna');
+    if (name === 'notes') return old ? 'notas, valoración o raciones distintas' : 'notas, valoración o raciones';
+    if (name === 'plan') return d.data.recipeId ? 'plato: ' + (String(d.data.recipeId).indexOf('custom:') === 0 ? String(d.data.recipeId).slice(7) : restoreTitleOf('x', d.data.recipeId)) : 'hueco vacío';
+    return old ? 'distinta de la actual' : 'no existe ahora';
+  }
+
+  function restoreDateText(iso) {
+    const t = Date.parse(iso);
+    if (!t) return 'fecha desconocida';
+    return new Date(t).toLocaleString('es-ES', { dateStyle: 'long', timeStyle: 'short' });
+  }
+
+  function renderRestore() {
+    const s = restoreState;
+    if (!s) return;
+    const working = s.phase === 'working', done = s.phase === 'done';
+    const selDocs = s.rows.filter(r => r.selected).reduce((n, r) => n + r.todo, 0) + (s.favSelected ? s.favNew.length : 0);
+    const rowsHtml = s.rows.map((r, i) => {
+      const examples = r.newDocs.concat(r.changedDocs).slice(0, 8).map(d => '<li>' + escapeHtml(restoreTitleOf(r.name, d.id, d.data)) + ' <span class="form-hint">— ' + escapeHtml(restoreDescribe(r.name, d, r.cur)) + '</span></li>').join('');
+      const nChanges = r.newDocs.length + r.changedDocs.length;
+      const parts = [];
+      if (r.newDocs.length) parts.push(r.newDocs.length + (r.newDocs.length === 1 ? ' nuevo' : ' nuevos'));
+      if (r.changedDocs.length) parts.push(r.changedDocs.length + (r.changedDocs.length === 1 ? ' distinto (se sobrescribe)' : ' distintos (se sobrescriben)'));
+      if (r.same) parts.push(r.same + (r.same === 1 ? ' igual' : ' iguales'));
+      let note = '';
+      if (r.name === 'shopping') note = r.todo ? 'La lista de la compra cambia a menudo. Si lo marcas, la lista actual se <b>reemplaza por la de la copia</b>' + (r.extra ? ' (se pierden ' + r.extra + ' productos que hay ahora y no estaban)' : '') + '.' : '';
+      else if (r.extra) parts.push(r.extra + ' en la nube que no están en la copia (no se tocan)');
+      return '<div class="rs-row">' +
+        '<label class="rs-head"><input type="checkbox" data-rs="' + i + '"' + (r.selected ? ' checked' : '') + (r.todo === 0 || working || done ? ' disabled' : '') + '> <b>' + escapeHtml(r.label) + '</b></label>' +
+        '<div class="form-hint rs-sum">' + (r.todo === 0 ? 'Sin cambios: ya está igual en la nube.' : escapeHtml(parts.join(' · '))) + '</div>' +
+        (note ? '<div class="form-hint" style="color:var(--accent-2-text)">' + note + '</div>' : '') +
+        (examples ? '<details class="rs-det"><summary>Ver qué cambia' + (nChanges > 8 ? ' (primeros 8 de ' + nChanges + ')' : '') + '</summary><ul>' + examples + '</ul></details>' : '') +
+      '</div>';
+    }).join('');
+    const favHtml = '<div class="rs-row"><label class="rs-head"><input type="checkbox" data-rs="fav"' + (s.favSelected ? ' checked' : '') + (!s.favNew.length || working || done ? ' disabled' : '') + '> <b>Mis favoritas de este dispositivo</b></label>' +
+      '<div class="form-hint rs-sum">' + (s.favNew.length ? s.favNew.length + ' favoritas de la copia que aquí no tienes (se añaden; no se quita ninguna)' : 'Sin cambios') + '</div></div>';
+    overlayRoot.innerHTML =
+      '<div class="overlay" id="ov"><div class="sheet" role="dialog" aria-modal="true" id="rsSheet">' +
+        '<div class="sheet-top"><h2>Restaurar copia</h2><button class="close-btn" id="closeBtn" aria-label="Cerrar"' + (working ? ' disabled' : '') + '>✕</button></div>' +
+        '<p class="form-hint" style="margin:-2px 0 10px">Copia del <b>' + escapeHtml(restoreDateText(s.fecha)) + '</b>. Se recupera lo que marques; <b>no se borra</b> lo creado después de la copia.</p>' +
+        (done ? '' : '<p class="form-hint" style="padding:8px 10px;border-radius:8px;background:var(--accent-soft)">Antes de escribir se descargará una copia de cómo está ahora, por si quieres volver atrás. Los cambios los verán todos tus dispositivos.</p>') +
+        rowsHtml + favHtml +
+        '<p class="form-hint rv-msg" id="rsMsg" role="status" aria-live="polite">' + escapeHtml(s.msg) + '</p>' +
+        '<p style="margin:14px 0 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap">' +
+          (done ? '<button type="button" class="submit-btn" id="rsClose">Cerrar</button>'
+                : '<button type="button" class="submit-btn" id="rsGo"' + (selDocs === 0 || working ? ' disabled' : '') + '>' + (working ? 'Restaurando…' : 'Restaurar ' + selDocs + (selDocs === 1 ? ' elemento' : ' elementos')) + '</button>' +
+                  '<button type="button" class="delete-link" id="rsCancel"' + (working ? ' disabled' : '') + '>Cancelar</button>') +
+        '</p>' +
+      '</div></div>';
+    const close = () => { restoreState = null; closeDetail(); };
+    document.getElementById('closeBtn').addEventListener('click', () => { if (!working) close(); });
+    document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov' && !working) close(); });
+    const c = document.getElementById('rsCancel'); if (c) c.addEventListener('click', close);
+    const cl = document.getElementById('rsClose'); if (cl) cl.addEventListener('click', close);
+    document.querySelectorAll('[data-rs]').forEach(cb => cb.addEventListener('change', () => {
+      const k = cb.getAttribute('data-rs');
+      if (k === 'fav') s.favSelected = cb.checked; else s.rows[parseInt(k, 10)].selected = cb.checked;
+      renderRestore();
+    }));
+    const go = document.getElementById('rsGo'); if (go) go.addEventListener('click', runRestore);
+    document.removeEventListener('keydown', escClose);
+    if (!working) document.addEventListener('keydown', escClose);
+  }
+
+  async function runRestore() {
+    const s = restoreState;
+    if (!s || s.phase !== 'preview') return;
+    s.phase = 'working'; s.msg = 'Descargando una copia de cómo está ahora…'; renderRestore();
+    try {
+      const now = new Date();
+      triggerDownload(s.cloud, 'recetario-antes-de-restaurar-' + bkStamp(now) + '-' + bkPad(now.getHours()) + bkPad(now.getMinutes()) + '.json');
+    } catch (e) { s.phase = 'preview'; s.msg = 'No he podido guardar la copia previa, así que no he cambiado nada.'; renderRestore(); return; }
+    let ok = 0, failed = 0;
+    const touched = [];
+    const say = (t) => { const el = document.getElementById('rsMsg'); if (el) el.textContent = t; };
+    for (const r of s.rows.filter(x => x.selected && x.todo > 0)) {
+      if (r.name === 'shopping') {
+        say('Restaurando la lista de la compra…');
+        try {
+          const sets = r.allDocs.map(d => ({ id: d.id, text: d.data.text, checked: !!d.data.checked, sources: d.data.sources || [], ts: d.data.ts }));
+          const res = await slCall({ op: 'apply', clear: true, sets });
+          if (res.ok) { ok += r.todo; touched.push('shopping'); } else failed += r.todo;
+        } catch (e) { failed += r.todo; }
+        continue;
+      }
+      const docs = r.newDocs.concat(r.changedDocs);
+      let n = 0;
+      const fails = await rvPool(docs, async (d) => {
+        const wrote = await apiSetDoc(r.name, d.id, d.data);
+        n++;
+        say('Restaurando «' + r.label + '»… ' + n + ' de ' + docs.length);
+        return wrote;
+      }, 5);
+      ok += docs.length - fails; failed += fails;
+      touched.push(r.name);
+    }
+    if (s.favSelected && s.favNew.length) {
+      s.favNew.forEach(id => favs.add(id));
+      saveFavs(); filterOptionsCache = null; document.getElementById('statFav').textContent = favs.size; ok += s.favNew.length;
+    }
+    // refrescar la app con lo restaurado
+    touched.forEach(name => {
+      if (name === 'shopping') { slPoll(); return; }
+      if (pollers[name]) { pollers[name].sig = null; pollers[name].last = 0; pollTick(name); }
+    });
+    render();
+    s.phase = 'done';
+    s.msg = failed
+      ? '⚠️ ' + ok + (ok === 1 ? ' elemento restaurado' : ' elementos restaurados') + ', pero ' + failed + (failed === 1 ? ' no se ha podido guardar' : ' no se han podido guardar') + '. Vuelve a elegir el archivo y repite: solo te propondrá lo que falte.'
+      : '✓ Hecho: ' + ok + (ok === 1 ? ' elemento restaurado.' : ' elementos restaurados.');
+    renderRestore();
   }
 
   // ---- Edit-mode passcode ---------------------------------------------------
@@ -4370,11 +4598,20 @@
               '<button type="button" class="submit-btn" id="backupBtn" style="padding:9px 18px;font-size:14px">Descargar copia</button>' +
               '<p class="form-hint" id="backupStatus" role="status" style="margin:8px 0 0"></p>' +
               '<p class="form-hint" id="backupAge" role="status" style="margin:6px 0 0"></p>' +
+              '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">' +
+                '<p style="margin:0 0 6px;font-size:14px;font-weight:700">♻️ Restaurar una copia</p>' +
+                '<p class="form-hint" style="margin:0 0 10px">Recupera datos desde un archivo de copia. Antes de cambiar nada verás qué se va a modificar y podrás elegir qué recuperar.</p>' +
+                '<button type="button" class="submit-btn" id="restoreBtn" style="padding:9px 18px;font-size:14px">Elegir archivo…</button>' +
+                '<input type="file" id="restoreFile" accept=".json,application/json" hidden>' +
+                '<p class="form-hint" id="restoreStatus" role="status" style="margin:8px 0 0"></p>' +
+              '</div>' +
             '</div>' +
             '<p style="margin-top:14px"><button class="delete-link" id="logoutBtn" type="button">Salir del modo edición aquí</button></p>' +
           '</div>' +
         '</div>';
       document.getElementById('backupBtn').addEventListener('click', downloadBackup);
+      document.getElementById('restoreBtn').addEventListener('click', () => document.getElementById('restoreFile').click());
+      document.getElementById('restoreFile').addEventListener('change', (e) => { const f = e.target.files && e.target.files[0]; e.target.value = ''; restoreFromFile(f); });
       showBackupAge();
       document.getElementById('closeBtn').addEventListener('click', closeDetail);
       document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
