@@ -219,6 +219,13 @@
     pointer-events: none;
   }
   .filter-row { display: flex; }
+  .active-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
+  .active-filters[hidden] { display: none; }
+  .af-chip { font: inherit; font-size: 12.5px; font-weight: 600; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent); cursor: pointer; }
+  .af-chip:hover { background: var(--accent); color: var(--accent-ink); }
+  .fp-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; position: sticky; bottom: -30px; padding: 12px 0 4px; background: var(--paper); }
+  .filter-pick-item.is-empty { opacity: .45; }
+  #fpSheet .filter-pick-list { max-height: none; overflow: visible; }
   .filter-btn {
     display: inline-flex;
     align-items: center;
@@ -930,6 +937,7 @@
         <option value="za">Z–A</option>
       </select>
     </div>
+    <div class="active-filters" id="activeFilters" hidden></div>
   </div>
 
   <div class="count-row">
@@ -1005,7 +1013,11 @@
   let shoppingItems = [];
   try { shoppingItems = JSON.parse(localStorage.getItem(SLKEY) || "[]"); } catch(e) {}
 
-  let state = { q: "", cat: "TODAS", visible: PAGE_SIZE, sort: loadSortPref() };
+  // Filtros combinables: categorías (cualquiera de las marcadas), favoritas y etiquetas
+  // (se tienen que cumplir todas las marcadas). "Revisar" y "Mix" son vistas especiales
+  // que se eligen solas.
+  function emptyFilters() { return { cats: [], fav: false, tags: [], special: '' }; }
+  let state = { q: "", f: emptyFilters(), visible: PAGE_SIZE, sort: loadSortPref() };
 
   const grid = document.getElementById('grid');
   const filterBtn = document.getElementById('filterBtn');
@@ -1265,7 +1277,8 @@
 
   function expandTerm(word) {
     for (const group of SYNONYM_GROUPS) {
-      if (group.some(g => word.includes(g) || g.includes(word))) return group;
+      // Una palabra corta ("de", "con") no debe disparar un grupo solo por estar dentro de otra ("fideo")
+      if (group.some(g => word.includes(g) || (word.length >= 4 && g.indexOf(word) === 0))) return group;
     }
     return null;
   }
@@ -1362,92 +1375,157 @@
     }
   }
 
-  function matches(r) {
+  // ¿Cumple la receta los filtros f? (sin contar el texto de búsqueda)
+  function passFilters(r, f) {
     if (hiddenIds.has(r.id)) return false;
-    if (state.cat === "MIX") { if (!isMix(r)) return false; }
-    else {
-      if (isMix(r)) return false;
-      if (isLowContent(r) && state.cat !== "REVISAR") return false;
-      if (state.cat === "FAV") { if (!favs.has(r.id)) return false; }
-      else if (state.cat === "REVISAR") { if (!isLowContent(r)) return false; }
-      else if (state.cat.indexOf("TAG:") === 0) {
-        const tagName = state.cat.slice(4);
-        if (!r.tags || r.tags.indexOf(tagName) === -1) return false;
-      }
-      else if (state.cat !== "TODAS" && r.category !== state.cat) return false;
-    }
-    if (state.q) {
-      if (!queryMatchesRecipe(state.q, r)) return false;
+    if (f.special === 'MIX') return isMix(r);
+    if (isMix(r)) return false;
+    if (f.special === 'REVISAR') return isLowContent(r);
+    if (isLowContent(r)) return false;
+    if (f.fav && !favs.has(r.id)) return false;
+    if (f.cats.length && f.cats.indexOf(r.category) === -1) return false;
+    for (let i = 0; i < f.tags.length; i++) {
+      if (!r.tags || r.tags.indexOf(f.tags[i]) === -1) return false;
     }
     return true;
   }
 
-  function computeFilterOptions() {
-    if (filterOptionsCache) return filterOptionsCache;
-    const counts = {};
-    let lowContentCount = 0;
-    let mixCount = 0;
+  function matches(r) {
+    if (!passFilters(r, state.f)) return false;
+    if (state.q && !queryMatchesRecipe(state.q, r)) return false;
+    return true;
+  }
+
+  // ---- manejo de filtros: una "clave" por opción ('Pescado', 'FAV', 'TAG:Tupper', 'REVISAR', 'MIX', 'TODAS')
+  function filterReset() { state.f = emptyFilters(); }
+  function filterHas(key) {
+    const f = state.f;
+    if (key === 'TODAS') return filterCount() === 0;
+    if (key === 'FAV') return f.fav;
+    if (key === 'REVISAR' || key === 'MIX') return f.special === key;
+    if (key.indexOf('TAG:') === 0) return f.tags.indexOf(key.slice(4)) !== -1;
+    return f.cats.indexOf(key) !== -1;
+  }
+  function filterToggle(key) {
+    const f = state.f;
+    if (key === 'TODAS') { filterReset(); return; }
+    if (key === 'REVISAR' || key === 'MIX') {
+      const was = f.special === key;
+      filterReset();
+      if (!was) state.f.special = key;
+      return;
+    }
+    f.special = '';
+    if (key === 'FAV') { f.fav = !f.fav; return; }
+    const list = key.indexOf('TAG:') === 0 ? f.tags : f.cats;
+    const v = key.indexOf('TAG:') === 0 ? key.slice(4) : key;
+    const i = list.indexOf(v);
+    if (i === -1) list.push(v); else list.splice(i, 1);
+  }
+  function filterSetOnly(key) { filterReset(); if (key !== 'TODAS') filterToggle(key); }
+  function filterRemoveTag(name) { const i = state.f.tags.indexOf(name); if (i !== -1) state.f.tags.splice(i, 1); }
+  function filterCount() { const f = state.f; return f.cats.length + f.tags.length + (f.fav ? 1 : 0) + (f.special ? 1 : 0); }
+  function filterKeys() {
+    const f = state.f, keys = [];
+    if (f.special) keys.push(f.special);
+    f.cats.forEach(c => keys.push(c));
+    if (f.fav) keys.push('FAV');
+    f.tags.forEach(t => keys.push('TAG:' + t));
+    return keys;
+  }
+  function filterLabelOf(key) {
+    if (key === 'FAV') return '★ Favoritas';
+    if (key === 'REVISAR') return '⚠️ Revisar';
+    if (key === 'MIX') return '🎭 Mix';
+    if (key.indexOf('TAG:') === 0) return '🏷️ ' + key.slice(4);
+    return catLabel(key);
+  }
+
+  // Grupos de opciones del selector, con el nº de recetas que quedarían al elegir cada una
+  function filterOptionGroups() {
+    const present = {}, tagSeen = {};
+    let low = 0, mix = 0;
     recipes.forEach(r => {
       if (hiddenIds.has(r.id)) return;
-      if (isMix(r)) { mixCount++; return; }
-      if (isLowContent(r)) { lowContentCount++; return; }
-      counts[r.category] = (counts[r.category]||0) + 1;
+      if (isMix(r)) { mix++; return; }
+      if (isLowContent(r)) { low++; return; }
+      present[r.category] = true;
+      (r.tags || []).forEach(t => { tagSeen[t] = true; });
     });
-    const cats = CATEGORY_ORDER.filter(c => counts[c]);
-    const all = [
-      {key:"TODAS", label:"Todas", n: recipes.length - hiddenIds.size - lowContentCount - mixCount},
-      ...cats.map(c => ({key:c, label:catLabel(c), n: counts[c]})),
-      {key:"FAV", label:"★ Favoritas", n: favs.size},
-    ];
-    if (lowContentCount > 0) all.push({key:"REVISAR", label:"⚠️ Revisar", n: lowContentCount});
-    if (mixCount > 0) all.push({key:"MIX", label:"🎭 Mix", n: mixCount});
-    const tagCounts = {};
-    recipes.forEach(r => {
-      if (hiddenIds.has(r.id) || isMix(r) || isLowContent(r)) return;
-      (r.tags || []).forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; });
-    });
-    getAllTags().forEach(t => {
-      if (tagCounts[t]) all.push({key: "TAG:" + t, label: "🏷️ " + t, n: tagCounts[t]});
-    });
-    filterOptionsCache = all;
-    return all;
+    const count = (mutate) => { const f = { cats: state.f.cats.slice(), fav: state.f.fav, tags: state.f.tags.slice(), special: '' }; mutate(f); return recipes.filter(r => passFilters(r, f)).length; };
+    const cats = CATEGORY_ORDER.filter(c => present[c]).map(c => ({ key: c, label: catLabel(c), n: count(f => { f.cats = [c]; }) }));
+    const other = [{ key: 'FAV', label: '★ Favoritas', n: count(f => { f.fav = true; }) }];
+    const tags = Object.keys(tagSeen).sort((a, b) => a.localeCompare(b, 'es'))
+      .map(t => ({ key: 'TAG:' + t, label: '🏷️ ' + t, n: count(f => { if (f.tags.indexOf(t) === -1) f.tags.push(t); }) }));
+    const special = [];
+    if (low) special.push({ key: 'REVISAR', label: '⚠️ Revisar (sin contenido)', n: low });
+    if (mix) special.push({ key: 'MIX', label: '🎭 Mix', n: mix });
+    return { cats, other, tags, special };
   }
 
   function buildChips() {
-    const all = computeFilterOptions();
-    const current = all.find(c => c.key === state.cat) ||
-      (state.cat.indexOf('TAG:') === 0 ? { label: '🏷️ ' + state.cat.slice(4), n: 0 } : all[0]);
-    filterBtn.classList.toggle('active', state.cat !== 'TODAS');
-    document.getElementById('filterLabel').textContent = current.label;
-    document.getElementById('filterCount').textContent = current.n;
+    const total = recipes.filter(r => passFilters(r, state.f)).length;
+    const n = filterCount();
+    const keys = filterKeys();
+    filterBtn.classList.toggle('active', n > 0);
+    document.getElementById('filterLabel').textContent = n === 0 ? 'Todas' : n === 1 ? filterLabelOf(keys[0]) : n + ' filtros';
+    document.getElementById('filterCount').textContent = total;
+    // fichas de los filtros activos, para quitarlos de uno en uno
+    const box = document.getElementById('activeFilters');
+    if (box) {
+      box.hidden = n < 2;
+      box.innerHTML = n < 2 ? '' : keys.map(k => '<button type="button" class="af-chip" data-af="' + escapeAttr(k) + '" aria-label="Quitar filtro ' + escapeAttr(filterLabelOf(k)) + '">' + escapeHtml(filterLabelOf(k)) + ' ✕</button>').join('') +
+        '<button type="button" class="delete-link" data-af="TODAS">Quitar todos</button>';
+    }
   }
 
   function openFilterPicker() {
-    const all = computeFilterOptions();
+    document.addEventListener('keydown', escClose);
+    renderFilterPicker(0);
+  }
+  function renderFilterPicker(keepScroll) {
+    const g = filterOptionGroups();
+    const item = c => '<button type="button" class="filter-pick-item' + (filterHas(c.key) ? ' active' : '') + (c.n === 0 && !filterHas(c.key) ? ' is-empty' : '') + '" data-fkey="' + escapeAttr(c.key) + '" aria-pressed="' + (filterHas(c.key) ? 'true' : 'false') + '">' +
+      '<span>' + (filterHas(c.key) ? '✓ ' : '') + escapeHtml(c.label) + '</span><span class="n">' + c.n + '</span></button>';
+    const section = (title, list) => list.length ? '<div class="sl-section-hdr">' + title + '</div><div class="filter-pick-list">' + list.map(item).join('') + '</div>' : '';
+    const total = recipes.filter(r => passFilters(r, state.f)).length;
     overlayRoot.innerHTML =
       '<div class="overlay" id="ov">' +
-        '<div class="sheet" role="dialog" aria-modal="true">' +
+        '<div class="sheet" role="dialog" aria-modal="true" id="fpSheet">' +
           '<div class="sheet-top"><h2>Filtros</h2>' +
           '<button class="close-btn" id="closeBtn" aria-label="Cerrar">✕</button></div>' +
-          '<div class="filter-pick-list">' +
-            all.map(c => '<button type="button" class="filter-pick-item' + (state.cat === c.key ? ' active' : '') + '" data-cat="' + escapeAttr(c.key) + '">' +
-              '<span>' + escapeHtml(c.label) + '</span><span class="n">' + c.n + '</span>' +
-            '</button>').join('') +
+          '<p class="form-hint" style="margin:-2px 0 4px">Puedes combinar varios. Las categorías suman entre sí (Pescado o Carne); favoritas y etiquetas se aplican además (tienen que cumplirse todas). El número de cada opción es el de recetas que tiene con el resto de filtros que ya has marcado.</p>' +
+          section('Categoría', g.cats) + section('Favoritas', g.other) + section('Etiquetas', g.tags) + section('Otras vistas', g.special) +
+          '<div class="fp-foot">' +
+            '<button type="button" class="submit-btn" id="fpDone">Ver ' + total + (total === 1 ? ' receta' : ' recetas') + '</button>' +
+            (filterCount() ? '<button type="button" class="delete-link" id="fpClear">Quitar filtros</button>' : '') +
           '</div>' +
         '</div>' +
       '</div>';
+    const sheet = document.getElementById('fpSheet');
+    if (keepScroll) sheet.scrollTop = keepScroll;
     document.getElementById('closeBtn').addEventListener('click', closeDetail);
     document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
-    document.addEventListener('keydown', escClose);
-    overlayRoot.querySelectorAll('[data-cat]').forEach(btn => {
+    document.getElementById('fpDone').addEventListener('click', closeDetail);
+    const clr = document.getElementById('fpClear');
+    if (clr) clr.addEventListener('click', () => { filterReset(); state.visible = PAGE_SIZE; render(); renderFilterPicker(sheet.scrollTop); });
+    sheet.querySelectorAll('[data-fkey]').forEach(btn => {
       btn.addEventListener('click', () => {
-        state.cat = btn.getAttribute('data-cat');
+        filterToggle(btn.getAttribute('data-fkey'));
         state.visible = PAGE_SIZE;
         render();
-        closeDetail();
+        renderFilterPicker(sheet.scrollTop);
       });
     });
   }
+  document.getElementById('activeFilters').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-af]');
+    if (!b) return;
+    const k = b.getAttribute('data-af');
+    if (k === 'TODAS') filterReset(); else filterToggle(k);
+    state.visible = PAGE_SIZE;
+    render();
+  });
 
   function render() {
     const filtered = recipes.filter(matches);
@@ -1511,7 +1589,7 @@
     else { favs.add(id); el.classList.add('on'); el.textContent = '★'; }
     saveFavs();
     filterOptionsCache = null; // fav count changed
-    if (state.cat === 'FAV') {
+    if (state.f.fav) {
       render(); // card must appear/disappear in FAV filter
     } else {
       buildChips(); // just update the filter chip label/count
@@ -2757,14 +2835,14 @@
   }
 
   function filterByTag(tag) {
-    state.cat = 'TAG:' + tag;
+    filterSetOnly('TAG:' + tag);
     state.visible = PAGE_SIZE;
     render();
     history.back();
   }
 
   function filterByCategory(cat) {
-    state.cat = cat;
+    filterSetOnly(cat);
     state.visible = PAGE_SIZE;
     render();
     if (currentDetailId) history.back();
@@ -3983,13 +4061,14 @@
     const merged = others.indexOf(canon) !== -1;
     await rvTagApply(tags => tags.map(t => t === oldName ? canon : t), affected,
       (merged ? 'Unida «' + oldName + '» con «' + canon + '»' : 'Renombrada «' + oldName + '» → «' + canon + '»'));
-    if (state.cat === 'TAG:' + oldName) { state.cat = 'TAG:' + canon; render(); }
+    const fi = state.f.tags.indexOf(oldName);
+    if (fi !== -1) { state.f.tags[fi] = canon; state.f.tags = state.f.tags.filter((t, i, a) => a.indexOf(t) === i); render(); }
   }
 
   async function rvTagDelete(name) {
     const affected = recipes.filter(r => (r.tags || []).indexOf(name) !== -1);
     await rvTagApply(tags => tags.filter(t => t !== name), affected, 'Borrada «' + name + '»');
-    if (state.cat === 'TAG:' + name) { state.cat = 'TODAS'; state.visible = PAGE_SIZE; render(); }
+    if (state.f.tags.indexOf(name) !== -1) { filterRemoveTag(name); state.visible = PAGE_SIZE; render(); }
   }
 
   function renderReview(keepScroll) {
@@ -4051,7 +4130,7 @@
     // Gestor de etiquetas
     const tname = el.getAttribute('data-tag-name');
     if (act === 'tagview') {
-      state.cat = 'TAG:' + tname; state.visible = PAGE_SIZE; render(); closeReview(); return;
+      filterSetOnly('TAG:' + tname); state.visible = PAGE_SIZE; render(); closeReview(); return;
     }
     if (act === 'tagrename') { tagEdit = tname; tagDel = null; reviewMsg = ''; redraw(); return; }
     if (act === 'tagdel') { tagDel = tname; tagEdit = null; reviewMsg = ''; redraw(); return; }
