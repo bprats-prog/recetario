@@ -3968,6 +3968,29 @@
   // una copia incompleta que parece completa es peor que ninguna.
   const BACKUP_COLLECTIONS = ['overrides', 'manual_recipes', 'hidden', 'notes', 'edits', 'tags', 'plan'];
 
+  // Cuándo se hizo la última copia (solo se sabe de las descargadas desde este dispositivo)
+  const BACKUP_AT_KEY = 'recetario_lastbackup_v1';
+  const BACKUP_STALE_DAYS = 30;
+  function showBackupAge() {
+    const el = document.getElementById('backupAge');
+    if (!el) return;
+    let at = 0;
+    try { at = Date.parse(localStorage.getItem(BACKUP_AT_KEY) || '') || 0; } catch (e) {}
+    if (!at) {
+      el.textContent = '⚠️ No has hecho ninguna copia desde este dispositivo.';
+      el.style.color = 'var(--accent-2)';
+      return;
+    }
+    const days = Math.floor((Date.now() - at) / 86400000);
+    const when = days <= 0 ? 'hoy' : days === 1 ? 'ayer'
+      : days < 14 ? 'hace ' + days + ' días'
+      : days < 60 ? 'hace ' + Math.round(days / 7) + ' semanas'
+      : 'hace ' + Math.round(days / 30) + ' meses';
+    const stale = days >= BACKUP_STALE_DAYS;
+    el.textContent = (stale ? '⚠️ ' : '') + 'Última copia desde este dispositivo: ' + when + '.' + (stale ? ' Conviene hacer una nueva.' : '');
+    el.style.color = stale ? 'var(--accent-2)' : '';
+  }
+
   async function downloadBackup() {
     const btn = document.getElementById('backupBtn');
     const status = document.getElementById('backupStatus');
@@ -4005,7 +4028,9 @@
       a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
       const total = Object.values(colecciones).reduce((s, l) => s + l.length, 0);
+      try { localStorage.setItem(BACKUP_AT_KEY, now.toISOString()); } catch (e) {}
       say('✓ Copia descargada (' + fname + ', ' + total + ' elementos).');
+      showBackupAge();
     } catch (e) {
       console.error('backup', e);
       say('No se ha podido hacer la copia: ' + (e && e.message ? e.message : 'error de conexión') + ' Inténtalo de nuevo.');
@@ -4033,11 +4058,13 @@
               '<p class="form-hint" style="margin:0 0 10px">Descarga un archivo con todo lo que guardas en la nube: ediciones de texto, categorías, etiquetas, notas y valoraciones, recetas añadidas, recetas ocultas, plan semanal y lista de la compra, más tus favoritas de este dispositivo.</p>' +
               '<button type="button" class="submit-btn" id="backupBtn" style="padding:9px 18px;font-size:14px">Descargar copia</button>' +
               '<p class="form-hint" id="backupStatus" style="margin:8px 0 0"></p>' +
+              '<p class="form-hint" id="backupAge" style="margin:6px 0 0"></p>' +
             '</div>' +
             '<p style="margin-top:14px"><button class="delete-link" id="logoutBtn" type="button">Salir del modo edición aquí</button></p>' +
           '</div>' +
         '</div>';
       document.getElementById('backupBtn').addEventListener('click', downloadBackup);
+      showBackupAge();
       document.getElementById('closeBtn').addEventListener('click', closeDetail);
       document.getElementById('ov').addEventListener('click', (e) => { if (e.target.id === 'ov') closeDetail(); });
       document.addEventListener('keydown', escClose);
