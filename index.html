@@ -816,6 +816,14 @@
     cursor: pointer; margin: 0 0 16px;
   }
   .cook-start:hover { opacity: .92; }
+  .serv-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 2px 0 10px; }
+  .serv-lbl { font-size: 14px; color: var(--ink-soft); }
+  .serv-n { font-size: 18px; min-width: 1.4em; text-align: center; }
+  .serv-btn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; font-size: 20px; line-height: 1; cursor: pointer; }
+  .serv-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .serv-btn:disabled { opacity: .4; cursor: default; }
+  .serv-hint { flex-basis: 100%; margin: 0; }
+  .cook-serv-note { font-size: .6em; opacity: .75; margin: 0 0 10px; }
   .cook-resume { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; padding: 12px 14px; border: 1px solid var(--accent); border-radius: 12px; background: var(--accent-soft); font-size: 14px; line-height: 1.4; }
   .cook-resume[hidden] { display: none; }
   .cook-resume-btns { display: flex; align-items: center; gap: 12px; }
@@ -1523,7 +1531,7 @@
     const plain = s => String(s).replace(/\*\*(.+?)\*\*/g, '*$1*');
     const parts = ['*' + plain(r.title) + '*'];
     if (r.ingredients && r.ingredients.length) {
-      parts.push('*Ingredientes*\n' + r.ingredients.map(i => '• ' + plain(i)).join('\n'));
+      parts.push('*Ingredientes*' + (servFactor(r) !== 1 ? ' (para ' + servTarget(r) + (servTarget(r) === 1 ? ' persona' : ' personas') + ')' : '') + '\n' + scaledIngredients(r).map(i => '• ' + plain(i)).join('\n'));
     }
     if (r.steps && r.steps.length) {
       parts.push('*Elaboración*\n' + r.steps.map((s, i) => (i + 1) + '. ' + plain(s)).join('\n'));
@@ -1716,12 +1724,13 @@
   function cookTotalPages() { return cook.r.steps.length + ((cook.r.tips && cook.r.tips.length) ? 1 : 0); }
 
   function cookRender() {
-    const r = cook.r, steps = r.steps || [], ings = r.ingredients || [];
+    const r = cook.r, steps = r.steps || [], ings = scaledIngredients(r);
     const body = document.getElementById('cookBody'), nav = document.getElementById('cookNav');
     document.getElementById('cookTabIng').classList.toggle('active', cook.tab === 'ing');
     document.getElementById('cookTabSteps').classList.toggle('active', cook.tab === 'steps');
     if (cook.tab === 'ing') {
-      body.innerHTML = '<ul class="cook-ing">' + ings.map((l, i) =>
+      body.innerHTML = (servFactor(r) !== 1 ? '<p class="cook-serv-note">Cantidades para ' + servTarget(r) + (servTarget(r) === 1 ? ' persona' : ' personas') + ' (la receta original es para ' + servBase(r) + ')</p>' : '') +
+        '<ul class="cook-ing">' + ings.map((l, i) =>
         '<li class="' + (cook.checked.has(i) ? 'done' : '') + '"><label><input type="checkbox" data-ing="' + i + '"' + (cook.checked.has(i) ? ' checked' : '') + '><span>' + formatRichText(l) + '</span></label></li>'
       ).join('') + '</ul>';
       body.querySelectorAll('[data-ing]').forEach(cb => cb.addEventListener('change', () => {
@@ -1869,10 +1878,170 @@
     return out + '</span>';
   }
 
+
+  // ---- Escalado de raciones ---------------------------------------------------
+  // Cada receta tiene unas raciones "de origen" (las que indica el texto o, si no, 2; se pueden
+  // corregir en modo edición y se guardan en la nube) y unas raciones elegidas en este
+  // dispositivo. Solo se reescriben las cantidades de la lista de ingredientes: los pasos y
+  // los tiempos de cocción no cambian.
+  const SERV_VULGAR = { '½': 0.5, '¼': 0.25, '¾': 0.75, '⅓': 1 / 3, '⅔': 2 / 3, '⅛': 0.125 };
+  const SERV_FRACS = [[0, ''], [0.25, '¼'], [1 / 3, '⅓'], [0.5, '½'], [2 / 3, '⅔'], [0.75, '¾'], [1, '']];
+  const SERV_INVARIANT = new Set('g gr grs kg kgs mg ml l lt cl dl cc cda cdas cdta cdtas de del en a o y al con sin para por x'.split(' '));
+  const SERV_ADJ = new Set('rojo roja verde amarillo amarilla grande mediano mediana pequeno pequena maduro madura fresco fresca entero entera duro dura grueso gruesa fino fina blanco blanca negro negra dulce picante cocido cocida crudo cruda pelado pelada'.split(' '));
+
+  // Lee una cantidad al principio de s: "1 1/2", "1 ½", "3/4", "½", "2,5", "200". -> { v, len } | null
+  function servReadQty(s) {
+    let m;
+    if ((m = s.match(/^(\d+)\s+(\d+)\/(\d+)/)) && +m[3]) return { v: +m[1] + m[2] / m[3], len: m[0].length };
+    if ((m = s.match(/^(\d+)\s*([½¼¾⅓⅔⅛])/))) return { v: +m[1] + SERV_VULGAR[m[2]], len: m[0].length };
+    if ((m = s.match(/^(\d+)\/(\d+)/)) && +m[2]) return { v: m[1] / m[2], len: m[0].length };
+    if ((m = s.match(/^([½¼¾⅓⅔⅛])/))) return { v: SERV_VULGAR[m[1]], len: m[0].length };
+    if ((m = s.match(/^\d+(?:[.,]\d+)?/))) return { v: parseFloat(m[0].replace(',', '.')), len: m[0].length };
+    return null;
+  }
+
+  function servFmt(v) {
+    if (v >= 100) return String(Math.round(v / 5) * 5);
+    if (v >= 10) return String(Math.round(v));
+    let whole = Math.floor(v + 1e-9), frac = v - whole, best = null;
+    SERV_FRACS.forEach(([f, sym]) => { const d = Math.abs(frac - f); if (d <= 0.045 && (!best || d < best.d)) best = { d, f, sym }; });
+    if (best) {
+      if (best.f === 1) { whole += 1; best = { sym: '' }; }
+      if (!whole && !best.sym) return '0';
+      return (whole ? String(whole) : '') + (whole && best.sym ? ' ' : '') + best.sym;
+    }
+    return (Math.round(v * 10) / 10).toString().replace('.', ',');
+  }
+
+  function servPlural(w) {
+    if (/ón$/.test(w)) return w.slice(0, -2) + 'ones';
+    if (/ín$/.test(w)) return w.slice(0, -2) + 'ines';
+    if (/z$/.test(w)) return w.slice(0, -1) + 'ces';
+    if (/[aeiouáéíóú]$/.test(w)) return w + 's';
+    return w + 'es';
+  }
+  function servSingular(w) {
+    if (/ones$/.test(w)) return w.slice(0, -4) + 'ón';
+    if (/ines$/.test(w)) return w.slice(0, -4) + 'ín';
+    if (/ces$/.test(w)) return w.slice(0, -3) + 'z';
+    if (/(l|r|d|j)es$/.test(w) && !/(ntes|tes|des)$/.test(w)) return w.slice(0, -2);
+    if (/s$/.test(w)) return w.slice(0, -1);
+    return w;
+  }
+  function servMatchCase(from, to) { return from[0] === from[0].toUpperCase() && from[0] !== from[0].toLowerCase() ? to[0].toUpperCase() + to.slice(1) : to; }
+
+  // Ajusta singular/plural de la(s) primera(s) palabra(s) tras la cantidad ("1 huevo" -> "2 huevos")
+  function servAgree(rest, toPlural) {
+    let out = '', s = rest, first = true;
+    for (let guard = 0; guard < 3; guard++) {
+      const m = s.match(/^(\s*)([A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)/);
+      if (!m) break;
+      const w = m[2], nw = norm(w);
+      if (SERV_INVARIANT.has(nw)) break;
+      if (!first && !SERV_ADJ.has(nw.replace(/s$/, '')) && !SERV_ADJ.has(nw)) break;
+      const lw = w.toLowerCase();
+      // palabras ya en la forma pedida, o que no cambian de número (p. ej. "pimienta")
+      const nuevo = toPlural ? (/s$/.test(lw) ? lw : servPlural(lw)) : servSingular(lw);
+      out += m[1] + servMatchCase(w, nuevo);
+      s = s.slice(m[0].length);
+      first = false;
+    }
+    return out + s;
+  }
+
+  // Escala la cantidad inicial de una línea de ingredientes (y las de gramos/ml entre paréntesis)
+  function scaleIngredient(line, factor) {
+    if (!line || Math.abs(factor - 1) < 1e-9) return line;
+    const mp = String(line).match(/^(\s*(?:[-•·*]\s+)?(?:\*\*|__)?\s*)/);
+    const prefix = mp[1];
+    let s = line.slice(prefix.length);
+    const q1 = servReadQty(s);
+    if (!q1) return line;
+    let out = prefix + servFmt(q1.v * factor);
+    s = s.slice(q1.len);
+    let qMax = q1.v, qMaxNew = q1.v * factor;
+    const rg = s.match(/^(\s*(?:-|–|—|a|o)\s*)(?=\d|[½¼¾⅓⅔⅛])/i);
+    if (rg) {
+      const after = s.slice(rg[0].length);
+      const q2 = servReadQty(after);
+      if (q2) {
+        out += rg[1] + servFmt(q2.v * factor);
+        s = after.slice(q2.len);
+        qMax = Math.max(q1.v, q2.v); qMaxNew = qMax * factor;
+      }
+    }
+    // el cambio de número gramatical solo se toca si cruza el 1
+    const wasPlural = qMax > 1.0001, willBePlural = qMaxNew > 1.0001;
+    if (wasPlural !== willBePlural) s = servAgree(s, willBePlural);
+    s = s.replace(/\((\d+(?:[.,]\d+)?)\s*(g|gr|kg|ml|l|cl)\b/gi, (all, n, u) => '(' + servFmt(parseFloat(n.replace(',', '.')) * factor) + ' ' + u);
+    return out + s;
+  }
+
+  // Raciones que indica el propio texto de la receta ("para 4 personas", "6-8 porciones"); 0 si no dice
+  function detectServings(r) {
+    const txt = [r.title].concat(r.ingredients || [], r.steps || [], r.tips || []).join(' \n ');
+    const m = txt.match(/(\d{1,2})(?:\s*(?:-|–|a|o)\s*\d{1,2})?\s*(?:personas?|raciones|porciones|comensales|pax)\b/i);
+    if (!m) return 0;
+    const n = parseInt(m[1], 10);
+    return n >= 1 && n <= 12 ? n : 0;
+  }
+
+  const SERV_KEY = 'recetario_servings_v1';
+  const myServings = {};          // raciones de origen guardadas en la nube (colección notes)
+  let servingsTarget = {};        // raciones elegidas en este dispositivo: { id: n }
+  try { const v = JSON.parse(localStorage.getItem(SERV_KEY) || '{}'); if (v && typeof v === 'object') servingsTarget = v; } catch (e) {}
+  function saveServingsTarget() { try { localStorage.setItem(SERV_KEY, JSON.stringify(servingsTarget)); } catch (e) {} }
+
+  function servBase(r) { return myServings[r.id] || detectServings(r) || 2; }
+  function servBaseKnown(r) { return !!(myServings[r.id] || detectServings(r)); }
+  function servTarget(r) { return servingsTarget[r.id] || servBase(r); }
+  function servFactor(r) { return servTarget(r) / servBase(r); }
+  function scaledIngredients(r) {
+    const f = servFactor(r);
+    return Math.abs(f - 1) < 1e-9 ? (r.ingredients || []) : (r.ingredients || []).map(l => scaleIngredient(l, f));
+  }
+  // Repinta solo el bloque de ingredientes (la ficha entera recargaría el vídeo y movería la pantalla)
+  function refreshServings(r) {
+    const sec = document.querySelector('#detailPage .section-ingredients');
+    if (!sec) return;
+    sec.innerHTML = '<h3>Ingredientes</h3>' + servingsBarHtml(r) + '<ul>' + scaledIngredients(r).map(i => '<li>' + formatRichText(i) + '</li>').join('') + '</ul>';
+  }
+  async function changeServingsBase(r) {
+    const ans = window.prompt('¿Para cuántas personas está escrita esta receta?', String(servBase(r)));
+    if (ans === null) return;
+    const n = parseInt(ans, 10);
+    if (!(n >= 1 && n <= 24)) { window.alert('Pon un número entre 1 y 24.'); return; }
+    myServings[r.id] = n;
+    if (servingsTarget[r.id] === n) delete servingsTarget[r.id];
+    saveServingsTarget();
+    refreshServings(r);
+    if (canEdit) await apiSetDoc('notes', r.id, notesPayload(r.id));
+  }
+  function notesPayload(id) {
+    const p = { rating: myRatings[id] || 0, note: myNotes[id] || '' };
+    if (myServings[id]) p.servings = myServings[id];
+    return p;
+  }
+  function servingsBarHtml(r) {
+    const base = servBase(r), target = servTarget(r), scaled = target !== base;
+    return '<div class="serv-bar" id="servBar">' +
+      '<span class="serv-lbl">Para</span>' +
+      '<button type="button" class="serv-btn" data-serv="-1" aria-label="Menos personas"' + (target <= 1 ? ' disabled' : '') + '>−</button>' +
+      '<b class="serv-n" aria-live="polite">' + target + '</b>' +
+      '<button type="button" class="serv-btn" data-serv="1" aria-label="Más personas"' + (target >= 24 ? ' disabled' : '') + '>+</button>' +
+      '<span class="serv-lbl">' + (target === 1 ? 'persona' : 'personas') + '</span>' +
+      (scaled ? '<button type="button" class="delete-link" data-serv="reset">Volver a ' + base + '</button>' : '') +
+      '<div class="form-hint serv-hint">' +
+        (scaled ? 'Cantidades ajustadas (la receta original es para ' + base + '). Los pasos y tiempos no cambian. ' : (servBaseKnown(r) ? '' : 'Se supone que la receta es para ' + base + ' personas. ')) +
+        (canEdit ? '<button type="button" class="delete-link" data-serv="base">Cambiar las raciones de origen</button>' : '') +
+      '</div>' +
+    '</div>';
+  }
+
   function bodyHtml(r) {
     let html = '';
     if (r.ingredients && r.ingredients.length) {
-      html += '<div class="section-block section-ingredients"><h3>Ingredientes</h3><ul>' + r.ingredients.map(i => '<li>' + formatRichText(i) + '</li>').join('') + '</ul></div>';
+      html += '<div class="section-block section-ingredients"><h3>Ingredientes</h3>' + servingsBarHtml(r) + '<ul>' + scaledIngredients(r).map(i => '<li>' + formatRichText(i) + '</li>').join('') + '</ul></div>';
     }
     if (r.steps && r.steps.length) {
       html += '<div class="section-block section-steps"><h3>Elaboración</h3><ol>' + r.steps.map(s => '<li>' + formatRichText(s) + '</li>').join('') + '</ol></div>';
@@ -2010,6 +2179,19 @@
     if (shareBtn) shareBtn.addEventListener('click', () => shareRecipe(r, shareBtn));
     const cookStartBtn = document.getElementById('cookStartBtn');
     if (cookStartBtn) cookStartBtn.addEventListener('click', () => openCook(r));
+    const detailPageEl = document.getElementById('detailPage');
+    if (detailPageEl) detailPageEl.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-serv]');
+      if (!b) return;
+      const act = b.getAttribute('data-serv');
+      if (act === 'base') { changeServingsBase(r); return; }
+      const base = servBase(r);
+      if (act === 'reset') delete servingsTarget[r.id];
+      else servingsTarget[r.id] = Math.max(1, Math.min(24, servTarget(r) + parseInt(act, 10)));
+      if (servingsTarget[r.id] === base) delete servingsTarget[r.id];
+      saveServingsTarget();
+      refreshServings(r);
+    });
     document.getElementById('detailCart').addEventListener('click', (e) => toggleCart(r.id, e.currentTarget));
     const tagPillsEl = document.getElementById('tagPills');
     if (tagPillsEl) tagPillsEl.addEventListener('click', (e) => {
@@ -2512,12 +2694,18 @@
   function applyNotesDocs(docs) {
     for (const k of Object.keys(myRatings)) delete myRatings[k];
     for (const k of Object.keys(myNotes)) delete myNotes[k];
+    for (const k of Object.keys(myServings)) delete myServings[k];
     docs.forEach(d => {
       const data = d.data || {};
       if (data.rating) myRatings[d.id] = data.rating;
       myNotes[d.id] = data.note || '';
+      if (data.servings >= 1 && data.servings <= 24) myServings[d.id] = data.servings;
     });
     render();
+    if (currentDetailId && !currentDetailEditing) {
+      const r = recipes.find(x => x.id === currentDetailId);
+      if (r) refreshServings(r);
+    }
   }
   function applyEditsDocs(docs) {
     for (const k of Object.keys(textEdits)) delete textEdits[k];
@@ -2609,12 +2797,12 @@
     myRatings[id] = rating;
     if (rating === 0) delete myRatings[id];
     render();
-    if (canEdit) await apiSetDoc('notes', id, { rating, note: myNotes[id] || '' });
+    if (canEdit) await apiSetDoc('notes', id, notesPayload(id));
   }
 
   async function saveNote(id, note) {
     myNotes[id] = note;
-    if (canEdit) await apiSetDoc('notes', id, { rating: myRatings[id] || 0, note });
+    if (canEdit) await apiSetDoc('notes', id, notesPayload(id));
   }
 
   async function saveNewRecipe(recipeData) {
@@ -2842,12 +3030,12 @@
     const recipeItems = recipeIds.map(id => recipes.find(r => r.id === id)).filter(Boolean);
     const recipeBody = recipeItems.length
       ? recipeItems.map(r => {
-          const lines = (r.ingredients && r.ingredients.length) ? r.ingredients : null;
+          const lines = (r.ingredients && r.ingredients.length) ? scaledIngredients(r) : null;
           const ingredientsHtml = lines
             ? lines.map(l => '• ' + escapeHtml(l)).join('\n')
             : '<span class="cart-empty-hint">Sin ingredientes detectados, mira la receta completa.</span>';
           return '<div class="cart-item">' +
-            '<div class="cart-item-top"><h3>' + escapeHtml(r.title) + '</h3>' +
+            '<div class="cart-item-top"><h3>' + escapeHtml(r.title) + (servFactor(r) !== 1 ? ' <span class="cart-empty-hint">(para ' + servTarget(r) + ')</span>' : '') + '</h3>' +
             '<button class="cart-remove" data-remove="' + r.id + '" type="button">Quitar</button></div>' +
             '<div class="cart-ingredients">' + ingredientsHtml + '</div>' +
           '</div>';
@@ -3129,7 +3317,7 @@
         if (planSkipped.noIngredients.indexOf(r.title) === -1) planSkipped.noIngredients.push(r.title);
         return;
       }
-      r.ingredients.forEach(line => {
+      scaledIngredients(r).forEach(line => {
         const trimmed = (line || '').trim();
         // Skip lines that are clearly cooking steps: end with a period or are very long sentences
         if (trimmed.endsWith('.') || trimmed.length > 80) return;
