@@ -27,6 +27,7 @@
     --accent: #3F5E33;
     --accent-ink: #F4F6EE;
     --accent-2: #B9702E;
+    --accent-2-text: #8F5016;
     --accent-2-soft: rgba(185,112,46,0.14);
     --accent-soft: rgba(63,94,51,0.12);
     --shadow: 0 1px 2px rgba(38,37,25,0.06);
@@ -43,6 +44,7 @@
       --accent: #8FBF78;
       --accent-ink: #14200F;
       --accent-2: #E6A15B;
+      --accent-2-text: #E6A15B;
       --accent-2-soft: rgba(230,161,91,0.16);
       --accent-soft: rgba(143,191,120,0.14);
       --shadow: 0 1px 2px rgba(0,0,0,0.3);
@@ -58,6 +60,7 @@
     --accent: #8FBF78;
     --accent-ink: #14200F;
     --accent-2: #E6A15B;
+    --accent-2-text: #E6A15B;
     --accent-2-soft: rgba(230,161,91,0.16);
     --accent-soft: rgba(143,191,120,0.14);
     --shadow: 0 1px 2px rgba(0,0,0,0.3);
@@ -66,6 +69,10 @@
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   [hidden] { display: none !important; }
+  .ig-embed a { color: var(--accent); }
+  .skip-link { position: absolute; left: 8px; top: -60px; z-index: 100; background: var(--accent); color: var(--accent-ink); padding: 10px 16px; border-radius: 10px; font-weight: 700; text-decoration: none; }
+  .skip-link:focus { top: 8px; outline: 3px solid var(--focus); outline-offset: 2px; }
+  main:focus { outline: none; }
   html { height: 100%; }
   body {
     margin: 0;
@@ -187,8 +194,6 @@
   }
   .surprise-btn:hover { background: var(--accent); color: var(--accent-ink); }
   .surprise-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
-  .cart-btn { flex: none; background: none; border: none; cursor: pointer; font-size: 16px; line-height: 1; color: var(--line); padding: 2px; }
-  .cart-btn.on { color: var(--accent); }
   .cart-item { display: flex; flex-direction: column; gap: 6px; padding: 12px 0; border-bottom: 1px solid var(--line); }
   .cart-item:last-child { border-bottom: none; }
   .cart-item-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
@@ -242,7 +247,7 @@
     transition: background .12s, color .12s, border-color .12s;
   }
   .filter-btn:hover { border-color: var(--accent); color: var(--ink); }
-  .filter-btn .n { font-variant-numeric: tabular-nums; opacity: .75; }
+  .filter-btn .n { font-variant-numeric: tabular-nums; }
   .filter-btn.active {
     background: var(--accent);
     color: var(--accent-ink);
@@ -294,39 +299,39 @@
     gap: 14px;
   }
   .card {
+    position: relative;
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: 12px;
     padding: 14px 15px 13px;
-    cursor: pointer;
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
     gap: 8px;
     text-align: left;
-    font: inherit;
     color: inherit;
   }
-  .card:hover { border-color: var(--accent); }
-  .card:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-  .card h3 {
-    font-size: 17px;
-    margin: 0;
-    line-height: 1.28;
-    font-weight: 500;
+  .card:hover, .card:focus-within { border-color: var(--accent); }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
+  .card-title { font-size: 17px; margin: 0; line-height: 1.28; font-weight: 500; flex: 1; min-width: 0; }
+  /* El título es el botón que abre la receta y su ::after cubre toda la tarjeta; los demás botones quedan por encima */
+  .card-open { font: inherit; color: inherit; background: none; border: none; padding: 0; margin: 0; text-align: left; cursor: pointer; }
+  .card-open::after { content: ''; position: absolute; inset: 0; border-radius: 12px; }
+  .card-open:focus-visible { outline: none; }
+  .card-open:focus-visible::after { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .card-actions { display: flex; flex: none; margin: -7px -9px 0 0; position: relative; z-index: 1; }
+  .cart-btn, .fav-btn {
+    flex: none; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; line-height: 1;
+    color: var(--ink-soft); min-width: 38px; min-height: 38px; border-radius: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
   }
-  .fav-btn {
-    flex: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    line-height: 1;
-    color: var(--line);
-    padding: 2px;
-  }
-  .fav-btn.on { color: var(--accent-2); }
+  .cart-btn { font-size: 19px; }
+  .fav-btn { font-size: 22px; }
+  .cart-btn:hover, .fav-btn:hover { background: var(--accent-soft); }
+  .cart-btn:focus-visible, .fav-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .cart-btn.on { color: var(--accent); }
+  .fav-btn.on { color: var(--accent-2-text); }
+  .card .tag { position: relative; z-index: 1; }
   .tag {
     align-self: flex-start;
     font-size: 11px;
@@ -336,10 +341,10 @@
     padding: 3px 8px;
     border-radius: 999px;
     background: var(--accent-2-soft);
-    color: var(--accent-2);
+    color: var(--accent-2-text);
   }
   button.tag { border: none; cursor: pointer; font-family: inherit; }
-  button.tag:hover { background: var(--accent-2); color: var(--accent-ink); }
+  button.tag:hover { background: var(--accent-2-text); color: var(--accent-ink); }
   button.tag:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
 
   .empty {
@@ -502,12 +507,12 @@
     border-radius: 4px 10px 10px 4px;
     padding: 14px 16px;
   }
-  .section-tips h3 { color: var(--accent-2); margin-top: 0; }
+  .section-tips h3 { color: var(--accent-2-text); margin-top: 0; }
   .section-tips ul { list-style: none; padding-left: 0; }
   .section-tips li { display: flex; gap: 8px; align-items: flex-start; }
   .section-tips li::before {
     content: "→";
-    color: var(--accent-2);
+    color: var(--accent-2-text);
     font-weight: 700;
     flex-shrink: 0;
   }
@@ -523,7 +528,7 @@
     border-radius: 999px;
     border: 1px solid var(--accent-2);
     background: var(--accent-2-soft);
-    color: var(--accent-2);
+    color: var(--accent-2-text);
     cursor: pointer;
   }
   .cat-select:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
@@ -571,8 +576,9 @@
   }
   .edit-text-input:focus-visible { outline: 2px solid var(--focus); }
   .rating-stars { display: inline-flex; gap: 2px; }
-  .rating-stars .star { cursor: pointer; font-size: 17px; color: var(--line); }
-  .rating-stars .star.on { color: var(--accent-2); }
+  .rating-stars .star { cursor: pointer; font-size: 20px; color: var(--ink-soft); background: none; border: none; padding: 4px 3px; min-width: 32px; min-height: 36px; font-family: inherit; line-height: 1; border-radius: 8px; }
+  .rating-stars .star:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .rating-stars .star.on { color: var(--accent-2-text); }
   .notes-box { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
   .notes-row { display: flex; align-items: center; justify-content: space-between; }
   .notes-label { font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-soft); }
@@ -643,7 +649,7 @@
     cursor: pointer;
   }
   .tag-pill:hover { background: var(--accent); color: var(--accent-ink); }
-  .card-rating { font-size: 12px; color: var(--accent-2); letter-spacing: 1px; }
+  .card-rating { font-size: 12px; color: var(--accent-2-text); letter-spacing: 1px; }
 
   .normalize-warning {
     font-size: 13.5px;
@@ -651,7 +657,7 @@
     padding: 10px 12px;
     border-radius: 8px;
     background: var(--accent-2-soft);
-    color: var(--accent-2);
+    color: var(--accent-2-text);
     margin: 4px 0 14px;
   }
   .normalize-diff-block { margin-bottom: 16px; }
@@ -670,7 +676,7 @@
   .diff-removed { background: rgba(200,60,60,0.12); color: var(--ink); text-decoration: line-through; text-decoration-color: rgba(200,60,60,0.6); }
   .diff-added { background: var(--accent-soft); color: var(--ink); }
   .diff-suspicious { background: var(--accent-2-soft); outline: 1.5px solid var(--accent-2); }
-  .diff-warn-badge { font-size: 11px; font-weight: 700; color: var(--accent-2); }
+  .diff-warn-badge { font-size: 11px; font-weight: 700; color: var(--accent-2-text); }
 
   .add-form { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
   .add-form label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
@@ -742,7 +748,7 @@
   .rv-btn { font:inherit; font-size:13px; font-weight:700; padding:7px 12px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); cursor:pointer; white-space:nowrap; }
   .rv-btn:hover { border-color:var(--accent); }
   .rv-btn-primary { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
-  .rv-btn-warn { color:var(--accent-2); }
+  .rv-btn-warn { color: var(--accent-2-text); }
   .rv-sel { font:inherit; font-size:13px; padding:6px 8px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--ink); max-width:100%; }
   .rv-bulk { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:10px 0 0; padding:10px 12px; border:1px dashed var(--accent); border-radius:12px; background:var(--accent-soft); font-size:13px; }
   @media (max-width: 520px) {
@@ -753,7 +759,7 @@
   .sl-add-inp { flex:1; font:inherit; font-size:15px; padding:10px 12px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); }
   .sl-add-inp:focus-visible { outline:2px solid var(--focus); outline-offset:1px; }
   .sl-clear-row { margin: 10px 0 0; display: flex; gap: 16px; flex-wrap: wrap; }
-  .sl-clear-all-btn { color: var(--accent-2); font-weight: 700; }
+  .sl-clear-all-btn { color: var(--accent-2-text); font-weight: 700; }
   .confirm-clear-box {
     margin-top: 12px;
     padding: 14px 16px;
@@ -785,10 +791,11 @@
   .plan-slot-sub .plan-slot-recipe { font-size: 13px; }
   .plan-slot-sub .plan-slot-label { font-size: 10.5px; }
   .plan-slot-label { flex: none; width: 62px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-soft); }
-  .plan-slot-recipe { flex: 1; font-size: 14.5px; cursor: pointer; }
+  .plan-slot-recipe { flex: 1; font: inherit; font-size: 14.5px; cursor: pointer; background: none; border: none; padding: 6px 2px; text-align: left; color: inherit; min-height: 36px; }
+  .plan-slot-recipe:focus-visible, .plan-clear-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; border-radius: 6px; }
   .plan-slot-recipe.empty { color: var(--ink-soft); font-style: italic; }
   .plan-slot-recipe:hover { color: var(--accent); text-decoration: underline; }
-  .plan-clear-btn { flex: none; background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 15px; padding: 2px 4px; }
+  .plan-clear-btn { flex: none; background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 15px; padding: 2px 4px; min-width: 34px; min-height: 34px; }
   .plan-pick-list { display: flex; flex-direction: column; gap: 6px; max-height: 55vh; overflow-y: auto; }
   .plan-pick-item {
     font: inherit;
@@ -857,7 +864,7 @@
   }
   .cook-timer span { font-weight: 500; font-size: 12.5px; color: var(--ink-soft); }
   .cook-timer button { font: inherit; font-size: 13px; font-weight: 700; border: none; border-radius: 999px; padding: 6px 12px; cursor: pointer; background: var(--card); color: var(--ink); }
-  .cook-timer.done { background: var(--accent-2); border-color: var(--accent-2); color: var(--accent-ink); animation: cookPulse 1s ease-in-out infinite; }
+  .cook-timer.done { background: var(--accent-2-text); border-color: var(--accent-2-text); color: var(--accent-ink); animation: cookPulse 1s ease-in-out infinite; }
   @keyframes cookPulse { 50% { opacity: .65; } }
   .cook-tabs { display: flex; gap: 8px; padding: 10px 16px 0; }
   .cook-tab {
@@ -873,7 +880,7 @@
   .cook-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
   .cook-chip {
     font: inherit; font-size: 17px; font-weight: 700; padding: 12px 18px; border-radius: 999px;
-    border: 1.5px solid var(--accent-2); background: var(--accent-2-soft); color: var(--accent-2); cursor: pointer;
+    border: 1.5px solid var(--accent-2); background: var(--accent-2-soft); color: var(--accent-2-text); cursor: pointer;
   }
   .cook-ing { list-style: none; margin: 0; padding: 0; }
   .cook-ing li { border-bottom: 1px solid var(--line); }
@@ -899,6 +906,7 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Saltar al contenido</a>
 <div class="wrap">
   <header class="top">
     <h1 class="title">Harina, huevo y pan rallao</h1>
@@ -910,13 +918,14 @@
     </div>
   </header>
 
+  <main id="main" tabindex="-1">
   <div class="cook-resume" id="cookResume" hidden></div>
 
   <div class="controls">
-    <div class="search-row">
+    <div class="search-row" role="search">
       <div class="searchbox">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
-        <input id="search" type="text" placeholder="Buscar por nombre, ingrediente…" autocomplete="off" inputmode="search" enterkeyhint="search">
+        <input id="search" type="text" aria-label="Buscar recetas" placeholder="Buscar por nombre, ingrediente…" autocomplete="off" inputmode="search" enterkeyhint="search">
       </div>
       <button class="add-btn cart-toggle-btn" id="cartBtn" type="button">🛒 Lista <span id="cartCount" hidden></span></button>
       <button class="add-btn cart-toggle-btn" id="planBtn" type="button">📅 Plan semanal</button>
@@ -941,7 +950,7 @@
   </div>
 
   <div class="count-row">
-    <p class="count-line" id="countLine"></p>
+    <p class="count-line" id="countLine" role="status" aria-live="polite"></p>
     <button class="surprise-btn" id="surpriseBtn" type="button" hidden>🎲 Sorpréndeme</button>
   </div>
   <div class="grid" id="grid"></div>
@@ -950,6 +959,7 @@
     <div>Prueba otra búsqueda o cambia de categoría.</div>
   </div>
   <button class="loadmore" id="loadMore" hidden>Ver más recetas</button>
+  </main>
 </div>
 
 <div id="overlayRoot"></div>
@@ -1221,6 +1231,7 @@
   function toggleCart(id, el) {
     if (cart.has(id)) { cart.delete(id); el.classList.remove('on'); el.textContent = '🛒'; }
     else { cart.add(id); el.classList.add('on'); el.textContent = '✓'; }
+    el.setAttribute('aria-pressed', cart.has(id) ? 'true' : 'false');
     saveCart();
   }
   saveCart();
@@ -1541,42 +1552,27 @@
     grid.innerHTML = "";
     const frag = document.createDocumentFragment();
     shown.forEach(r => {
-      const card = document.createElement('button');
+      const card = document.createElement('article');
       card.className = 'card';
-      card.type = 'button';
       const isFav = favs.has(r.id);
       const inCart = cart.has(r.id);
       const rating = myRatings[r.id] || 0;
+      const tt = escapeAttr(r.title);
       card.innerHTML =
-        '<div class="card-top"><h3>' + escapeHtml(r.title) + '</h3>' +
-        '<span style="display:flex; gap:4px; flex:none">' +
-        (r.steps && r.steps.length ? '<span class="cart-btn" data-cook="' + r.id + '" role="button" aria-label="modo cocina" title="Modo cocina">👩‍🍳</span>' : '') +
-        '<span class="cart-btn' + (inCart?' on':'') + '" data-cart="' + r.id + '" role="button" aria-label="añadir a la lista de la compra">' + (inCart ? '✓' : '🛒') + '</span>' +
-        '<span class="fav-btn' + (isFav?' on':'') + '" data-fav="' + r.id + '" role="button" aria-label="favorita">' + (isFav ? '★' : '☆') + '</span>' +
-        '</span></div>' +
-        '<button type="button" class="tag" data-cat-filter="' + escapeAttr(r.category) + '">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</button>' +
-        (rating > 0 ? '<span class="card-rating">' + '★'.repeat(rating) + '</span>' : '');
-      card.addEventListener('click', (e) => {
-        if (e.target.closest('[data-fav],[data-cart],[data-cook],[data-cat-filter]')) return;
-        openDetail(r);
-      });
+        '<div class="card-top"><h2 class="card-title"><button type="button" class="card-open" data-open="' + escapeAttr(r.id) + '">' + escapeHtml(r.title) + '</button></h2>' +
+        '<div class="card-actions">' +
+        (r.steps && r.steps.length ? '<button type="button" class="cart-btn" data-cook="' + escapeAttr(r.id) + '" aria-label="Modo cocina: ' + tt + '" title="Modo cocina">👩‍🍳</button>' : '') +
+        '<button type="button" class="cart-btn' + (inCart?' on':'') + '" data-cart="' + escapeAttr(r.id) + '" aria-pressed="' + inCart + '" aria-label="Lista de la compra: ' + tt + '" title="Lista de la compra">' + (inCart ? '✓' : '🛒') + '</button>' +
+        '<button type="button" class="fav-btn' + (isFav?' on':'') + '" data-fav="' + escapeAttr(r.id) + '" aria-pressed="' + isFav + '" aria-label="Favorita: ' + tt + '" title="Favorita">' + (isFav ? '★' : '☆') + '</button>' +
+        '</div></div>' +
+        '<button type="button" class="tag" data-cat-filter="' + escapeAttr(r.category) + '" aria-label="Ver solo la categoría ' + escapeAttr(catLabel(r.category)) + '">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</button>' +
+        (rating > 0 ? '<span class="card-rating" role="img" aria-label="Mi valoración: ' + rating + ' de 5">' + '★'.repeat(rating) + '</span>' : '');
+      card.querySelector('[data-open]').addEventListener('click', () => openDetail(r));
       const cookCardBtn = card.querySelector('[data-cook]');
-      if (cookCardBtn) cookCardBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openCook(r);
-      });
-      card.querySelector('[data-fav]').addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleFav(r.id, e.target);
-      });
-      card.querySelector('[data-cart]').addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleCart(r.id, e.target);
-      });
-      card.querySelector('[data-cat-filter]').addEventListener('click', (e) => {
-        e.stopPropagation();
-        filterByCategory(r.category);
-      });
+      if (cookCardBtn) cookCardBtn.addEventListener('click', () => openCook(r));
+      card.querySelector('[data-fav]').addEventListener('click', (e) => toggleFav(r.id, e.currentTarget));
+      card.querySelector('[data-cart]').addEventListener('click', (e) => toggleCart(r.id, e.currentTarget));
+      card.querySelector('[data-cat-filter]').addEventListener('click', () => filterByCategory(r.category));
       frag.appendChild(card);
     });
     grid.appendChild(frag);
@@ -1587,6 +1583,7 @@
   function toggleFav(id, el) {
     if (favs.has(id)) { favs.delete(id); el.classList.remove('on'); el.textContent = '☆'; }
     else { favs.add(id); el.classList.add('on'); el.textContent = '★'; }
+    el.setAttribute('aria-pressed', favs.has(id) ? 'true' : 'false');
     saveFavs();
     filterOptionsCache = null; // fav count changed
     if (state.f.fav) {
@@ -1949,9 +1946,11 @@
   }
 
   function starsHtml(rating, interactive) {
-    let out = '<span class="rating-stars"' + (interactive ? ' id="ratingStars"' : '') + '>';
+    let out = '<span class="rating-stars"' + (interactive ? ' id="ratingStars" role="group" aria-label="Mi valoración"' : ' aria-hidden="true"') + '>';
     for (let i = 1; i <= 5; i++) {
-      out += '<span class="star' + (i <= rating ? ' on' : '') + '"' + (interactive ? ' data-n="' + i + '" role="button" aria-label="' + i + ' estrellas"' : '') + '>' + (i <= rating ? '★' : '☆') + '</span>';
+      out += interactive
+        ? '<button type="button" class="star' + (i <= rating ? ' on' : '') + '" data-n="' + i + '" aria-label="' + i + (i === 1 ? ' estrella' : ' estrellas') + '" aria-pressed="' + (i <= rating) + '">' + (i <= rating ? '★' : '☆') + '</button>'
+        : '<span class="star' + (i <= rating ? ' on' : '') + '" aria-hidden="true">' + (i <= rating ? '★' : '☆') + '</span>';
     }
     return out + '</span>';
   }
@@ -2186,7 +2185,7 @@
         '<p style="margin:2px 0 10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap">' +
           '<button type="button" class="delete-link" id="aiCleanExistingBtn">✨ Limpiar con IA</button>' +
           '<button type="button" class="delete-link" id="normalizeBtn">✨ Ordenar receta</button>' +
-          '<span class="form-hint" id="aiExistingStatus"></span>' +
+          '<span class="form-hint" id="aiExistingStatus" role="status"></span>' +
         '</p>' +
         '<label class="edit-section-label" for="editIngredients">Ingredientes</label>' +
         '<textarea id="editIngredients" class="edit-text-input" style="min-height:110px">' + escapeHtml((r.ingredients||[]).join('\n')) + '</textarea>' +
@@ -2197,7 +2196,7 @@
       : '<div class="body-text">' + bodyHtml(r) + '</div>';
     const isInstagramUrl = !!(r.url && r.url.indexOf('instagram.com') !== -1);
     const photoBlock = (!editing && isInstagramUrl)
-      ? '<div class="ig-embed"><blockquote class="instagram-media" data-instgrm-permalink="' + escapeAttr(r.url) + '" data-instgrm-version="14"><a href="' + escapeAttr(r.url) + '"></a></blockquote></div>'
+      ? '<div class="ig-embed"><blockquote class="instagram-media" data-instgrm-permalink="' + escapeAttr(r.url) + '" data-instgrm-version="14"><a href="' + escapeAttr(r.url) + '">Ver la publicación en Instagram</a></blockquote></div>'
       : '';
     pageRoot.innerHTML =
       '<div class="recipe-page" id="detailPage">' +
@@ -2212,8 +2211,8 @@
             : '<button type="button" class="tag" data-cat-filter="' + escapeAttr(r.category) + '">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</button>') +
           '<span style="display:flex; gap:10px; margin-left:auto">' +
             (!editing && hasRealRecipeContent(r) ? '<button type="button" class="cart-btn" id="detailShare" aria-label="Compartir receta" title="Compartir receta" style="font-size:20px">📤</button>' : '') +
-            '<span class="cart-btn' + (inCart?' on':'') + '" id="detailCart" role="button" tabindex="0" aria-label="añadir a la lista de la compra" style="font-size:20px">' + (inCart?'✓':'🛒') + '</span>' +
-            '<span class="fav-btn' + (isFav?' on':'') + '" id="detailFav" role="button" tabindex="0" aria-label="favorita" style="font-size:20px">' + (isFav?'★':'☆') + '</span>' +
+            '<button type="button" class="cart-btn' + (inCart?' on':'') + '" id="detailCart" aria-pressed="' + inCart + '" aria-label="Lista de la compra" title="Lista de la compra" style="font-size:20px">' + (inCart?'✓':'🛒') + '</button>' +
+            '<button type="button" class="fav-btn' + (isFav?' on':'') + '" id="detailFav" aria-pressed="' + isFav + '" aria-label="Favorita" title="Favorita" style="font-size:22px">' + (isFav?'★':'☆') + '</button>' +
           '</span>' +
         '</div>' +
         (!editing ? '<div class="tag-pills-row" id="tagPills">' + tagPillsHtml(r) + '</div>' : '') +
@@ -2393,6 +2392,7 @@
         saveRating(r.id, newRating);
         starsEl.querySelectorAll('.star').forEach((s2, idx) => {
           s2.classList.toggle('on', idx < newRating);
+          s2.setAttribute('aria-pressed', idx < newRating ? 'true' : 'false');
           s2.textContent = idx < newRating ? '★' : '☆';
         });
       });
@@ -2908,14 +2908,14 @@
                 '<input type="url" id="f_ig_url" placeholder="Pega un enlace: Instagram, un blog de cocina..." style="flex:1;min-width:160px;font:inherit;font-size:15px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)">' +
                 '<button type="button" id="igImportBtn" class="submit-btn" style="flex:none;padding:9px 16px;font-size:13.5px;white-space:nowrap">Importar</button>' +
               '</div>' +
-              '<p id="igStatus" class="form-hint" style="margin:6px 0 0"></p>' +
+              '<p id="igStatus" role="status" class="form-hint" style="margin:6px 0 0"></p>' +
             '</div>' +
             '<p style="text-align:center;color:var(--ink-soft);font-size:12.5px;margin:-6px 0 10px">— o pega el texto directamente —</p>' +
             '<label>Texto completo de la receta<textarea id="f_raw" style="min-height:120px" placeholder="Pega el texto tal cual, con ingredientes, elaboración, todo junto... y pulsa Limpiar con IA."></textarea></label>' +
             '<p style="margin:-6px 0 4px; display:flex; align-items:center; gap:10px; flex-wrap:wrap">' +
               '<button type="button" class="submit-btn" id="aiCleanBtn" style="padding:9px 18px; font-size:14px">✨ Limpiar con IA</button>' +
               '<button type="button" class="delete-link" id="manualBtn">Prefiero rellenarlo a mano</button>' +
-              '<span class="form-hint" id="aiStatus"></span>' +
+              '<span class="form-hint" id="aiStatus" role="status"></span>' +
             '</p>' +
             '<div id="structuredFields" hidden>' +
               '<label>Título<input type="text" id="f_title" maxlength="120" placeholder="Ej. Tarta de manzana de la abuela"></label>' +
@@ -3018,7 +3018,7 @@
         igStatus.innerHTML = '⚠️ No se pudo extraer el texto automáticamente de ese enlace. ' +
           '<strong>Copia el texto de la receta y pégalo abajo.</strong> ' +
           'El enlace ya está guardado para la receta.';
-        igStatus.style.color = 'var(--accent-2)';
+        igStatus.style.color = 'var(--accent-2-text)';
         // Focus the raw textarea so the user can paste immediately
         const rawEl = document.getElementById('f_raw');
         if (rawEl) rawEl.focus();
@@ -3029,8 +3029,8 @@
 
     igImportBtn.addEventListener('click', () => {
       const igUrl = igUrlEl.value.trim();
-      if (!igUrl) { igStatus.textContent = 'Pega primero un enlace.'; igStatus.style.color = 'var(--accent-2)'; return; }
-      try { new URL(igUrl); } catch (e) { igStatus.textContent = 'Ese enlace no parece válido.'; igStatus.style.color = 'var(--accent-2)'; return; }
+      if (!igUrl) { igStatus.textContent = 'Pega primero un enlace.'; igStatus.style.color = 'var(--accent-2-text)'; return; }
+      try { new URL(igUrl); } catch (e) { igStatus.textContent = 'Ese enlace no parece válido.'; igStatus.style.color = 'var(--accent-2-text)'; return; }
       runIgImport(igUrl);
     });
 
@@ -4085,7 +4085,7 @@
             '<button type="button" class="rv-tab' + (reviewTab === 'cat' ? ' on' : '') + '" data-act="tab" data-tab="cat">Categorías' + (nCat ? ' (' + nCat + ')' : '') + '</button>' +
             '<button type="button" class="rv-tab' + (reviewTab === 'tag' ? ' on' : '') + '" data-act="tab" data-tab="tag">Etiquetas' + (nTags ? ' (' + nTags + ')' : '') + '</button>' +
           '</div>' +
-          '<p class="form-hint rv-msg" id="rvMsg">' + escapeHtml(reviewMsg) + '</p>' +
+          '<p class="form-hint rv-msg" id="rvMsg" role="status">' + escapeHtml(reviewMsg) + '</p>' +
           (reviewTab === 'dup' ? rvDupHtml() : reviewTab === 'tag' ? rvTagHtml() : rvCatHtml()) +
           (reviewTab === 'tag' ? '' : '<p style="margin:16px 0 0"><button type="button" class="delete-link" data-act="resetdismiss">Volver a mostrar lo descartado en este dispositivo</button></p>') +
         '</div>' +
@@ -4245,7 +4245,7 @@
     try { at = Date.parse(localStorage.getItem(BACKUP_AT_KEY) || '') || 0; } catch (e) {}
     if (!at) {
       el.textContent = '⚠️ No has hecho ninguna copia desde este dispositivo.';
-      el.style.color = 'var(--accent-2)';
+      el.style.color = 'var(--accent-2-text)';
       return;
     }
     const days = Math.floor((Date.now() - at) / 86400000);
@@ -4255,7 +4255,7 @@
       : 'hace ' + Math.round(days / 30) + ' meses';
     const stale = days >= BACKUP_STALE_DAYS;
     el.textContent = (stale ? '⚠️ ' : '') + 'Última copia desde este dispositivo: ' + when + '.' + (stale ? ' Conviene hacer una nueva.' : '');
-    el.style.color = stale ? 'var(--accent-2)' : '';
+    el.style.color = stale ? 'var(--accent-2-text)' : '';
   }
 
   async function downloadBackup() {
@@ -4324,8 +4324,8 @@
               '<p style="margin:0 0 6px;font-size:14px;font-weight:700">💾 Copia de seguridad</p>' +
               '<p class="form-hint" style="margin:0 0 10px">Descarga un archivo con todo lo que guardas en la nube: ediciones de texto, categorías, etiquetas, notas y valoraciones, recetas añadidas, recetas ocultas, plan semanal y lista de la compra, más tus favoritas de este dispositivo.</p>' +
               '<button type="button" class="submit-btn" id="backupBtn" style="padding:9px 18px;font-size:14px">Descargar copia</button>' +
-              '<p class="form-hint" id="backupStatus" style="margin:8px 0 0"></p>' +
-              '<p class="form-hint" id="backupAge" style="margin:6px 0 0"></p>' +
+              '<p class="form-hint" id="backupStatus" role="status" style="margin:8px 0 0"></p>' +
+              '<p class="form-hint" id="backupAge" role="status" style="margin:6px 0 0"></p>' +
             '</div>' +
             '<p style="margin-top:14px"><button class="delete-link" id="logoutBtn" type="button">Salir del modo edición aquí</button></p>' +
           '</div>' +
@@ -4358,7 +4358,7 @@
             '<label>Código<input type="password" id="f_pass" autocomplete="off" required></label>' +
             '<button type="submit" class="submit-btn">Entrar</button>' +
           '</form>' +
-          '<p class="form-hint" id="passError" style="color:var(--accent-2); margin-top:8px"></p>' +
+          '<p class="form-hint" id="passError" role="alert" style="color: var(--accent-2-text); margin-top:8px"></p>' +
         '</div>' +
       '</div>';
     document.getElementById('closeBtn').addEventListener('click', closeDetail);
@@ -4656,13 +4656,15 @@
     const r = (!isCustom && slotVal) ? recipes.find(x => x.id === slotVal) : null;
     const displayText = isCustom ? slotVal.slice(7) : (r ? r.title : null);
     const hasContent = displayText !== null;
+    const dayObj = PLAN_DAYS.find(d => key.indexOf(d.key + '_') === 0);
+    const ctx = (dayObj ? dayObj.label + ', ' : '') + label;
     return '<div class="plan-slot' + (opts.sub ? ' plan-slot-sub' : '') + '">' +
-      '<span class="plan-slot-label">' + escapeHtml(label) + '</span>' +
-      '<span class="plan-slot-recipe' + (hasContent ? '' : ' empty') + '" data-slotview="' + key + '">' +
+      '<span class="plan-slot-label" aria-hidden="true">' + escapeHtml(label) + '</span>' +
+      '<button type="button" class="plan-slot-recipe' + (hasContent ? '' : ' empty') + '" data-slotview="' + key + '" aria-label="' + escapeAttr(ctx + ': ' + (hasContent ? displayText : 'sin plato, elegir')) + '">' +
         (hasContent ? escapeHtml(displayText) : (opts.emptyLabel || 'Elegir receta…')) +
-      '</span>' +
-      (hasContent ? '<button type="button" class="plan-clear-btn" data-slotedit="' + key + '" aria-label="Cambiar" title="Cambiar">✏️</button>' : '') +
-      (hasContent ? '<button type="button" class="plan-clear-btn" data-slotclear="' + key + '" aria-label="Quitar">✕</button>' : '') +
+      '</button>' +
+      (hasContent ? '<button type="button" class="plan-clear-btn" data-slotedit="' + key + '" aria-label="Cambiar plato: ' + escapeAttr(ctx) + '" title="Cambiar">✏️</button>' : '') +
+      (hasContent ? '<button type="button" class="plan-clear-btn" data-slotclear="' + key + '" aria-label="Quitar plato: ' + escapeAttr(ctx) + '">✕</button>' : '') +
     '</div>';
   }
 
@@ -4723,6 +4725,77 @@
       });
     });
   }
+
+  // ---- Accesibilidad de las ventanas (hojas, ficha y modo cocina) ----------------
+  // Al abrir una ventana el foco pasa a ella, el fondo queda inerte (ni teclado ni lector de
+  // pantalla llegan a él), Tab se queda dentro y, al cerrar, el foco vuelve a donde estaba.
+  // Orden de apilado: modo cocina > ficha > hoja.
+  const wrapEl = document.querySelector('.wrap');
+  const DIALOG_ROOTS = [cookRoot, pageRoot, overlayRoot];
+  function topDialogRoot() { for (const r of DIALOG_ROOTS) if (r.childElementCount) return r; return null; }
+  function syncInert() {
+    const top = topDialogRoot();
+    wrapEl.inert = !!top;
+    overlayRoot.inert = !!(top && top !== overlayRoot);
+    pageRoot.inert = !!(top && top === cookRoot);
+  }
+  function dialogOf(root) {
+    const d = root.querySelector('[role=dialog]') || root.firstElementChild;
+    if (!d) return null;
+    if (!d.getAttribute('role')) d.setAttribute('role', 'dialog');
+    d.setAttribute('aria-modal', 'true');
+    if (!d.getAttribute('aria-label') && !d.getAttribute('aria-labelledby')) {
+      const t = d.querySelector('h1, h2, .cook-title');
+      if (t) { if (!t.id) t.id = 'dlgTitle' + Math.random().toString(36).slice(2, 7); d.setAttribute('aria-labelledby', t.id); }
+    }
+    if (!d.hasAttribute('tabindex')) d.setAttribute('tabindex', '-1');
+    return d;
+  }
+  function focusablesIn(root) {
+    return Array.from(root.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'))
+      .filter(el => el.tabIndex >= 0 && !el.disabled && !el.hidden && el.getClientRects().length > 0);
+  }
+  // Safari/iPhone no da el foco a un botón al pulsarlo: se recuerda el último pulsado para devolver el foco
+  let lastActivator = null;
+  document.addEventListener('click', (e) => { lastActivator = e.target.closest ? e.target.closest('button, a, [tabindex]') : null; }, true);
+  DIALOG_ROOTS.forEach(root => {
+    let wasOpen = false, opener = null, openerKey = '';
+    new MutationObserver(() => {
+      const isOpen = root.childElementCount > 0;
+      if (isOpen && !wasOpen) {
+        opener = document.activeElement && document.activeElement !== document.body ? document.activeElement
+          : (lastActivator && document.contains(lastActivator) && !lastActivator.closest('[inert]') ? lastActivator : null);
+        const k = opener && opener.closest && opener.closest('[data-open]');
+        openerKey = k ? k.getAttribute('data-open') : '';
+      }
+      if (isOpen) {
+        const d = dialogOf(root);
+        syncInert();
+        // solo la ventana de más arriba recibe el foco, y solo si lo ha perdido (no al repintarse por dentro)
+        if (d && topDialogRoot() === root && !root.contains(document.activeElement)) d.focus({ preventScroll: true });
+      } else if (wasOpen) {
+        syncInert();
+        let t = opener && document.contains(opener) ? opener : null;
+        if (!t && openerKey) t = document.querySelector('[data-open="' + (window.CSS && CSS.escape ? CSS.escape(openerKey) : openerKey) + '"]');
+        const top = topDialogRoot();
+        if (t && !t.closest('[inert]') && (!top || top.contains(t))) t.focus({ preventScroll: true });
+        else if (top) { const d = dialogOf(top); if (d && !top.contains(document.activeElement)) d.focus({ preventScroll: true }); }
+        opener = null; openerKey = '';
+      }
+      wasOpen = isOpen;
+    }).observe(root, { childList: true });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const top = topDialogRoot();
+    if (!top) return;
+    const list = focusablesIn(top);
+    if (!list.length) { e.preventDefault(); return; }
+    const first = list[0], last = list[list.length - 1], a = document.activeElement;
+    const d = dialogOf(top);
+    if (e.shiftKey && (a === first || a === d || !top.contains(a))) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && (a === last || !top.contains(a))) { e.preventDefault(); first.focus(); }
+  });
 
   // ---- Boot ---------------------------------------------------------------
 
