@@ -2266,8 +2266,7 @@
             : '<button type="button" class="tag" data-cat-filter="' + escapeAttr(r.category) + '">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</button>') +
           '<span style="display:flex; gap:10px; margin-left:auto">' +
             (!editing && hasRealRecipeContent(r) ? '<button type="button" class="cart-btn" id="detailShare" aria-label="Compartir receta" title="Compartir receta" style="font-size:20px">📤</button>' : '') +
-            (!editing && r.ingredients && r.ingredients.length ? '<button type="button" class="cart-btn" id="detailSendCompra" aria-label="Añadir ingredientes a la Lista de la compra" title="Añadir ingredientes a Compra" style="font-size:20px">🛍️</button>' : '') +
-            '<button type="button" class="cart-btn' + (inCart?' on':'') + '" id="detailCart" aria-pressed="' + inCart + '" aria-label="Lista de la compra" title="Lista de la compra" style="font-size:20px">' + (inCart?'✓':'🛒') + '</button>' +
+            (r.ingredients && r.ingredients.length ? '<button type="button" class="cart-btn" id="detailCart" aria-label="Añadir ingredientes a la Lista de la compra" title="Añadir ingredientes a Compra" style="font-size:20px">🛒</button>' : '') +
             '<button type="button" class="fav-btn' + (isFav?' on':'') + '" id="detailFav" aria-pressed="' + isFav + '" aria-label="Favorita" title="Favorita" style="font-size:22px">' + (isFav?'★':'☆') + '</button>' +
           '</span>' +
         '</div>' +
@@ -2325,9 +2324,8 @@
       saveServingsTarget();
       refreshServings(r);
     });
-    document.getElementById('detailCart').addEventListener('click', (e) => toggleCart(r.id, e.currentTarget));
-    const sendCompraBtn = document.getElementById('detailSendCompra');
-    if (sendCompraBtn) sendCompraBtn.addEventListener('click', () => sendToCompra(r));
+    const detailCartBtn = document.getElementById('detailCart');
+    if (detailCartBtn) detailCartBtn.addEventListener('click', () => sendToCompra(r));
     const tagPillsEl = document.getElementById('tagPills');
     if (tagPillsEl) tagPillsEl.addEventListener('click', (e) => {
       const b = e.target.closest('[data-tag-filter]');
