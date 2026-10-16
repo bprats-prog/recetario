@@ -1026,6 +1026,10 @@
   const NORMALIZE_API_BASE = "https://zfqpupvarjbwgcmiomcs.supabase.co/functions/v1/normalize-recipe";
   const PASSKEY = "recetario_passcode_v1";
 
+  // ── Integración con la app Lista de la compra ──
+  const COMPRA_REST = 'https://zfqpupvarjbwgcmiomcs.supabase.co/rest/v1';
+  const COMPRA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmcXB1cHZhcmpid2djbWlvbWNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3NDE1MzIsImV4cCI6MjEwNTMxNzUzMn0.nDbpkU0g3Qxp51NDJ_sgCYA17kj2fSDCXmkUHws0_jE';
+
   const CATEGORY_ORDER = ["Entrantes y Aperitivos","Sopas y Cremas","Ensaladas","Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y Bocadillos","Salsas","Postres","Desayunos","Bebe","Otras"];
   const CATEGORY_LABEL = { "Sandwiches y Bocadillos": "Sándwiches y Bocadillos", "Verduras": "Recetas con Verduras", "Bebe": "Recetas Bebé" };
   function catLabel(c) { return CATEGORY_LABEL[c] || c; }
@@ -2262,6 +2266,7 @@
             : '<button type="button" class="tag" data-cat-filter="' + escapeAttr(r.category) + '">' + catIcon(r.category) + ' ' + escapeHtml(catLabel(r.category)) + '</button>') +
           '<span style="display:flex; gap:10px; margin-left:auto">' +
             (!editing && hasRealRecipeContent(r) ? '<button type="button" class="cart-btn" id="detailShare" aria-label="Compartir receta" title="Compartir receta" style="font-size:20px">📤</button>' : '') +
+            (!editing && r.ingredients && r.ingredients.length ? '<button type="button" class="cart-btn" id="detailSendCompra" aria-label="Añadir ingredientes a la Lista de la compra" title="Añadir ingredientes a Compra" style="font-size:20px">🛍️</button>' : '') +
             '<button type="button" class="cart-btn' + (inCart?' on':'') + '" id="detailCart" aria-pressed="' + inCart + '" aria-label="Lista de la compra" title="Lista de la compra" style="font-size:20px">' + (inCart?'✓':'🛒') + '</button>' +
             '<button type="button" class="fav-btn' + (isFav?' on':'') + '" id="detailFav" aria-pressed="' + isFav + '" aria-label="Favorita" title="Favorita" style="font-size:22px">' + (isFav?'★':'☆') + '</button>' +
           '</span>' +
@@ -2321,6 +2326,8 @@
       refreshServings(r);
     });
     document.getElementById('detailCart').addEventListener('click', (e) => toggleCart(r.id, e.currentTarget));
+    const sendCompraBtn = document.getElementById('detailSendCompra');
+    if (sendCompraBtn) sendCompraBtn.addEventListener('click', () => sendToCompra(r));
     const tagPillsEl = document.getElementById('tagPills');
     if (tagPillsEl) tagPillsEl.addEventListener('click', (e) => {
       const b = e.target.closest('[data-tag-filter]');
@@ -5747,6 +5754,138 @@
       openAddForm();
     }
   }
+
+  // ── Enviar ingredientes de una receta a la app Lista de la compra ──────────
+
+  function _compraToast(msg) {
+    let el = document.getElementById('_compraToast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = '_compraToast';
+      el.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);' +
+        'background:#1a2135;color:#F0F4FF;padding:10px 18px;border-radius:12px;font-size:14px;' +
+        'box-shadow:0 4px 18px rgba(0,0,0,.45);z-index:9999;pointer-events:none;' +
+        'opacity:0;transition:opacity .2s;max-width:320px;text-align:center;line-height:1.4';
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.style.opacity = '1';
+    clearTimeout(el._t);
+    el._t = setTimeout(() => { el.style.opacity = '0'; }, 3000);
+  }
+
+  function _compraExtractName(s) {
+    const cleaned = s
+      .replace(/^\d[\d.,\/x×\s]*\s*(g|kg|ml|l|cl|dl|litros?|taza[s]?|cucharad[ao]s?(?:\s+(?:sopera|colmada|rasa)s?)?|cdtas?|cdas?|dientes?|manojos?|lata[s]?|bote[s]?|paquetes?|lonchas?|rodajas?|ramas?|hojas?|pizcas?|sobres?|piezas?|unidades?|rebanadas?|chorritos?|vasos?|puñados?)?\s*(?:de\s+|d'|of\s+)?/i, '')
+      .replace(/^(?:un\s+poco\s+de|un\s+chorrito\s+de|al?\s+gusto|una?\s+pizca\s+de|unas?\s+|unos?\s+|varias?\s+|media?\s+(?:de\s+)?)/i, '')
+      .split(/[,(]/)[0]
+      .trim();
+    return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+  }
+
+  function _compraGuessEmoji(name) {
+    const n = name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const rules = [
+      [/espagueti|spaghetti|pasta\b|tallar|fideo|macarron|penne|rigat|lasan|raviol|noqui/, '🍝'],
+      [/harina/, '🌾'], [/huevo/, '🥚'], [/leche\b/, '🥛'], [/mantequill/, '🧈'],
+      [/aceite/, '🫙'], [/tomate/, '🍅'], [/ceboll/, '🧅'], [/\bajo\b|ajos/, '🧄'],
+      [/zanahori/, '🥕'], [/patata|papa\b/, '🥔'], [/pollo/, '🍗'],
+      [/jamon|jamon/, '🥩'], [/ternera|cerdo|cordero|carne picada/, '🥩'], [/carne\b/, '🥩'],
+      [/queso/, '🧀'], [/yogur/, '🥛'], [/nata\b|crema\b/, '🥛'],
+      [/limon|naranja/, '🍋'], [/manzana/, '🍎'], [/platano|banana/, '🍌'], [/fresa/, '🍓'],
+      [/pan\b/, '🍞'], [/arroz/, '🍚'], [/lentejas?|garbanz|alubias?|judias?\b|frijol/, '🫘'],
+      [/sal\b/, '🧂'], [/azucar/, '🍬'], [/pimienta/, '🌶️'], [/pimenton/, '🌶️'],
+      [/oregano|perejil|cilantro|albahaca|tomillo|romero|especias?|hierbas?/, '🌿'],
+      [/vino/, '🍷'], [/caldo/, '🍲'], [/agua/, '💧'], [/aceitunas?|olivas?/, '🫒'],
+      [/champiñon|seta|hongo/, '🍄'], [/pimiento/, '🫑'], [/berenjena/, '🍆'],
+      [/calabacin/, '🥒'], [/lechuga|espinaca|rucula/, '🥬'],
+      [/salmon|merluza|bacalao|pescado/, '🐟'], [/gambas?|langostino|camaron/, '🦐'],
+      [/mejillon|almeja|berberecho/, '🦪'], [/atun/, '🐟'],
+      [/chocolate|cacao/, '🍫'], [/miel/, '🍯'],
+      [/frutos? secos?|almendra|nuez|pistacho|cacahuete|anacardo/, '🥜'],
+      [/mantequilla de cacahuete|crema de cacahuete/, '🥜'],
+    ];
+    for (const [re, e] of rules) if (re.test(n)) return e;
+    return '🛒';
+  }
+
+  async function sendToCompra(r) {
+    const ings = scaledIngredients(r);
+    if (!ings.length) { _compraToast('Esta receta no tiene ingredientes'); return; }
+
+    const btn = document.getElementById('detailSendCompra');
+    if (btn) { btn.textContent = '⏳'; btn.disabled = true; }
+
+    try {
+      const hdrs = {
+        'Content-Type': 'application/json',
+        'apikey': COMPRA_KEY,
+        'Authorization': 'Bearer ' + COMPRA_KEY
+      };
+
+      // Carga en paralelo: todos los productos y la lista activa
+      const [allProds, activeList] = await Promise.all([
+        fetch(COMPRA_REST + '/compra_products?select=id,name', { headers: hdrs }).then(r => r.json()),
+        fetch(COMPRA_REST + '/compra_list?status=eq.needed&select=product_id', { headers: hdrs }).then(r => r.json())
+      ]);
+
+      const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+      // Mapa nombre normalizado → id
+      const prodMap = new Map((allProds || []).map(p => [norm(p.name), p.id]));
+      const inList  = new Set((activeList || []).map(x => x.product_id));
+
+      let added = 0, skipped = 0;
+
+      for (const ing of ings) {
+        const rawName = _compraExtractName(ing);
+        if (!rawName || rawName.length < 2) continue;
+        const nName = norm(rawName);
+
+        // Búsqueda fuzzy: el nombre del catálogo está contenido en el ingrediente o viceversa
+        let productId = null;
+        for (const [pname, pid] of prodMap) {
+          if (nName.includes(pname) || pname.includes(nName)) { productId = pid; break; }
+        }
+
+        // Crear producto custom si no existe
+        if (!productId) {
+          const res = await fetch(COMPRA_REST + '/compra_products', {
+            method: 'POST',
+            headers: { ...hdrs, 'Prefer': 'return=representation' },
+            body: JSON.stringify({ name: rawName, emoji: _compraGuessEmoji(rawName), is_custom: true })
+          });
+          const created = await res.json();
+          const prod = Array.isArray(created) ? created[0] : created;
+          if (prod?.id) { productId = prod.id; prodMap.set(nName, productId); }
+        }
+
+        if (!productId) continue;
+        if (inList.has(productId)) { skipped++; continue; }
+
+        await fetch(COMPRA_REST + '/compra_list', {
+          method: 'POST',
+          headers: hdrs,
+          body: JSON.stringify({ product_id: productId, status: 'needed' })
+        });
+        inList.add(productId);
+        added++;
+      }
+
+      const msg = added > 0
+        ? added + ' ingrediente' + (added !== 1 ? 's' : '') + ' añadido' + (added !== 1 ? 's' : '') + ' a la lista' +
+          (skipped ? ' (' + skipped + ' ya estaban)' : '') + ' ✓'
+        : 'Todos los ingredientes ya estaban en la lista ✓';
+      _compraToast(msg);
+    } catch (e) {
+      _compraToast('Error al conectar con la app Compra');
+      console.error('sendToCompra:', e);
+    } finally {
+      if (btn) { btn.textContent = '🛍️'; btn.disabled = false; }
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────────────────────
 
   initRemote().then(handleShareTarget);
 
