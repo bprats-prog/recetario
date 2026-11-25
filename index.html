@@ -1032,12 +1032,12 @@
   const COMPRA_REST = 'https://zfqpupvarjbwgcmiomcs.supabase.co/rest/v1';
   const COMPRA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmcXB1cHZhcmpid2djbWlvbWNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3NDE1MzIsImV4cCI6MjEwNTMxNzUzMn0.nDbpkU0g3Qxp51NDJ_sgCYA17kj2fSDCXmkUHws0_jE';
 
-  const CATEGORY_ORDER = ["Entrantes y Aperitivos","Sopas y Cremas","Ensaladas","Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y Bocadillos","Salsas","Postres","Desayunos","Bebe","Otras"];
-  const CATEGORY_LABEL = { "Sandwiches y Bocadillos": "Sándwiches y Bocadillos", "Verduras": "Recetas con Verduras", "Bebe": "Recetas Bebé" };
+  const CATEGORY_ORDER = ["Entrantes y aperitivos","Sopas y cremas","Ensaladas","Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y bocadillos","Salsas","Postres","Desayunos","Bebe","Otras"];
+  const CATEGORY_LABEL = { "Sandwiches y bocadillos": "Sándwiches y bocadillos", "Verduras": "Recetas con verduras", "Bebe": "Recetas bebé" };
   function catLabel(c) { return CATEGORY_LABEL[c] || c; }
   const CATEGORY_ICON = {
-    "Entrantes y Aperitivos": "🥟",
-    "Sopas y Cremas": "🍲",
+    "Entrantes y aperitivos": "🥟",
+    "Sopas y cremas": "🍲",
     "Ensaladas": "🥗",
     "Carne": "🥩",
     "Pescado": "🐟",
@@ -1045,7 +1045,7 @@
     "Pasta": "🍝",
     "Arroces": "🍚",
     "Pizzas": "🍕",
-    "Sandwiches y Bocadillos": "🥪",
+    "Sandwiches y bocadillos": "🥪",
     "Salsas": "🧂",
     "Postres": "🍰",
     "Desayunos": "🍳",
@@ -4715,8 +4715,8 @@
     }
   }
 
-  const MAIN_CATEGORIES = new Set(["Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y Bocadillos"]);
-  const STARTER_CATEGORIES = new Set(["Entrantes y Aperitivos","Sopas y Cremas","Ensaladas"]);
+  const MAIN_CATEGORIES = new Set(["Carne","Pescado","Verduras","Pasta","Arroces","Pizzas","Sandwiches y bocadillos"]);
+  const STARTER_CATEGORIES = new Set(["Entrantes y aperitivos","Sopas y cremas","Ensaladas"]);
   const GUIDE_TITLE_RE = /^(gu[ií]a|c[oó]mo|consejo|truco|idea[s]?|primeros alimentos|qu[eé]\s|men[uú]|plan (de|semanal)|batch cooking|especias para|alimentaci[oó]n|\d+\s+(ideas?|formas?|recetas?|maneras?|trucos?|consejos?)\b)/i;
   const BABY_TREAT_RE = /(porridge|papilla|helado|gelatina|torrija|kinder|compota|mousse|flan|pud[ií]n|bizcocho|galleta|batido|yogur)/i;
   // some "Verduras"/other-category titles are actually soups, broths or bases,
