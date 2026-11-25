@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Harina, huevo y pan rallao</title>
 <meta name="description" content="Harina, huevo y pan rallao: recetas de mi madre, de mi abuela y de Instagram. Cocina como antes pero ahora.">
-<meta name="theme-color" content="#EFEFE3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1A1C15" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,21 +16,21 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&family=Dancing+Script:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap">
 <style>
   :root {
-    --paper: #EFEFE3;
-    --card: #F9F9F1;
-    --ink: #262519;
-    --ink-soft: #5B5A4A;
-    --line: rgba(38,37,25,0.14);
+    --paper: #FFFFFF;
+    --card: #F4F5F7;
+    --ink: #1A1B1E;
+    --ink-soft: #5B5C6B;
+    --line: rgba(0,0,0,0.10);
     --accent: #3F5E33;
     --accent-ink: #F4F6EE;
     --accent-2: #B9702E;
     --accent-2-text: #8F5016;
     --accent-2-soft: rgba(185,112,46,0.14);
     --accent-soft: rgba(63,94,51,0.12);
-    --shadow: 0 1px 2px rgba(38,37,25,0.06);
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.05);
     --focus: #B9702E;
   }
 
@@ -73,13 +73,13 @@
   .pantry-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; margin: 0 0 14px; padding: 13px 16px; border-radius: 14px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font: inherit; text-align: left; cursor: pointer; }
   .pantry-cta:hover { opacity: .93; }
   .pantry-cta:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
-  .pantry-cta-t { font-size: 17px; font-weight: 700; }
-  .pantry-cta-s { font-size: 13px; opacity: .92; }
+  .pantry-cta-t { font-size: 19px; font-weight: 700; }
+  .pantry-cta-s { font-size: 15px; opacity: .92; }
   .pt-search { width: 100%; font: inherit; font-size: 16px; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
   .pt-search:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
   .pt-suggest { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .pt-suggest:empty { display: none; }
-  .pt-sug, .pt-chip { font: inherit; font-size: 13.5px; font-weight: 600; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; min-height: 36px; }
+  .pt-sug, .pt-chip { font: inherit; font-size: 15px; font-weight: 600; padding: 9px 15px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; min-height: 40px; }
   .pt-sug { border-style: dashed; border-color: var(--accent); color: var(--accent); }
   .pt-chip:hover, .pt-sug:hover { border-color: var(--accent); }
   .pt-chip.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
@@ -89,7 +89,7 @@
   .pt-have-x { font: inherit; background: none; border: none; color: var(--accent); cursor: pointer; font-size: 17px; line-height: 1; min-width: 28px; min-height: 28px; border-radius: 50%; }
   .pt-have-x:focus-visible { outline: 2px solid var(--focus); }
   .pt-sec { border: 1px solid var(--line); border-radius: 12px; margin-top: 8px; background: var(--card); }
-  .pt-sec summary { cursor: pointer; padding: 11px 14px; font-weight: 700; font-size: 14px; list-style-position: inside; }
+  .pt-sec summary { cursor: pointer; padding: 13px 16px; font-weight: 700; font-size: 16px; list-style-position: inside; }
   .pt-sec summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; border-radius: 10px; }
   .pt-count { font-size: 12px; background: var(--accent); color: var(--accent-ink); border-radius: 999px; padding: 1px 8px; margin-left: 4px; }
   .pt-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 12px 12px; }
@@ -129,15 +129,16 @@
     min-height: 100%;
     background: var(--paper);
     color: var(--ink);
-    font-family: 'Karla', ui-sans-serif, system-ui, sans-serif;
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    font-size: 16px;
     -webkit-font-smoothing: antialiased;
     padding-bottom: env(safe-area-inset-bottom);
   }
   h1, h2, h3, .display {
-    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
-    font-weight: 600;
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
     text-wrap: balance;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
 
   .wrap { max-width: 980px; margin: 0 auto; padding: 28px 20px 80px; padding-top: calc(28px + env(safe-area-inset-top)); }
@@ -149,16 +150,17 @@
     margin-bottom: 22px;
   }
   h1.title {
-    font-family: 'Dancing Script', cursive;
-    font-weight: 700;
-    font-size: clamp(38px, 8vw, 56px);
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    font-weight: 800;
+    font-size: clamp(36px, 7vw, 52px);
     margin: 2px 0 4px;
     font-style: normal;
+    letter-spacing: -0.03em;
   }
   .subtitle {
     font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
     color: var(--ink-soft);
-    font-size: 14.5px;
+    font-size: 16px;
     margin: 0;
   }
   .stats {
@@ -168,8 +170,8 @@
     flex-wrap: wrap;
     font-variant-numeric: tabular-nums;
   }
-  .stat { font-size: 13px; color: var(--ink-soft); }
-  .stat b { color: var(--ink); font-size: 15px; font-weight: 700; }
+  .stat { font-size: 15px; color: var(--ink-soft); }
+  .stat b { color: var(--ink); font-size: 17px; font-weight: 700; }
 
   .controls {
     position: sticky;
@@ -196,9 +198,9 @@
   .add-btn {
     flex: none;
     font: inherit;
-    font-size: 13.5px;
+    font-size: 15px;
     font-weight: 700;
-    padding: 0 16px;
+    padding: 11px 20px;
     border-radius: 10px;
     border: 1px solid var(--accent);
     background: var(--accent);
@@ -233,9 +235,9 @@
   .surprise-btn {
     flex: none;
     font: inherit;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
-    padding: 7px 14px;
+    padding: 10px 18px;
     border-radius: 999px;
     border: 1px solid var(--accent);
     background: var(--accent-soft);
@@ -286,9 +288,9 @@
     align-items: center;
     gap: 7px;
     font: inherit;
-    font-size: 13.5px;
+    font-size: 15px;
     font-weight: 600;
-    padding: 8px 14px;
+    padding: 10px 18px;
     border-radius: 999px;
     border: 1px solid var(--line);
     background: var(--card);
@@ -306,9 +308,9 @@
   .filter-btn.active .n { opacity: .85; }
   .sort-select {
     font: inherit;
-    font-size: 13.5px;
+    font-size: 15px;
     font-weight: 600;
-    padding: 8px 12px;
+    padding: 10px 16px;
     border-radius: 999px;
     border: 1px solid var(--line);
     background: var(--card);
@@ -352,8 +354,8 @@
     position: relative;
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 14px 15px 13px;
+    border-radius: 14px;
+    padding: 16px 18px 15px;
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
@@ -363,7 +365,7 @@
   }
   .card:hover, .card:focus-within { border-color: var(--accent); }
   .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
-  .card-title { font-size: 17px; margin: 0; line-height: 1.28; font-weight: 500; flex: 1; min-width: 0; }
+  .card-title { font-size: 19px; margin: 0; line-height: 1.28; font-weight: 600; flex: 1; min-width: 0; }
   /* El título es el botón que abre la receta y su ::after cubre toda la tarjeta; los demás botones quedan por encima */
   .card-open { font: inherit; color: inherit; background: none; border: none; padding: 0; margin: 0; text-align: left; cursor: pointer; }
   .card-open::after { content: ''; position: absolute; inset: 0; border-radius: 12px; }
@@ -372,7 +374,7 @@
   .card-actions { display: flex; flex: none; margin: -7px -9px 0 0; position: relative; z-index: 1; }
   .cart-btn, .fav-btn {
     flex: none; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; line-height: 1;
-    color: var(--ink-soft); min-width: 38px; min-height: 38px; border-radius: 10px;
+    color: var(--ink-soft); min-width: 42px; min-height: 42px; border-radius: 10px;
     display: inline-flex; align-items: center; justify-content: center;
   }
   .cart-btn { font-size: 19px; }
@@ -409,8 +411,8 @@
     margin: 26px auto 0;
     font: inherit;
     font-weight: 700;
-    font-size: 14px;
-    padding: 11px 22px;
+    font-size: 16px;
+    padding: 13px 28px;
     border-radius: 999px;
     border: 1px solid var(--line);
     background: var(--card);
@@ -419,7 +421,7 @@
   }
   .loadmore:hover { border-color: var(--accent); }
 
-  .count-line { color: var(--ink-soft); font-size: 13px; margin: 0 0 14px; }
+  .count-line { color: var(--ink-soft); font-size: 15px; margin: 0 0 14px; }
 
   /* detail overlay */
   .overlay {
@@ -449,7 +451,7 @@
     .sheet { border-radius: 16px; }
   }
   .sheet-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
-  .sheet h2, .recipe-page h2 { font-size: 24px; margin: 0; font-style: italic; }
+  .sheet h2, .recipe-page h2 { font-size: 26px; margin: 0; font-style: normal; font-weight: 700; }
   .close-btn {
     flex: none;
     background: var(--card);
@@ -490,13 +492,13 @@
 
   .sheet .meta-row, .recipe-page .meta-row { display: flex; align-items: center; gap: 10px; margin: 10px 0 16px; flex-wrap: wrap; }
   .sheet .body-text, .recipe-page .body-text {
-    font-size: 15px;
-    line-height: 1.6;
+    font-size: 17px;
+    line-height: 1.65;
     color: var(--ink);
   }
   .body-text h3 {
-    font-family: 'Karla', ui-sans-serif, system-ui, sans-serif;
-    font-size: 12.5px;
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    font-size: 13.5px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .03em;
@@ -584,10 +586,10 @@
   .cat-select:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
 
   .edit-title-input {
-    font-family: 'Fraunces', Georgia, serif;
-    font-style: italic;
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    font-style: normal;
     font-size: 22px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--ink);
     background: var(--card);
     border: 1px solid var(--line);
@@ -745,8 +747,8 @@
   .submit-btn {
     font: inherit;
     font-weight: 700;
-    font-size: 15px;
-    padding: 12px 20px;
+    font-size: 16px;
+    padding: 14px 26px;
     border-radius: 999px;
     border: 1px solid var(--accent);
     background: var(--accent);
@@ -898,7 +900,7 @@
     padding-top: env(safe-area-inset-top);
   }
   .cook-top { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
-  .cook-title { flex: 1; min-width: 0; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cook-title { flex: 1; min-width: 0; font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; font-style: normal; font-weight: 700; font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cook-round {
     flex: none; width: 38px; height: 38px; border-radius: 999px;
     border: 1px solid var(--line); background: var(--card); color: var(--ink);
@@ -937,7 +939,7 @@
   .cook-ing label { display: flex; align-items: flex-start; gap: 14px; padding: 14px 2px; cursor: pointer; }
   .cook-ing input { flex: none; width: 26px; height: 26px; margin-top: 3px; accent-color: var(--accent); }
   .cook-ing li.done span { text-decoration: line-through; opacity: .45; }
-  .cook-tips h3 { font-family: 'Fraunces', Georgia, serif; font-size: 1.1em; margin: 0 0 12px; }
+  .cook-tips h3 { font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; font-size: 1.1em; margin: 0 0 12px; }
   .cook-tips ul { margin: 0; padding-left: 1.1em; }
   .cook-tips li { margin-bottom: .6em; }
   .cook-nav { display: flex; gap: 10px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--paper); }
