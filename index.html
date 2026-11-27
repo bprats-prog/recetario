@@ -70,11 +70,11 @@
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   [hidden] { display: none !important; }
   .ig-embed a { color: var(--accent); }
-  .pantry-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; margin: 0 0 14px; padding: 13px 16px; border-radius: 14px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font: inherit; text-align: left; cursor: pointer; }
+  .pantry-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; margin: 0 0 10px; padding: 10px 16px; border-radius: 14px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font: inherit; text-align: left; cursor: pointer; }
   .pantry-cta:hover { opacity: .93; }
   .pantry-cta:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
-  .pantry-cta-t { font-size: 19px; font-weight: 700; }
-  .pantry-cta-s { font-size: 15px; opacity: .92; }
+  .pantry-cta-t { font-size: 16px; font-weight: 700; }
+  .pantry-cta-s { font-size: 13.5px; opacity: .85; }
   .pt-search { width: 100%; font: inherit; font-size: 16px; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
   .pt-search:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
   .pt-suggest { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
@@ -147,26 +147,44 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    margin-bottom: 22px;
+    margin-bottom: 14px;
   }
+  .top-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .top-row-left { flex: 1; min-width: 0; }
+  .top-row-right { display: flex; gap: 8px; padding-top: 4px; flex-shrink: 0; }
+  .top-action-btn {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 12px;
+    line-height: 1.3;
+    white-space: nowrap;
+    color: var(--ink-soft);
+  }
+  .top-action-btn:hover { background: var(--paper); border-color: var(--ink-soft); color: var(--ink); }
+  .top-action-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
   h1.title {
     font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
     font-weight: 800;
-    font-size: clamp(36px, 7vw, 52px);
-    margin: 2px 0 4px;
+    font-size: clamp(24px, 4.5vw, 34px);
+    margin: 2px 0 2px;
     font-style: normal;
     letter-spacing: -0.03em;
   }
   .subtitle {
     font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
     color: var(--ink-soft);
-    font-size: 16px;
+    font-size: 14px;
     margin: 0;
   }
   .stats {
-    margin-top: 10px;
+    margin-top: 6px;
     display: flex;
-    gap: 18px;
+    gap: 14px;
     flex-wrap: wrap;
     font-variant-numeric: tabular-nums;
   }
@@ -805,6 +823,10 @@
     .rv-row { flex-direction:column; }
     .rv-actions { max-width:none; justify-content:flex-start; }
   }
+  @media (max-width: 480px) {
+    .top-row { flex-direction: column; gap: 8px; }
+    .top-row-right { flex-direction: row; justify-content: flex-start; }
+  }
   .sl-add-row { display:flex; gap:8px; margin-top:12px; }
   .sl-add-inp { flex:1; font:inherit; font-size:15px; padding:10px 12px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); }
   .sl-add-inp:focus-visible { outline:2px solid var(--focus); outline-offset:1px; }
@@ -959,12 +981,19 @@
 <a class="skip-link" href="#main">Saltar al contenido</a>
 <div class="wrap">
   <header class="top">
-    <h1 class="title">Harina, huevo y pan rallao</h1>
-    <p class="subtitle">Recetas de mi madre, de mi abuela y de Instagram. Cocina como antes pero ahora.</p>
-    <div class="stats">
-      <span class="stat"><b id="statTotal">–</b> recetas</span>
-      <span class="stat"><b id="statCats">–</b> categorías</span>
-      <span class="stat"><b id="statFav">0</b> favoritas</span>
+    <div class="top-row">
+      <div class="top-row-left">
+        <h1 class="title">Harina, huevo y pan rallao</h1>
+        <p class="subtitle">Recetas de mi madre, de mi abuela y de Instagram.</p>
+        <div class="stats">
+          <span class="stat"><b id="statTotal">–</b> recetas</span>
+          <span class="stat" id="statFavWrap" hidden><b id="statFav">0</b> favoritas</span>
+        </div>
+      </div>
+      <div class="top-row-right">
+        <button class="top-action-btn" id="planBtn" type="button" title="Plan semanal">📅 Plan</button>
+        <button class="top-action-btn" id="editModeBtn" type="button" title="Modo edición">🔒 Edición</button>
+      </div>
     </div>
   </header>
 
@@ -979,8 +1008,6 @@
         <input id="search" type="text" aria-label="Buscar recetas" placeholder="Buscar por nombre, ingrediente…" autocomplete="off" inputmode="search" enterkeyhint="search">
       </div>
       <button class="add-btn cart-toggle-btn" id="cartBtn" type="button">🛒 Lista <span id="cartCount" hidden></span></button>
-      <button class="add-btn cart-toggle-btn" id="planBtn" type="button">📅 Plan semanal</button>
-      <button class="add-btn cart-toggle-btn" id="editModeBtn" type="button">🔒 Modo edición</button>
       <button class="add-btn" id="addRecipeBtn" type="button" hidden>+ Añadir receta</button>
       <button class="add-btn cart-toggle-btn" id="reviewBtn" type="button" hidden>🧹 Revisar recetario</button>
     </div>
@@ -1117,7 +1144,9 @@
 
   function saveFavs() {
     try { localStorage.setItem(FAVKEY, JSON.stringify([...favs])); } catch(e) {}
-    document.getElementById('statFav').textContent = favs.size;
+    const n = favs.size;
+    document.getElementById('statFav').textContent = n;
+    document.getElementById('statFavWrap').hidden = n === 0;
   }
 
   function saveShoppingItems() {
@@ -4585,7 +4614,7 @@
   // ---- Edit-mode passcode ---------------------------------------------------
 
   function updateEditModeUI() {
-    editModeBtn.textContent = canEdit ? '🔓 Edición activa' : '🔒 Modo edición';
+    editModeBtn.textContent = canEdit ? '🔓 Edición' : '🔒 Edición';
     reviewBtn.hidden = !canEdit;
   }
 
